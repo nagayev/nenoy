@@ -4,7 +4,7 @@ import {AddPlacemarkModal} from "./Modal"
 
 function MapProvider(){
     //FIXME: delete debug and dead code
-    const [mapCoords,setMapCoords] = React.useState([[0.1,0.1]]);
+    const [mapCoords,setMapCoords] = React.useState([0.1,0.1]);
     const [placemarksCoords,setPlacemarksCoords] = React.useState([mapCoords]);
     const [placemarkModalIsOpen,setPlacemarkModalIsOpen] = React.useState(!true);
     
