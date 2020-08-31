@@ -40,10 +40,6 @@ const Posts: React.FunctionComponent<PostsProps> = () => {
   return (
     <div className="App">
       {posts.map((post, index) => {
-        //if(Math.random()>0.51) console.log(post);
-        // FIXME:
-        const n = Math.round(Math.random() * 5) + 1;
-        //import(`./1234${n}`)
         return <Post key={index} data={post} />;
       })}
     </div>

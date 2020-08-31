@@ -1,15 +1,11 @@
 import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import Posts from "./Posts";
+//import gismap from "./2gismap"
 import MapProvider from "./Map";
 import dark from "./dark";
 import logo from "./logo.jpg";
 import Menu from "./Menu";
-
-const NoSSRPosts = dynamic(() => import("./Posts"), {
-  ssr: false,
-});
 
 const PageContentsForIndex: NextPage = () => {
   const style = dark;
@@ -33,7 +29,7 @@ const PageContentsForIndex: NextPage = () => {
       &nbsp;
       <MapProvider />
       </div>
-      <NoSSRPosts  postType={postType} />
+      <Posts  postType={postType} />
       <br />
       <div id="bottom">
         nenoy.ru, 2020 <br />

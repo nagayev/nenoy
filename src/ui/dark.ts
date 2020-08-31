@@ -25,6 +25,14 @@ const menu : CSSProperties = {
 const a : CSSProperties = {
   color: "white",
 };
+const log : CSSProperties = {
+  color: "red",
+  marginRight:'10%'
+};
+const reg : CSSProperties = {
+  color: "red",
+  marginRight:'-10%'
+};
 const pageLayout: CSSProperties = {
   backgroundColor: "black",
   color: "white",
@@ -47,6 +55,8 @@ const dark = {
   me,
   menu,
   languages,
+  log,
+  reg,
   dots
 };
 export default dark;

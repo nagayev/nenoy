@@ -1,36 +1,13 @@
 import React, { useEffect } from "react";
 import { YMaps,Map,Placemark,ZoomControl, GeolocationControl } from 'react-yandex-maps';
-import Modal from 'react-modal';
-
-const customStyles = {
-  content : {
-    color:'black',
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+import {AddPlacemarkModal} from "./Modal"
 
 function MapProvider(){
-    const [mapCoords,setMapCoords] = React.useState([55.75, 37.57]);
-    const [modalIsOpen,setIsOpen] = React.useState(false);
-    const [modalCoords,setModalCoords] = React.useState([55.75, 37.57]);
-
-    let subtitle;
-    function openModal(coords) {
-        setModalCoords(coords);
-        setIsOpen(true);
-    }
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        //subtitle.style.color = '#f00';
-    }
-    function closeModal(){
-        setIsOpen(false);
-    }
+    //FIXME: delete debug and dead code
+    const [mapCoords,setMapCoords] = React.useState([[0.1,0.1]]);
+    const [placemarksCoords,setPlacemarksCoords] = React.useState([mapCoords]);
+    const [placemarkModalIsOpen,setPlacemarkModalIsOpen] = React.useState(!true);
+    
     var opts = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -48,30 +25,27 @@ function MapProvider(){
     useEffect(()=>{
         console.log('Request user geolocation');
         navigator.geolocation.getCurrentPosition(suc,err,opts);
-    },[]); 
-    const testCoords = [mapCoords[0]*0.99,mapCoords[1]*0.99];
-    const placemarksCoords = [mapCoords,testCoords];
-    const Placemarks = placemarksCoords.map((v)=>{
-        return <Placemark geometry={v} onClick={()=>openModal(v)} />
-    }); 
+    },[]);
+    useEffect(()=>{
+        //load coords
+        fetch('placemarks.json').then(data=>data.json()).then(data=>setPlacemarksCoords(data));
+    },[]);
+    const Placemarks:any[] = [];
+    for(let i:number=0;i<placemarksCoords.length;i++){
+        const coords = placemarksCoords[i];
+        //console.log(coords)
+        Placemarks.push(<Placemark key={i} geometry={coords} onClick={()=>setPlacemarkModalIsOpen(true)} />);
+    }
+    const clickOnMap = (e:any) => { //fix typo any
+        //console.log(typeof e);
+        const coords = e._sourceEvent.originalEvent.coords; //get original coords
+        setPlacemarksCoords(placemarksCoords.concat([coords])); //add placemark to screen
+    };
     return (
         <>
-            <Modal
-                isOpen={modalIsOpen}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                style={customStyles}
-                contentLabel="Example Modal"
-                >
-
-                {/*<h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2> */}
-                <button onClick={closeModal}>close</button>
-                <div>Кажется, об этом объекте никто не писал.</div>
-                <div>Станьте первым!</div>
-    <div>Объект с координатами ({modalCoords[0]});({modalCoords[1]}) </div>
-            </Modal>
-            <YMaps id="map">
-                <Map defaultState={{ center: mapCoords, zoom: 8 }}>
+            {/*<AddPlacemarkModal isOpen={placemarkModalIsOpen} setIsOpen={setPlacemarkModalIsOpen} /> */}
+            <YMaps  id="map">
+                <Map onClick={clickOnMap} defaultState={{ center: mapCoords, zoom: 8 }}>
                     <GeolocationControl />
                     <ZoomControl />
                     {Placemarks}
