@@ -1,6 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Modal from 'react-modal'; //see https://github.com/reactjs/react-modal
+import {wrap} from "./utils"
 import NoSsr from "./no";
+
+//FIXME: fix AddPlacemarkModal
 
 const customStyles = {
     content : {
@@ -35,18 +38,18 @@ interface LogRegProps{
 
 function MapModal(props:MapModalInterface){
     const {modalIsOpen,setIsOpen,modalCoords} = props;
-    const closeModal = () => setIsOpen(false);
+    
     return (
         <>
             <Modal
                 isOpen={modalIsOpen}
                 /*onAfterOpen={afterOpenModal} */
-                onRequestClose={closeModal}
+                onRequestClose={wrap(setIsOpen,false)}
                 style={customStyles}
                 contentLabel="Example Modal">
 
                     {/*<h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2> */}
-                <button onClick={closeModal}>close</button>
+                <button onClick={wrap(setIsOpen,false)}>close</button>
                 <div>Кажется, об этом объекте никто не писал.</div>
                 <div>Станьте первым!</div>
                 <div>Объект с координатами ({modalCoords[0]});({modalCoords[1]}) </div>
@@ -56,16 +59,15 @@ function MapModal(props:MapModalInterface){
 }
 function LogModal(props:LogRegProps){
     const {isOpen,setIsOpen} = props;
-    const closeModal = () => setIsOpen(false);
     return (
         <>
             <Modal
                 isOpen={isOpen}
                 /*onAfterOpen={afterOpenModal} */
-                onRequestClose={closeModal}
+                onRequestClose={wrap(setIsOpen,false)}
                 style={customStyles}
                 contentLabel="Example Modal">
-                <button onClick={closeModal}>close</button>
+                <button onClick={wrap(setIsOpen,false)}>close</button>
                 <h2>Вход</h2>
                 <p>Пожалуйста, введите свой логин и пароль</p>
                 <p>Логин</p><input type="text" /> <br />
@@ -80,16 +82,16 @@ function LogModal(props:LogRegProps){
 }
 function RegModal(props:LogRegProps){
     const {isOpen,setIsOpen} = props;
-    const closeModal = () => setIsOpen(false);
+    
     return (
         <>
             <Modal
                 isOpen={isOpen}
                 /*onAfterOpen={afterOpenModal} */
-                onRequestClose={closeModal}
+                onRequestClose={wrap(setIsOpen,false)}
                 style={customStyles}
                 /*contentLabel="Example Modal"  (?) */>
-                <button onClick={closeModal}>close</button>
+                <button onClick={wrap(setIsOpen,false)}>close</button>
                 <h2>Регестрация</h2>
                 <p>Логин</p><input type="text" /> <br />
                 <p>Пароль</p><input type="password" /> <br />
@@ -102,11 +104,26 @@ function RegModal(props:LogRegProps){
         </>
     );
 }
-
+function Sorry(){
+    const [isOpen,setIsOpen] = useState(false);
+    
+    return (
+        <>
+            <Modal
+                isOpen={isOpen}
+                /*onAfterOpen={afterOpenModal} */
+                onRequestClose={wrap(setIsOpen,false)}
+                style={customStyles}
+                /*contentLabel="Example Modal"  (?) */>
+                abc
+            </Modal>
+        </>
+    );
+}
 /* function AddPlacemarkModal(props:AddPlacemarkInterface){
     //NOTE: savetlyOpenModal is close previous and open next
     const {isOpen,setIsOpen} = props;
-    //const closeModal = () => setIsOpen(false);
+    //
     const firstIsOpen = props.isOpen===true;
     const [firstModalIsOpen,setFirstIsOpen] = React.useState(firstIsOpen);
     const [secondModalIsOpen,setSecondIsOpen] = React.useState(false);
@@ -168,7 +185,7 @@ function RegModal(props:LogRegProps){
 function AddPlacemarkModal(props:AddPlacemarkInterface){
     //NOTE: savetlyOpenModal is close previous and open next
     const {isOpen,setIsOpen} = props;
-    //const closeModal = () => setIsOpen(false);
+    //
     //const firstIsOpen = props.isOpen===true;
     const [firstModalIsOpen,setFirstIsOpen] = [isOpen,setIsOpen]; 
     const [secondModalIsOpen,setSecondIsOpen] = React.useState(false);
@@ -233,4 +250,4 @@ const AddPlacemarkModalwithNoSsr = (props:AddPlacemarkInterface) => {
         <NoSsr><AddPlacemarkModal isOpen={isOpen} setIsOpen={setIsOpen} /></NoSsr>
     );
 } 
-export { MapModal,LogModal,RegModal,AddPlacemarkModalwithNoSsr as AddPlacemarkModal };
+export { MapModal,LogModal,RegModal,AddPlacemarkModalwithNoSsr as AddPlacemarkModal,Sorry };

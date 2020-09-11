@@ -1,25 +1,19 @@
 import { NextPage } from "next";
 import React, { useState } from "react";
 import Posts from "./Posts";
-//import gismap from "./2gismap"
 import MapProvider from "./Map";
-import dark from "./dark";
+import {getDefaultTheme} from "./utils";
 import logo from "./logo.jpg";
-import Menu from "./Menu";
+import Menu from "./Menu"
+import TopMenu from "./TopMenu";
 
 const PageContentsForIndex: NextPage = () => {
-  const style = dark;
+  const style = getDefaultTheme();
   const [postType,setType] = useState(0);
+  const headers = ["Блог редакции","Больницы","Заводы"]
   return (
     <div style={style.pageLayout}>
-      <div style={style.languages}>
-        <a style={style.dots} href="#">
-          en
-        </a>{" "}
-        <a style={style.dots} href="#">
-          ru
-        </a>
-      </div>
+      <TopMenu />
       <h1>Неной</h1>
       <img id="me" src={logo} alt="Украина не Россия" style={style.me} />
       <div id="menu">
@@ -30,6 +24,7 @@ const PageContentsForIndex: NextPage = () => {
       <MapProvider />
       </div>
       <p>Версия тестовая, буду обновлять</p>
+      <h1>{headers[postType]}</h1>
       <Posts postType={postType} />
       <br />
       <div id="bottom">
