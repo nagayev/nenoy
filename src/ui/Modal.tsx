@@ -28,6 +28,11 @@ interface AddPlacemarkInterface{
     //modalCoords:any
 }
 
+interface LogRegProps{
+    isOpen:boolean,
+    setIsOpen:Function
+}
+
 function MapModal(props:MapModalInterface){
     const {modalIsOpen,setIsOpen,modalCoords} = props;
     const closeModal = () => setIsOpen(false);
@@ -49,14 +54,13 @@ function MapModal(props:MapModalInterface){
         </>
     );
 }
-function LogModal(props){
-    const isOpen = props.isOpen?true:false;
-    const [modalIsOpen,setIsOpen] = React.useState(isOpen);
+function LogModal(props:LogRegProps){
+    const {isOpen,setIsOpen} = props;
     const closeModal = () => setIsOpen(false);
     return (
         <>
             <Modal
-                isOpen={modalIsOpen}
+                isOpen={isOpen}
                 /*onAfterOpen={afterOpenModal} */
                 onRequestClose={closeModal}
                 style={customStyles}
@@ -74,14 +78,13 @@ function LogModal(props){
         </>
     );
 }
-function RegModal(props:any){
-    console.log(props.isOpen);
-    const {modalIsOpen,setIsOpen} = props;
+function RegModal(props:LogRegProps){
+    const {isOpen,setIsOpen} = props;
     const closeModal = () => setIsOpen(false);
     return (
         <>
             <Modal
-                isOpen={modalIsOpen}
+                isOpen={isOpen}
                 /*onAfterOpen={afterOpenModal} */
                 onRequestClose={closeModal}
                 style={customStyles}

@@ -2,17 +2,14 @@ import React from "react"
 import {LogModal,RegModal} from "./Modal"
 import dark from "./dark";
 
-//FIXME: GOVNOCODE
-
 type Function = (n:number) => any;
+
 interface MenuInterface{
     updateState:Function
 }
 
-
 function Menu(props:MenuInterface){
     const {updateState} = props;
-
     const [isLogOpen,setLogOpen] = React.useState(false);
     const [isRegOpen,setRegOpen] = React.useState(false);
     const showLogIn = () => setLogOpen(true);
