@@ -30,7 +30,7 @@ const PageContentsForIndex: NextPage = () => {
       <MapProvider />
       </div>
       <p>Версия тестовая, буду обновлять</p>
-      <Posts  postType={postType} />
+      <Posts postType={postType} />
       <br />
       <div id="bottom">
         nenoy.ru, 2020 <br />

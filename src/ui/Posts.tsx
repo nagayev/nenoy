@@ -2,8 +2,11 @@ import React from "react";
 
 import { Post } from "./Post";
 
+//FIXME: fix the first useEffect
+
+type postType = 0|1|2
 interface PostData {
-  date: number;
+  date: postType;
   header: string;
   content: string;
 }
@@ -13,32 +16,34 @@ const fetchSinglePost = async (postUrl: string): Promise<PostData> => {
   return (await response.json()) as PostData;
 };
 
-const getListOfPosts = async (): Promise<any> =>
-  await fetchSinglePost("posts.json");
+const getListOfPosts = async (type:postType): Promise<any> =>
+  await fetchSinglePost(`1/posts.json`);
 
-const loadPosts = async (postUrls: string[]): Promise<any> =>
-  await Promise.all(postUrls.map((postUrl) => fetchSinglePost(postUrl)));
+const loadPosts = async (postUrls: string[],type:postType): Promise<any> =>
+  await Promise.all(postUrls.map((postUrl) => fetchSinglePost(`${type}/${postUrl}`)));
 
 interface PostsProps {
-  postType: number;
+  postType: number; //0 is blog, 1 is ambulances, 2 is zavod
 }
 
-const Posts: React.FunctionComponent<PostsProps> = () => {
+const Posts: any = (props:PostsProps) => {
   const [postUrls, setPostUrls] = React.useState([]);
   const [posts, setPosts] = React.useState([]);
 
   React.useEffect(() => {
-    getListOfPosts().then((list) => setPostUrls(list));
-  }, []);
+    console.warn(props.postType)
+    getListOfPosts(props.postType as postType).then((list) => setPostUrls(list));
+    console.error(postUrls)
+  },[props.postType]);
 
   React.useEffect(() => {
     if (postUrls.length) {
-      loadPosts(postUrls).then((loadedPosts) => setPosts(loadedPosts));
+      loadPosts(postUrls,props.postType as postType).then((loadedPosts) => setPosts(loadedPosts));
     }
   }, [postUrls]);
 
   return (
-    <div className="App">
+    <div className="posts">
       {posts.map((post, index) => {
         return <Post key={index} data={post} />;
       })}
