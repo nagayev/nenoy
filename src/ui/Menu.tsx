@@ -42,6 +42,7 @@ function _Menu(props: MenuInterface) {
   );
   return (
     <div id="menu">
+      {screen.availHeight} {screen.availWidth}
       <div>
         <a style={style.log} onClick={showLogIn}>
           Вход

@@ -8,12 +8,26 @@ import {
 } from "react-yandex-maps";
 //import {AddPlacemarkModal} from "./Modal"
 
+function MapUnvailble() {
+  const LINE_ONE = "К сожалению, карта недоступна.";
+  const LINE_TWO = "Возможно Вы не предоставили доступ к местоположению";
+  const ZOPA_COORDS = [0.1, 0.1];
+  const clickOnMap = () => alert(`${LINE_ONE}\n${LINE_TWO}`);
+  return (
+    <YMaps id="map">
+      <Map onClick={clickOnMap} defaultState={{ center: ZOPA_COORDS, zoom: 8 }}>
+        <Placemark key={0} geometry={ZOPA_COORDS} onClick={clickOnMap} />
+      </Map>
+    </YMaps>
+  );
+}
 function MapProvider() {
   //FIXME: delete debug and dead code
   const [mapCoords, setMapCoords] = React.useState([0.1, 0.1]);
   const [placemarksCoords, setPlacemarksCoords] = React.useState([mapCoords]);
-  const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(!true);
+  //const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(!true);
   const [lock, setLock] = React.useState(false);
+  const [geoError, setGeoError] = React.useState(false);
 
   const opts = {
     enableHighAccuracy: true,
@@ -26,7 +40,8 @@ function MapProvider() {
   }
   function err(err) {
     console.warn(`Can\'t get geolocation:${err.message}(${err.code})`);
-    alert("Произошла ошибка при получении геоположения(");
+    //alert("Произошла ошибка при получении геоположения(");
+    setGeoError(true);
   }
 
   useEffect(() => {
@@ -47,7 +62,7 @@ function MapProvider() {
       <Placemark
         key={i}
         geometry={coords}
-        onClick={() => setPlacemarkModalIsOpen(true)}
+        //onClick={() => setPlacemarkModalIsOpen(true)}
       />,
     );
   }
@@ -62,6 +77,9 @@ function MapProvider() {
       alert("Пожалуйста, добавьте информацию о предыдущем объекте");
     }
   };
+  if (geoError) {
+    return <MapUnvailble />;
+  }
   return (
     <>
       {/*<AddPlacemarkModal isOpen={placemarkModalIsOpen} setIsOpen={setPlacemarkModalIsOpen} /> */}
