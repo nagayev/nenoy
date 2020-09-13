@@ -1,124 +1,134 @@
-import React, { useEffect, useState } from "react"
-import Modal from 'react-modal'; //see https://github.com/reactjs/react-modal
-import {wrap} from "./utils"
+import React from "react";
+import Modal from "react-modal"; //see https://github.com/reactjs/react-modal
+
 import NoSsr from "./no";
+import { wrap } from "./utils";
 
 //FIXME: fix AddPlacemarkModal
 
 const customStyles = {
-    content : {
-      color:'black',
-      top                   : '50%',
-      left                  : '50%',
-      right                 : 'auto',
-      bottom                : 'auto',
-      marginRight           : '-50%',
-      transform             : 'translate(-50%, -50%)'
-    }
+  content: {
+    color: "black",
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
 };
 
-type Function = (...args:any[]) => any;
+type Function = (...args: any[]) => any;
 
 interface MapModalInterface {
-    modalIsOpen:boolean,
-    setIsOpen:Function,
-    modalCoords:number[]
+  modalIsOpen: boolean;
+  setIsOpen: Function;
+  modalCoords: number[];
 }
 
-interface AddPlacemarkInterface{
-    isOpen:boolean,
-    setIsOpen:Function,
-    //modalCoords:any
+interface AddPlacemarkInterface {
+  isOpen: boolean;
+  setIsOpen: Function;
+  //modalCoords:any
 }
 
-interface LogRegProps{
-    isOpen:boolean,
-    setIsOpen:Function
+interface LogRegProps {
+  isOpen: boolean;
+  setIsOpen: Function;
 }
 
-function MapModal(props:MapModalInterface){
-    const {modalIsOpen,setIsOpen,modalCoords} = props;
-    
-    return (
-        <>
-            <Modal
-                isOpen={modalIsOpen}
-                /*onAfterOpen={afterOpenModal} */
-                onRequestClose={wrap(setIsOpen,false)}
-                style={customStyles}
-                contentLabel="Example Modal">
+function MapModal(props: MapModalInterface) {
+  const { modalIsOpen, setIsOpen, modalCoords } = props;
 
-                    {/*<h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2> */}
-                <button onClick={wrap(setIsOpen,false)}>close</button>
-                <div>Кажется, об этом объекте никто не писал.</div>
-                <div>Станьте первым!</div>
-                <div>Объект с координатами ({modalCoords[0]});({modalCoords[1]}) </div>
-            </Modal>
-        </>
-    );
+  return (
+    <>
+      <Modal
+        isOpen={modalIsOpen}
+        /*onAfterOpen={afterOpenModal} */
+        onRequestClose={wrap(setIsOpen, false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        {/*<h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2> */}
+        <button onClick={wrap(setIsOpen, false)}>close</button>
+        <div>Кажется, об этом объекте никто не писал.</div>
+        <div>Станьте первым!</div>
+        <div>
+          Объект с координатами ({modalCoords[0]});({modalCoords[1]}){" "}
+        </div>
+      </Modal>
+    </>
+  );
 }
-function LogModal(props:LogRegProps){
-    const {isOpen,setIsOpen} = props;
-    return (
-        <>
-            <Modal
-                isOpen={isOpen}
-                /*onAfterOpen={afterOpenModal} */
-                onRequestClose={wrap(setIsOpen,false)}
-                style={customStyles}
-                contentLabel="Example Modal">
-                <button onClick={wrap(setIsOpen,false)}>close</button>
-                <h2>Вход</h2>
-                <p>Пожалуйста, введите свой логин и пароль</p>
-                <p>Логин</p><input type="text" /> <br />
-                <p>Пароль</p><input type="password" />
-                <br />
-                <p>Или войдите с помощью этих сервисов</p>
-                <p>Тут будет вк, гугл и т.д</p>
-                <button>Войти</button>
-            </Modal>
-        </>
-    );
+function LogModal(props: LogRegProps) {
+  const { isOpen, setIsOpen } = props;
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        /*onAfterOpen={afterOpenModal} */
+        onRequestClose={wrap(setIsOpen, false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button onClick={wrap(setIsOpen, false)}>close</button>
+        <h2>Вход</h2>
+        <p>Пожалуйста, введите свой логин и пароль</p>
+        <p>Логин</p>
+        <input type="text" /> <br />
+        <p>Пароль</p>
+        <input type="password" />
+        <br />
+        <p>Или войдите с помощью этих сервисов</p>
+        <p>Тут будет вк, гугл и т.д</p>
+        <button>Войти</button>
+      </Modal>
+    </>
+  );
 }
-function RegModal(props:LogRegProps){
-    const {isOpen,setIsOpen} = props;
-    
-    return (
-        <>
-            <Modal
-                isOpen={isOpen}
-                /*onAfterOpen={afterOpenModal} */
-                onRequestClose={wrap(setIsOpen,false)}
-                style={customStyles}
-                /*contentLabel="Example Modal"  (?) */>
-                <button onClick={wrap(setIsOpen,false)}>close</button>
-                <h2>Регестрация</h2>
-                <p>Логин</p><input type="text" /> <br />
-                <p>Пароль</p><input type="password" /> <br />
-                <p>Повторите пароль</p> <input type="password" />
-                <br />
-                <p>Или войдите с помощью этих сервисов</p>
-                <p>Тут будет вк, гугл и т.д</p>
-                <button>Зарегестрироваться</button>
-            </Modal>
-        </>
-    );
+function RegModal(props: LogRegProps) {
+  const { isOpen, setIsOpen } = props;
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        /*onAfterOpen={afterOpenModal} */
+        onRequestClose={wrap(setIsOpen, false)}
+        style={customStyles}
+        /*contentLabel="Example Modal"  (?) */
+      >
+        <button onClick={wrap(setIsOpen, false)}>close</button>
+        <h2>Регестрация</h2>
+        <p>Логин</p>
+        <input type="text" /> <br />
+        <p>Пароль</p>
+        <input type="password" /> <br />
+        <p>Повторите пароль</p> <input type="password" />
+        <br />
+        <p>Или войдите с помощью этих сервисов</p>
+        <p>Тут будет вк, гугл и т.д</p>
+        <button>Зарегестрироваться</button>
+      </Modal>
+    </>
+  );
 }
-function Sorry(){
-    const [isOpen,setIsOpen] = useState(false);
-    
-    return (
-        <>
-            <Modal
-                isOpen={isOpen}
-                /*onAfterOpen={afterOpenModal} */
-                onRequestClose={wrap(setIsOpen,false)}
-                style={customStyles}
-                /*contentLabel="Example Modal"  (?) */>
-                abc
-            </Modal>
-        </>
-    );
+function Sorry(props) {
+  const { isOpen, setIsOpen } = props;
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        /*onAfterOpen={afterOpenModal} */
+        onRequestClose={wrap(setIsOpen, false)}
+        style={customStyles}
+        /*contentLabel="Example Modal"  (?) */
+      >
+        <button onClick={wrap(setIsOpen, false)}>close</button> <br />
+        Sorry, English version are coming
+      </Modal>
+    </>
+  );
 }
 /* function AddPlacemarkModal(props:AddPlacemarkInterface){
     //NOTE: savetlyOpenModal is close previous and open next
@@ -182,72 +192,88 @@ function Sorry(){
         </>
     );
 } */
-function AddPlacemarkModal(props:AddPlacemarkInterface){
-    //NOTE: savetlyOpenModal is close previous and open next
-    const {isOpen,setIsOpen} = props;
-    //
-    //const firstIsOpen = props.isOpen===true;
-    const [firstModalIsOpen,setFirstIsOpen] = [isOpen,setIsOpen]; 
-    const [secondModalIsOpen,setSecondIsOpen] = React.useState(false);
-    const closeFirstModal = () => setFirstIsOpen(false);
-    const savetlyOpenSecondModal = ()=>{
-        setFirstIsOpen(false);
-        setSecondIsOpen(true);
-    }
-    const areYouSureTo:Function = (f:Function,m:string='Выйти без сохранения?') => confirm(m)?f:()=>{};
-    const closeSecondModal = () => setSecondIsOpen(false);
-    const sendInformation = () => {
-        console.warn('[STUB] Sending info to server...');
-        closeSecondModal();
-    }
-    return (
-        <>
-            <Modal
-                isOpen={firstModalIsOpen}
-                /*onAfterOpen={afterOpenModal} */
-                onRequestClose={closeFirstModal} //and open another modal
-                style={customStyles}
-                contentLabel="Example Modal">
-                <button onClick={()=>areYouSureTo(closeFirstModal)}>close</button>
-                <h2>Добавить информацию об объекте</h2>
-                <p>Об этом объекте еще никто не писал!</p>
-                <p>Станьте первым!</p>
-                <div style={{display:'contents'}}>
-                    <p>Выберите категорию объекта:</p>
-                    <select name = "categories">
-                        <option value = "hospital">Больницы</option>
-                        <option value = "road">Дороги</option>
-                        <option value = "schools">Школы</option>
-                    </select> <br />
-                    <p>Название объекта:</p><input type="text" /> 
-                </div> <br />
-                <button onClick={savetlyOpenSecondModal}>Сохранить</button>
-            </Modal>
-            <Modal
-                isOpen={secondModalIsOpen}
-                /*onAfterOpen={afterOpenModal} */
-                onRequestClose={areYouSureTo(closeSecondModal)} //and open another modal
-                style={customStyles}
-                contentLabel="Example Modal">
-                <button onClick={closeSecondModal}>close</button>
-                <h2>Спасибо за добавление информации!</h2>
-                <p>Пожалуйста напишите о нем первую запись</p>
-                <div style={{display:'contents'}}>
-                    <p>Заголовок записи:</p>
-                    <input type="text" />
-                    <br />
-                    <p>Содержимое поста:</p><textarea></textarea>
-                </div> <br />
-                <button onClick={sendInformation}>Отправить</button>
-            </Modal>
-        </>
-    );
+function AddPlacemarkModal(props: AddPlacemarkInterface) {
+  //NOTE: savetlyOpenModal is close previous and open next
+  const { isOpen, setIsOpen } = props;
+  //
+  //const firstIsOpen = props.isOpen===true;
+  const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
+  const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
+  const closeFirstModal = () => setFirstIsOpen(false);
+  const savetlyOpenSecondModal = () => {
+    setFirstIsOpen(false);
+    setSecondIsOpen(true);
+  };
+  const areYouSureTo: Function = (f: Function, m = "Выйти без сохранения?") =>
+    confirm(m) ? f : () => {};
+  const closeSecondModal = () => setSecondIsOpen(false);
+  const sendInformation = () => {
+    console.warn("[STUB] Sending info to server...");
+    closeSecondModal();
+  };
+  return (
+    <>
+      <Modal
+        isOpen={firstModalIsOpen}
+        /*onAfterOpen={afterOpenModal} */
+        onRequestClose={closeFirstModal} //and open another modal
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button onClick={() => areYouSureTo(closeFirstModal)}>close</button>
+        <h2>Добавить информацию об объекте</h2>
+        <p>Об этом объекте еще никто не писал!</p>
+        <p>Станьте первым!</p>
+        <div style={{ display: "contents" }}>
+          <p>Выберите категорию объекта:</p>
+          <select name="categories">
+            <option value="hospital">Больницы</option>
+            <option value="road">Дороги</option>
+            <option value="schools">Школы</option>
+          </select>{" "}
+          <br />
+          <p>Название объекта:</p>
+          <input type="text" />
+        </div>{" "}
+        <br />
+        <button onClick={savetlyOpenSecondModal}>Сохранить</button>
+      </Modal>
+      <Modal
+        isOpen={secondModalIsOpen}
+        /*onAfterOpen={afterOpenModal} */
+        onRequestClose={areYouSureTo(closeSecondModal)} //and open another modal
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button onClick={closeSecondModal}>close</button>
+        <h2>Спасибо за добавление информации!</h2>
+        <p>Пожалуйста напишите о нем первую запись</p>
+        <div style={{ display: "contents" }}>
+          <p>Заголовок записи:</p>
+          <input type="text" />
+          <br />
+          <p>Содержимое поста:</p>
+          <textarea></textarea>
+        </div>{" "}
+        <br />
+        <button onClick={sendInformation}>Отправить</button>
+      </Modal>
+    </>
+  );
 }
 //NOTE: for browser only confirm function
-const AddPlacemarkModalwithNoSsr = (props:AddPlacemarkInterface) => {
-    const {isOpen,setIsOpen} = props
-    return (
-        <NoSsr><AddPlacemarkModal isOpen={isOpen} setIsOpen={setIsOpen} /></NoSsr>
-    );
-} 
-export { MapModal,LogModal,RegModal,AddPlacemarkModalwithNoSsr as AddPlacemarkModal,Sorry };
+const AddPlacemarkModalwithNoSsr = (props: AddPlacemarkInterface) => {
+  const { isOpen, setIsOpen } = props;
+  return (
+    <NoSsr>
+      <AddPlacemarkModal isOpen={isOpen} setIsOpen={setIsOpen} />
+    </NoSsr>
+  );
+};
+export {
+  MapModal,
+  LogModal,
+  RegModal,
+  AddPlacemarkModalwithNoSsr as AddPlacemarkModal,
+  Sorry,
+};

@@ -7,4 +7,3 @@ module.exports = require("next-compose-plugins")(
     reactStrictMode: true,
   },
 );
- 

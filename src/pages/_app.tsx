@@ -1,9 +1,9 @@
 //import "react-awesome-slider/dist/styles.css";
 import "../ui/index.css";
 import "../ui/PageContentsForIndex.css";
+
 // https://github.com/roylee0704/react-flexbox-grid/issues/173#issuecomment-628984004
 //import "react-flexbox-grid/dist/react-flexbox-grid.css";
-
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";

@@ -1,14 +1,14 @@
 import React from "react";
 
 import { LogModal, RegModal } from "./Modal";
+import NoSsr from "./no";
 import { detectMobile, getDefaultTheme } from "./utils";
 
-type Function = (n: number) => any;
-
 interface MenuInterface {
-  updateState: Function;
+  updateState: (n: number) => any;
 }
-function DesktopMenu(props: any) {
+
+function DesktopMenu(props: MenuInterface) {
   return (
     <div>
       <a onClick={() => props.updateState(0)}>Блог редакции</a>&nbsp;
@@ -17,17 +17,17 @@ function DesktopMenu(props: any) {
     </div>
   );
 }
-function MobileMenu(props: any) {
-  const c = (event) => props.updateState(+event.target.value);
+function MobileMenu(props: MenuInterface) {
+  const handler = (event) => props.updateState(+event.target.value);
   return (
-    <select onChange={c}>
+    <select onChange={handler}>
       <option value="0">Блог редакции</option>
       <option value="1">Больницы</option>
       <option value="2">Заводы</option>
     </select>
   );
 }
-function Menu(props: MenuInterface) {
+function _Menu(props: MenuInterface) {
   const style = getDefaultTheme();
   const { updateState } = props;
   const [isLogOpen, setLogOpen] = React.useState(false);
@@ -56,6 +56,13 @@ function Menu(props: MenuInterface) {
       <LogModal isOpen={isLogOpen} setIsOpen={setLogOpen} />
       {menu}
     </div>
+  );
+}
+function Menu(props: MenuInterface) {
+  return (
+    <NoSsr>
+      <_Menu updateState={props.updateState} />
+    </NoSsr>
   );
 }
 export default Menu;

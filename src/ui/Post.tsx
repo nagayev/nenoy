@@ -1,19 +1,19 @@
-import ReactMarkdown from "react-markdown";
-import React from "react";
 import moment from "moment";
+import React from "react";
+import ReactMarkdown from "react-markdown";
 
 interface PostProps {
   data: PostData;
 }
 interface PostData {
-    date: number;
-    header: string;
-    content: string;
+  date: number;
+  header: string;
+  content: string;
 }
 
-function formatDate(ms:number):string{
-    moment.locale('ru');
-    return moment(ms).fromNow();
+function formatDate(ms: number): string {
+  moment.locale("ru");
+  return moment(ms).fromNow();
 }
 
 export const Post: React.FunctionComponent<PostProps> = ({ data }) => {

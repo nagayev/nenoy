@@ -13,25 +13,25 @@ const about: CSSProperties = {
   textAlign: "left",
   marginLeft: "30%",
 };
-const map : CSSProperties = {
-  textAlign:"center",
+const map: CSSProperties = {
+  textAlign: "center",
   marginLeft: "auto",
-  marginRight: "auto"
+  marginRight: "auto",
 };
-const menu : CSSProperties = {
-  textAlign:"left",
-  marginLeft:"-90%"
+const menu: CSSProperties = {
+  textAlign: "left",
+  marginLeft: "-90%",
 };
-const a : CSSProperties = {
+const a: CSSProperties = {
   color: "white",
 };
-const log : CSSProperties = {
+const log: CSSProperties = {
   color: "red",
-  marginRight:'10%'
+  marginRight: "10%",
 };
-const reg : CSSProperties = {
+const reg: CSSProperties = {
   color: "red",
-  marginRight:'-10%'
+  marginRight: "-10%",
 };
 const pageLayout: CSSProperties = {
   backgroundColor: "black",
@@ -57,6 +57,6 @@ const dark = {
   languages,
   log,
   reg,
-  dots
+  dots,
 };
 export default dark;
