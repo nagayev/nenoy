@@ -130,74 +130,8 @@ function Sorry(props) {
     </>
   );
 }
-/* function AddPlacemarkModal(props:AddPlacemarkInterface){
-    //NOTE: savetlyOpenModal is close previous and open next
-    const {isOpen,setIsOpen} = props;
-    //
-    const firstIsOpen = props.isOpen===true;
-    const [firstModalIsOpen,setFirstIsOpen] = React.useState(firstIsOpen);
-    const [secondModalIsOpen,setSecondIsOpen] = React.useState(false);
-    const closeFirstModal = () => {
-        setFirstIsOpen(false);
-        //setSecondIsOpen(true);
-    }
-    const savetlyOpenSecondModal = ()=>{
-        setFirstIsOpen(false);
-        setSecondIsOpen(true);
-    }
-    const areYouSureTo = (f:Function,m:string='Выйти без сохранения?') => confirm(m)?f:null;
-    const closeSecondModal = () => setSecondIsOpen(false);
-    const sendInformation = () => {
-        console.warn('[STUB] Sending info to server...');
-        closeSecondModal();
-    }
-    return (
-        <>
-            <Modal
-                isOpen={firstModalIsOpen}
-                onRequestClose={closeFirstModal} //and open another modal
-                style={customStyles}
-                contentLabel="Example Modal">
-                <button onClick={()=>areYouSureTo(closeFirstModal)}>close</button>
-                <h2>Добавить информацию об объекте</h2>
-                <p>Об этом объекте еще никто не писал!</p>
-                <p>Станьте первым!</p>
-                <div style={{display:'contents'}}>
-                    <p>Выберите категорию объекта:</p>
-                    <select name = "categories">
-                        <option value = "hospital">Больницы</option>
-                        <option value = "road">Дороги</option>
-                        <option value = "schools">Школы</option>
-                    </select> <br />
-                    <p>Название объекта:</p><input type="text" /> 
-                </div> <br />
-                <button onClick={savetlyOpenSecondModal}>Сохранить</button>
-            </Modal>
-            <Modal
-                isOpen={secondModalIsOpen}
-                onRequestClose={areYouSureTo(closeSecondModal)} //and open another modal
-                style={customStyles}
-                contentLabel="Example Modal">
-                <button onClick={closeSecondModal}>close</button>
-                <h2>Спасибо за добавление информации!</h2>
-                <p>Пожалуйста напишите о нем первую запись</p>
-                <div style={{display:'contents'}}>
-                    <p>Заголовок записи:</p>
-                    <input type="text" />
-                    <br />
-                    <p>Содержимое поста:</p><textarea></textarea>
-                </div> <br />
-                <button onClick={sendInformation}>Отправить</button>
-            </Modal>
-        </>
-    );
-} */
 function AddPlacemarkModal(props: AddPlacemarkInterface) {
-  //NOTE: savetlyOpenModal is close previous and open next
   const { isOpen, setIsOpen } = props;
-  console.log(isOpen);
-  //
-  //const firstIsOpen = props.isOpen===true;
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
   const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
   const closeFirstModal = () => setFirstIsOpen(false);
@@ -207,12 +141,15 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
   };
 
   const areYouSureTo: any = (f: Function, m = "Выйти без сохранения?") =>
-    confirm(m) ? f() : null//() => {};
+    confirm(m) ? f() : null;
   const closeSecondModal = () => setSecondIsOpen(false);
   const sendInformation = () => {
     const thanks = 'Спасибо за отправку записи!\nВ ближайшее время нащ модератор проверит ее'; 
     alert(thanks);
     console.warn("[STUB] Sending info to server...");
+    const data = {type:'BOLNICA',name:'',coords:[1.0,2.0],header:'Yoooh!',content:'Content'};
+    let opts = {method:'post',body:JSON.stringify(data)}
+    fetch('api/user',opts).then(data=>console.log(data));
     closeSecondModal();
   };
   return (
@@ -220,7 +157,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
       <Modal
         isOpen={firstModalIsOpen}
         /*onAfterOpen={afterOpenModal} */
-        onRequestClose={closeFirstModal} //and open another modal
+        onRequestClose={closeFirstModal}
         style={customStyles}
         contentLabel="Example Modal"
       >
@@ -265,7 +202,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
     </>
   );
 }
-//NOTE: for browser only confirm function
+//NOTE: because confirm only for browser
 const AddPlacemarkModalwithNoSsr = (props: AddPlacemarkInterface) => {
   return (
     <NoSsr>
