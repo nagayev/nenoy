@@ -195,6 +195,7 @@ function Sorry(props) {
 function AddPlacemarkModal(props: AddPlacemarkInterface) {
   //NOTE: savetlyOpenModal is close previous and open next
   const { isOpen, setIsOpen } = props;
+  console.log(isOpen);
   //
   //const firstIsOpen = props.isOpen===true;
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
@@ -204,10 +205,13 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
     setFirstIsOpen(false);
     setSecondIsOpen(true);
   };
-  const areYouSureTo: Function = (f: Function, m = "Выйти без сохранения?") =>
-    confirm(m) ? f : () => {};
+
+  const areYouSureTo: any = (f: Function, m = "Выйти без сохранения?") =>
+    confirm(m) ? f() : null//() => {};
   const closeSecondModal = () => setSecondIsOpen(false);
   const sendInformation = () => {
+    const thanks = 'Спасибо за отправку записи!\nВ ближайшее время нащ модератор проверит ее'; 
+    alert(thanks);
     console.warn("[STUB] Sending info to server...");
     closeSecondModal();
   };
@@ -220,7 +224,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <button onClick={() => areYouSureTo(closeFirstModal)}>close</button>
+        <button onClick={()=>areYouSureTo(closeFirstModal)}>close</button>
         <h2>Добавить информацию об объекте</h2>
         <p>Об этом объекте еще никто не писал!</p>
         <p>Станьте первым!</p>
@@ -241,7 +245,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
       <Modal
         isOpen={secondModalIsOpen}
         /*onAfterOpen={afterOpenModal} */
-        onRequestClose={areYouSureTo(closeSecondModal)} //and open another modal
+        onRequestClose={()=>areYouSureTo(closeSecondModal)} //and open another modal
         style={customStyles}
         contentLabel="Example Modal"
       >
@@ -263,10 +267,9 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
 }
 //NOTE: for browser only confirm function
 const AddPlacemarkModalwithNoSsr = (props: AddPlacemarkInterface) => {
-  const { isOpen, setIsOpen } = props;
   return (
     <NoSsr>
-      <AddPlacemarkModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <AddPlacemarkModal isOpen={props.isOpen} setIsOpen={props.setIsOpen} />
     </NoSsr>
   );
 };

@@ -6,7 +6,7 @@ import {
   YMaps,
   ZoomControl,
 } from "react-yandex-maps";
-//import {AddPlacemarkModal} from "./Modal"
+import {AddPlacemarkModal} from "./Modal"
 
 function MapUnvailble() {
   const LINE_ONE = "К сожалению, карта недоступна.";
@@ -25,7 +25,7 @@ function MapProvider() {
   //FIXME: delete debug and dead code
   const [mapCoords, setMapCoords] = React.useState([0.1, 0.1]);
   const [placemarksCoords, setPlacemarksCoords] = React.useState([mapCoords]);
-  //const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(!true);
+  const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(!true);
   const [lock, setLock] = React.useState(false);
   const [geoError, setGeoError] = React.useState(false);
 
@@ -55,6 +55,7 @@ function MapProvider() {
       .then((data) => setPlacemarksCoords(data));
   }, []);
   const Placemarks: any[] = [];
+  //const a = () => console.log('qwer');
   for (let i = 0; i < placemarksCoords.length; i++) {
     const coords = placemarksCoords[i];
     //console.log(coords)
@@ -62,7 +63,8 @@ function MapProvider() {
       <Placemark
         key={i}
         geometry={coords}
-        //onClick={() => setPlacemarkModalIsOpen(true)}
+        //onClick={a}
+        onClick={() => setPlacemarkModalIsOpen(true)}
       />,
     );
   }
@@ -88,6 +90,7 @@ function MapProvider() {
           <GeolocationControl />
           <ZoomControl />
           {Placemarks}
+          <AddPlacemarkModal isOpen={placemarkModalIsOpen} setIsOpen={setPlacemarkModalIsOpen} />
         </Map>
       </YMaps>
     </>
