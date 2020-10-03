@@ -1,10 +1,7 @@
 import React from "react";
 import Modal from "react-modal"; //see https://github.com/reactjs/react-modal
-
 import NoSsr from "./no";
 import { wrap } from "./utils";
-
-//FIXME: fix AddPlacemarkModal
 
 const customStyles = {
   content: {
@@ -29,7 +26,7 @@ interface MapModalInterface {
 interface AddPlacemarkInterface {
   isOpen: boolean;
   setIsOpen: Function;
-  //modalCoords:any
+  userPlacemark:any
 }
 
 interface LogRegProps {
@@ -93,7 +90,6 @@ function RegModal(props: LogRegProps) {
     <>
       <Modal
         isOpen={isOpen}
-        /*onAfterOpen={afterOpenModal} */
         onRequestClose={wrap(setIsOpen, false)}
         style={customStyles}
         /*contentLabel="Example Modal"  (?) */
@@ -131,7 +127,7 @@ function Sorry(props) {
   );
 }
 function AddPlacemarkModal(props: AddPlacemarkInterface) {
-  const { isOpen, setIsOpen } = props;
+  const { isOpen, setIsOpen, userPlacemark } = props;
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
   const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
   const closeFirstModal = () => setFirstIsOpen(false);
@@ -139,6 +135,9 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
     setFirstIsOpen(false);
     setSecondIsOpen(true);
   };
+  const types = {hospital:1,roads:2,schools:3}
+  const [sendData,setSendData] = 
+  React.useState({type:types.hospital,userPlacemark:userPlacemark,name:'',header:'',content:''});
 
   const areYouSureTo: any = (f: Function, m = "Выйти без сохранения?") =>
     confirm(m) ? f() : null;
@@ -146,17 +145,28 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
   const sendInformation = () => {
     const thanks = 'Спасибо за отправку записи!\nВ ближайшее время нащ модератор проверит ее'; 
     alert(thanks);
+    //FIXME: normal request
     console.warn("[STUB] Sending info to server...");
-    const data = {type:'BOLNICA',name:'',coords:[1.0,2.0],header:'Yoooh!',content:'Content'};
-    let opts = {method:'post',body:JSON.stringify(data)}
+    let opts = {method:'post',body:JSON.stringify(sendData)}
+    console.log(sendData);
     fetch('api/user',opts).then(data=>console.log(data));
     closeSecondModal();
   };
+  const updateSendDataProp = (event,prop) => {
+    //console.log(`props: ${prop},value: ${event.target.value}`);
+    var copy = Object.assign({},sendData);
+    /*
+    let keys = Object.keys(sendData)
+    for(let i=0;i<keys.length;i++){
+      copy[keys[i]] = sendData[keys[i]];
+    } */
+    copy[prop]=event.target.value; 
+    setSendData(copy);
+  }
   return (
     <>
       <Modal
         isOpen={firstModalIsOpen}
-        /*onAfterOpen={afterOpenModal} */
         onRequestClose={closeFirstModal}
         style={customStyles}
         contentLabel="Example Modal"
@@ -167,21 +177,20 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
         <p>Станьте первым!</p>
         <div style={{ display: "contents" }}>
           <p>Выберите категорию объекта:</p>
-          <select name="categories">
-            <option value="hospital">Больницы</option>
-            <option value="road">Дороги</option>
+          <select name="categories" onChange={(e)=>updateSendDataProp(e,"type")}>
+            <option value="hospitals">Больницы</option>
+            <option value="roads">Дороги</option>
             <option value="schools">Школы</option>
           </select>{" "}
           <br />
           <p>Название объекта:</p>
-          <input type="text" />
+          <input type="text" onChange={(e)=>updateSendDataProp(e,"name")} />
         </div>{" "}
         <br />
         <button onClick={savetlyOpenSecondModal}>Сохранить</button>
       </Modal>
       <Modal
         isOpen={secondModalIsOpen}
-        /*onAfterOpen={afterOpenModal} */
         onRequestClose={()=>areYouSureTo(closeSecondModal)} //and open another modal
         style={customStyles}
         contentLabel="Example Modal"
@@ -191,10 +200,10 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
         <p>Пожалуйста напишите о нем первую запись</p>
         <div style={{ display: "contents" }}>
           <p>Заголовок записи:</p>
-          <input type="text" />
+          <input type="text" onChange={(e)=>updateSendDataProp(e,"header")} />
           <br />
           <p>Содержимое поста:</p>
-          <textarea></textarea>
+          <textarea onChange={(e)=>updateSendDataProp(e,"content")}></textarea>
         </div>{" "}
         <br />
         <button onClick={sendInformation}>Отправить</button>
@@ -202,11 +211,11 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
     </>
   );
 }
-//NOTE: because confirm only for browser
 const AddPlacemarkModalwithNoSsr = (props: AddPlacemarkInterface) => {
   return (
-    <NoSsr>
-      <AddPlacemarkModal isOpen={props.isOpen} setIsOpen={props.setIsOpen} />
+    //NOTE: because confirm only for browser
+    <NoSsr> 
+      <AddPlacemarkModal isOpen={props.isOpen} setIsOpen={props.setIsOpen} userPlacemark={props.userPlacemark} />
     </NoSsr>
   );
 };

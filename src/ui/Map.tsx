@@ -23,11 +23,13 @@ function MapUnvailble() {
 }
 function MapProvider() {
   //FIXME: delete debug and dead code
-  const [mapCoords, setMapCoords] = React.useState([0.1, 0.1]);
+  const [mapCoords, setMapCoords] = React.useState([0.1, 0.1]); //center of map
   const [placemarksCoords, setPlacemarksCoords] = React.useState([mapCoords]);
-  const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(!true);
-  const [lock, setLock] = React.useState(false);
-  const [geoError, setGeoError] = React.useState(false);
+  const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(false);
+  const [lock, setLock] = React.useState(false); //for only one user's placemark on map
+  const [geoError, setGeoError] = React.useState(false); //for Geolocation error
+  
+  let userPlacemark=[];
 
   const opts = {
     enableHighAccuracy: true,
@@ -40,7 +42,6 @@ function MapProvider() {
   }
   function err(err) {
     console.warn(`Can\'t get geolocation:${err.message}(${err.code})`);
-    //alert("Произошла ошибка при получении геоположения(");
     setGeoError(true);
   }
 
@@ -55,25 +56,22 @@ function MapProvider() {
       .then((data) => setPlacemarksCoords(data));
   }, []);
   const Placemarks: any[] = [];
-  //const a = () => console.log('qwer');
   for (let i = 0; i < placemarksCoords.length; i++) {
     const coords = placemarksCoords[i];
-    //console.log(coords)
     Placemarks.push(
       <Placemark
         key={i}
         geometry={coords}
-        //onClick={a}
         onClick={() => setPlacemarkModalIsOpen(true)}
       />,
     );
   }
   const clickOnMap = (event: any) => {
-    //fix typo any
-    //console.log(typeof e);
+    //NOTE: type of event is any
     const coords = event._sourceEvent.originalEvent.coords; //get original coords
     if (!lock) {
       setPlacemarksCoords(placemarksCoords.concat([coords])); //add placemark to screen
+      userPlacemark=coords;
       setLock(true);
     } else {
       alert("Пожалуйста, добавьте информацию о предыдущем объекте");
@@ -84,13 +82,13 @@ function MapProvider() {
   }
   return (
     <>
-      {/*<AddPlacemarkModal isOpen={placemarkModalIsOpen} setIsOpen={setPlacemarkModalIsOpen} /> */}
       <YMaps id="map">
         <Map onClick={clickOnMap} defaultState={{ center: mapCoords, zoom: 8 }}>
           <GeolocationControl />
           <ZoomControl />
           {Placemarks}
-          <AddPlacemarkModal isOpen={placemarkModalIsOpen} setIsOpen={setPlacemarkModalIsOpen} />
+          <AddPlacemarkModal isOpen={placemarkModalIsOpen}
+           setIsOpen={setPlacemarkModalIsOpen} userPlacemark={userPlacemark} />
         </Map>
       </YMaps>
     </>
