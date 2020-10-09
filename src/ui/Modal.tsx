@@ -128,6 +128,7 @@ function Sorry(props) {
 }
 function AddPlacemarkModal(props: AddPlacemarkInterface) {
   const { isOpen, setIsOpen, userPlacemark } = props;
+  console.warn('user placemark',userPlacemark)
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
   const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
   const closeFirstModal = () => setFirstIsOpen(false);
@@ -143,23 +144,17 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
     confirm(m) ? f() : null;
   const closeSecondModal = () => setSecondIsOpen(false);
   const sendInformation = () => {
-    const thanks = 'Спасибо за отправку записи!\nВ ближайшее время нащ модератор проверит ее'; 
+    const thanks = 'Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее'; 
     alert(thanks);
     //FIXME: normal request
     console.warn("[STUB] Sending info to server...");
     let opts = {method:'post',body:JSON.stringify(sendData)}
     console.log(sendData);
-    fetch('api/user',opts).then(data=>console.log(data));
+    fetch('api/sendInformation',opts).then(data=>console.log(data));
     closeSecondModal();
   };
   const updateSendDataProp = (event,prop) => {
-    //console.log(`props: ${prop},value: ${event.target.value}`);
     var copy = Object.assign({},sendData);
-    /*
-    let keys = Object.keys(sendData)
-    for(let i=0;i<keys.length;i++){
-      copy[keys[i]] = sendData[keys[i]];
-    } */
     copy[prop]=event.target.value; 
     setSendData(copy);
   }

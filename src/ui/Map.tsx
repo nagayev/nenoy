@@ -8,6 +8,14 @@ import {
 } from "react-yandex-maps";
 import {AddPlacemarkModal} from "./Modal"
 
+interface NormalMapInterface{
+    mapCenter:Array<number>
+}
+//type Placemarks = Array<null|undefined|React.ComponentType<any>>
+/*
+Новая версия карт - теперь есть MapProvider (base), NormalMap и MapUnvailable
+Normal map это старый map без определения местоположения и недоступности карты (это в MapProvider)
+*/
 function MapUnvailble() {
   const LINE_ONE = "К сожалению, карта недоступна.";
   const LINE_TWO = "Возможно Вы не предоставили доступ к местоположению";
@@ -21,37 +29,14 @@ function MapUnvailble() {
     </YMaps>
   );
 }
-function MapProvider() {
-  //FIXME: delete debug and dead code
-  const [mapCoords, setMapCoords] = React.useState([0.1, 0.1]); //center of map
-  const [placemarksCoords, setPlacemarksCoords] = React.useState([mapCoords]);
+function NormalMap(props:NormalMapInterface) {
+  const [placemarksCoords, setPlacemarksCoords] = React.useState([props.mapCenter]);
   const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(false);
   const [lock, setLock] = React.useState(false); //for only one user's placemark on map
-  const [geoError, setGeoError] = React.useState(false); //for Geolocation error
+  const [userPlacemark,setUserPlacemark] = React.useState([]);
   
-  let userPlacemark=[];
-
-  const opts = {
-    enableHighAccuracy: true,
-    timeout: 1e4,
-    maximumAge: 0,
-  };
-  function suc(pos) {
-    console.log(`Got coords: ${pos.coords.latitude}, ${pos.coords.longitude}`);
-    setMapCoords([pos.coords.latitude, pos.coords.longitude]);
-  }
-  function err(err) {
-    console.warn(`Can\'t get geolocation:${err.message}(${err.code})`);
-    setGeoError(true);
-  }
-
   useEffect(() => {
-    console.log("Request user geolocation");
-    navigator.geolocation.getCurrentPosition(suc, err, opts);
-  }, []);
-  useEffect(() => {
-    //load coords
-    fetch("placemarks.json")
+    fetch("placemarks.json") //load coords
       .then((data) => data.json())
       .then((data) => setPlacemarksCoords(data));
   }, []);
@@ -59,11 +44,7 @@ function MapProvider() {
   for (let i = 0; i < placemarksCoords.length; i++) {
     const coords = placemarksCoords[i];
     Placemarks.push(
-      <Placemark
-        key={i}
-        geometry={coords}
-        onClick={() => setPlacemarkModalIsOpen(true)}
-      />,
+      <Placemark key={i} geometry={coords} onClick={() => setPlacemarkModalIsOpen(true)} />,
     );
   }
   const clickOnMap = (event: any) => {
@@ -71,19 +52,16 @@ function MapProvider() {
     const coords = event._sourceEvent.originalEvent.coords; //get original coords
     if (!lock) {
       setPlacemarksCoords(placemarksCoords.concat([coords])); //add placemark to screen
-      userPlacemark=coords;
+      setUserPlacemark(coords);
       setLock(true);
     } else {
       alert("Пожалуйста, добавьте информацию о предыдущем объекте");
     }
   };
-  if (geoError) {
-    return <MapUnvailble />;
-  }
   return (
     <>
       <YMaps id="map">
-        <Map onClick={clickOnMap} defaultState={{ center: mapCoords, zoom: 8 }}>
+        <Map onClick={clickOnMap} defaultState={{ center: props.mapCenter, zoom: 8 }}>
           <GeolocationControl />
           <ZoomControl />
           {Placemarks}
@@ -93,5 +71,30 @@ function MapProvider() {
       </YMaps>
     </>
   );
+}
+function MapProvider(){
+    const [geoError, setGeoError] = React.useState(false);
+    const [mapCenter, setMapCenter] = React.useState([0.1, 0.1]); 
+    const opts = {
+        enableHighAccuracy: true,
+        timeout: 1e4,
+        maximumAge: 0,
+    };
+    function suc(pos) {
+        console.log(`Got coords: ${pos.coords.latitude}, ${pos.coords.longitude}`);
+        setMapCenter([pos.coords.latitude, pos.coords.longitude]);
+    }
+    function err(err) {
+        console.warn(`Can\'t get geolocation:${err.message}(${err.code})`);
+        setGeoError(true);
+    }
+    useEffect(() => {
+        console.log("Request user geolocation");
+        navigator.geolocation.getCurrentPosition(suc, err, opts);
+    },[]);
+    if (geoError) {
+        return <MapUnvailble />;
+    }
+    return <NormalMap mapCenter={mapCenter} />
 }
 export default MapProvider;
