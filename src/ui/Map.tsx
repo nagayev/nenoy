@@ -11,16 +11,16 @@ import {AddPlacemarkModal} from "./Modal"
 interface NormalMapInterface{
     mapCenter:Array<number>
 }
-//type Placemarks = Array<null|undefined|React.ComponentType<any>>
 /*
 Новая версия карт - теперь есть MapProvider (base), NormalMap и MapUnvailable
 Normal map это старый map без определения местоположения и недоступности карты (это в MapProvider)
 */
 function MapUnvailble() {
   const LINE_ONE = "К сожалению, карта недоступна.";
-  const LINE_TWO = "Возможно Вы не предоставили доступ к местоположению";
+  const LINE_TWO = "Похоже Вы не предоставили доступ к местоположению";
   const ZOPA_COORDS = [0.1, 0.1];
   const clickOnMap = () => alert(`${LINE_ONE}\n${LINE_TWO}`);
+  //TODO: add support for mouseMove event (stub with preventing mouseMove)
   return (
     <YMaps id="map">
       <Map onClick={clickOnMap} defaultState={{ center: ZOPA_COORDS, zoom: 8 }}>
@@ -36,9 +36,9 @@ function NormalMap(props:NormalMapInterface) {
   const [userPlacemark,setUserPlacemark] = React.useState([]);
   
   useEffect(() => {
-    fetch("placemarks.json") //load coords
+    fetch("api/getPlacemarks") //load coords
       .then((data) => data.json())
-      .then((data) => setPlacemarksCoords(data));
+      .then((data) => setPlacemarksCoords(JSON.parse(data)));
   }, []);
   const Placemarks: any[] = [];
   for (let i = 0; i < placemarksCoords.length; i++) {
