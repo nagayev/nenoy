@@ -138,7 +138,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
   };
   const types = {hospital:1,roads:2,schools:3}
   const [sendData,setSendData] = 
-  React.useState({type:types.hospital,userPlacemark:userPlacemark,name:'',header:'',content:''});
+  React.useState({type:types.hospital,coords:userPlacemark,name:'',header:'',content:''});
 
   const areYouSureTo: any = (f: Function, m = "Выйти без сохранения?") =>
     confirm(m) ? f() : null;

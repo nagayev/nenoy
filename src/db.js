@@ -1,52 +1,31 @@
-//export default 1;
-/*
-https://allwebstuff.info/%D0%BA%D0%B0%D0%BA-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-orm-sequelize
-*/
-const mode = 1;
 const Sequelize = require('sequelize'); //Подключаем библиотеку
-const { exec } = require('child_process');
-const [RED,NORMAL] = ['\x1B[31m','33[0m']
-console.log(`${RED}Deleting previous DB...\0${NORMAL}\t\t`)
-exec('rm -rf /home/marat/website/test_db.db')
+const { QueryTypes } = Sequelize;
 const config =  {
-  username: null,
-  password: null, // Для sqlite пароль не обязателен
-  database: 'test_db', // Имя базы данных
-  host: 'localhost', // Адрес субд, для sqlite всегда локалхост
-  dialect: 'sqlite', // Говорим, какую СУБД будем юзать
-  dialectOptions: {
-    multipleStatements: true
-  },
-  logging: console.log, // function or false NOTE: false in future
-  storage: './test_db.db', // Путь к файлу БД
-  operatorsAliases: Sequelize.Op // Передаём алиасы параметров (дальше покажу нафига)
-}
-
+    username: null,
+    password: null, // Для sqlite пароль не обязателен
+    database: 'test_db', // Имя базы данных
+    host: 'localhost', // Адрес субд, для sqlite всегда локалхост
+    dialect: 'sqlite', // Говорим, какую СУБД будем юзать
+    dialectOptions: {
+      multipleStatements: true
+    },
+    logging: false,//console.log, // function or false NOTE: false in future
+    storage: './objectswithposts.db', // Путь к файлу БД
+    operatorsAliases: Sequelize.Op // Передаём алиасы параметров (дальше покажу нафига)
+}  
 let sequelize = new Sequelize(config); // Создаём подключение
-/*
- DB:
- TABLE Objects
- -----------------------------
- |id|coords | posts|type    |name         |
- |10|[0.1,0]|[2,4,]|HOSPITAL|Горбольница№1|
- ------------------------------
- //NOTE: id объекта в таблице посты нет, они идут всей кучей (т.е посты 2,3,4 и т.д)
- TABLE Posts
-  |post_id|header|body
-  |1      |abcd! |abcd fkfkldfjkfkf
-  |2      |12fj! |dfkl le;1wd;wld;wd;
- */
-async function createDB(){
+async function createObject(arg){
+    const {type,coords,name} = arg;
     let objects = sequelize.define('objects', {
         id: {
-          allowNull: false,
+          //allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: Sequelize.DataTypes.INTEGER
         }, 
         name: {
           type: Sequelize.DataTypes.STRING,
-          allowNull: false
+          //allowNull: false
         },
         coords:{
             type: Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.FLOAT)
@@ -61,38 +40,56 @@ async function createDB(){
         timestamps: false //NOTE:нужны ли таймстемпы????
     }); 
     await sequelize.sync();
+    let firstObject = {
+        name: name,
+        type: type,
+        posts:[1,2,3],
+        coords:coords
+    }
+    await sequelize.models.objects.create(firstObject);
+}
+async function createPost(arg){
+    const {header,content} = arg;
     let posts = sequelize.define('posts',{
       header:{
         type:Sequelize.DataTypes.STRING
       },
-      body:{
+      content:{
         type:Sequelize.DataTypes.STRING
-      },
-      post_id:{
-        type:Sequelize.DataTypes.INTEGER
       }
     },{
       timestamps: true // Колонки createdAt и updatedAt будут созданы автоматически
     })
     await sequelize.sync();
-    let firstObject = {
-        id:1,
-        name: 'Самарская горбольница №1',
-        type: 1,
-        posts:[1,2,3],
-        coords:[45.2,56.23]
-    }
     let secondObject = {
-      post_id:1,
-      body:'Текст новости',
-      header:'Заголовок новости'
+      //post_id:1,
+      content,
+      header
     }
-    let firstDBRecord = await sequelize.models.objects.create(firstObject);
-    let secondDBRecord = await sequelize.models.objects.create(secondObject);
+    await sequelize.models.posts.create(secondObject);
 }
-function readInformation(){
-    //TODO: add reading information
+async function createDB(arg){
+  //FIXME: posts not used!
+  const {type,name,posts,coords,content,header} = arg;
+  createObject({type,coords,name});
+  createPost({content,header});
 }
-if(mode===1) createDB();
-if(mode===2){readInformation()}
-//export default console.error('Не для экспорта!');
+async function readInformation(table,param,val){
+  //TODO: add reading information
+  let objects;
+  try{
+    objects = await sequelize.query(`SELECT * from ${table} where ${param}=${val};`,{ type: QueryTypes.SELECT });
+  }
+  catch(e){
+    return 'error'
+  }
+  return objects;
+}
+//TEST
+if(require.main===module){
+    //Run directly from bash
+    //NOTE: works as INSERT
+    //createObject({type:1,coords:[22.1,23.2],name:'abc'});
+    //createPost({header:'Post header',content:'Content'})
+}
+export {createDB,createObject,createPost};
