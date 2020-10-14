@@ -1,20 +1,20 @@
-const Sequelize = require('sequelize'); //Подключаем библиотеку
+const Sequelize = require('sequelize');
 const { QueryTypes } = Sequelize;
 const config =  {
     username: null,
     password: null, // Для sqlite пароль не обязателен
-    database: 'test_db', // Имя базы данных
-    host: 'localhost', // Адрес субд, для sqlite всегда локалхост
-    dialect: 'sqlite', // Говорим, какую СУБД будем юзать
+    database: 'test_db', // name
+    host: 'localhost', // always localhost for sqlite
+    dialect: 'sqlite', 
     dialectOptions: {
       multipleStatements: true
     },
-    logging: false,//console.log, // function or false
-    storage: './objectswithposts.db', // Путь к файлу БД
+    logging: false,//function like console.log or false
+    storage: './objectswithposts.db', 
     operatorsAliases: Sequelize.Op // Передаём алиасы параметров (дальше покажу нафига)
 }  
 let sequelize = new Sequelize(config); // Создаём подключение
-async function createObject(arg){
+async function appendObject(arg){
     const {type,coords,name} = arg;
     let objects = sequelize.define('objects', {
         id: {
@@ -40,7 +40,7 @@ async function createObject(arg){
           type: Sequelize.DataTypes.BOOLEAN
         }
       }, {
-        timestamps: false //NOTE:нужны ли таймстемпы????
+        timestamps: false //NOTE:timestampts????
     }); 
     await sequelize.sync();
     let firstObject = {
@@ -50,10 +50,9 @@ async function createObject(arg){
         coords:coords,
         checked:false
     }
-    //console.log(objects)
     await sequelize.models.objects.create(firstObject);
 }
-async function createPost(arg){
+async function appendPost(arg){
     const {header,content} = arg;
     let posts = sequelize.define('posts',{
       header:{
@@ -66,21 +65,21 @@ async function createPost(arg){
         type: Sequelize.DataTypes.BOOLEAN
       }
     },{
-      timestamps: true // Колонки createdAt и updatedAt будут созданы автоматически
+      timestamps: true // add createdAt and updatedAt automatically
     })
     await sequelize.sync();
     let secondObject = {
       content,
       header,
-      checked:false
+      checked:true //TODO: change to false, it's 
     }
     await sequelize.models.posts.create(secondObject);
 }
-async function createDB(arg){
+async function append2DB(arg){
   //FIXME: posts not used!
   const {type,name,posts,coords,content,header} = arg;
-  createObject({type,coords,name});
-  createPost({content,header});
+  appendObject({type,coords,name});
+  appendPost({content,header});
 }
 async function readInformation(table,param,val){
   //TODO: add reading information
@@ -97,7 +96,7 @@ async function readInformation(table,param,val){
 if(require.main===module){
     //Run directly from bash
     //NOTE: works as INSERT
-    createObject({type:1,coords:[22.1,23.2],name:'abc'});
-    createPost({header:'Post header',content:'Content'})
+    //appendObject({type:1,coords:[22.1,23.2],name:'abc'});
+    //appendPost({header:'Post header',content:'Content'})
 }
-//export {createDB,createObject,createPost};
+export {append2DB,appendObject,appendPost};

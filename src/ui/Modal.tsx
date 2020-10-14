@@ -1,7 +1,8 @@
 import React from "react";
-import Modal from "react-modal"; //see https://github.com/reactjs/react-modal
+import Modal from "react-modal";
 import NoSsr from "./no";
 import { wrap } from "./utils";
+import types from "./objectTypes";
 
 const customStyles = {
   content: {
@@ -15,7 +16,7 @@ const customStyles = {
   },
 };
 
-type Function = (...args: any[]) => any;
+type VoidFunction = (...args: any[]) => undefined;
 
 interface MapModalInterface {
   modalIsOpen: boolean;
@@ -59,6 +60,10 @@ function MapModal(props: MapModalInterface) {
 }
 function LogModal(props: LogRegProps) {
   const { isOpen, setIsOpen } = props;
+  //NOTE: login NotImplemented!
+  function login(){
+    return 1;
+  }
   return (
     <>
       <Modal
@@ -78,14 +83,17 @@ function LogModal(props: LogRegProps) {
         <br />
         <p>Или войдите с помощью этих сервисов</p>
         <p>Тут будет вк, гугл и т.д</p>
-        <button>Войти</button>
+        <button onClick={login}>Войти</button>
       </Modal>
     </>
   );
 }
 function RegModal(props: LogRegProps) {
   const { isOpen, setIsOpen } = props;
-
+  //NOTE: signup NotImplemented!
+  function signup(){
+    return 2;
+  }
   return (
     <>
       <Modal
@@ -95,7 +103,7 @@ function RegModal(props: LogRegProps) {
         /*contentLabel="Example Modal"  (?) */
       >
         <button onClick={wrap(setIsOpen, false)}>close</button>
-        <h2>Регестрация</h2>
+        <h2>Регистрация</h2>
         <p>Логин</p>
         <input type="text" /> <br />
         <p>Пароль</p>
@@ -104,7 +112,7 @@ function RegModal(props: LogRegProps) {
         <br />
         <p>Или войдите с помощью этих сервисов</p>
         <p>Тут будет вк, гугл и т.д</p>
-        <button>Зарегестрироваться</button>
+        <button onClick={signup}>Зарегестрироваться</button>
       </Modal>
     </>
   );
@@ -115,11 +123,8 @@ function Sorry(props) {
     <>
       <Modal
         isOpen={isOpen}
-        /*onAfterOpen={afterOpenModal} */
         onRequestClose={wrap(setIsOpen, false)}
-        style={customStyles}
-        /*contentLabel="Example Modal"  (?) */
-      >
+        style={customStyles}>
         <button onClick={wrap(setIsOpen, false)}>close</button> <br />
         Sorry, English version are coming
       </Modal>
@@ -127,29 +132,25 @@ function Sorry(props) {
   );
 }
 function AddPlacemarkModal(props: AddPlacemarkInterface) {
-  const { isOpen, setIsOpen, userPlacemark } = props;
-  console.warn('user placemark',userPlacemark)
+  const { isOpen, setIsOpen,userPlacemark } = props;
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
   const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
   const closeFirstModal = () => setFirstIsOpen(false);
   const savetlyOpenSecondModal = () => {
-    setFirstIsOpen(false);
+    closeFirstModal();
     setSecondIsOpen(true);
   };
-  const types = {hospital:1,roads:2,schools:3}
+  
   const [sendData,setSendData] = 
-  React.useState({type:types.hospital,coords:userPlacemark,name:'',header:'',content:''});
-
-  const areYouSureTo: any = (f: Function, m = "Выйти без сохранения?") =>
-    confirm(m) ? f() : null;
+  React.useState({type:types.hospital,name:'',header:'',content:''}); //NOTE: without coords!
+  const areYouSureTo: VoidFunction = (f: VoidFunction, m = "Выйти без сохранения?") =>
+    confirm(m) ? f() : undefined;
   const closeSecondModal = () => setSecondIsOpen(false);
   const sendInformation = () => {
     const thanks = 'Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее'; 
     alert(thanks);
-    //FIXME: normal request
-    console.warn("[STUB] Sending info to server...");
+    sendData['coords']=userPlacemark; //NOTE: it's too hard to explain this hack
     let opts = {method:'post',body:JSON.stringify(sendData)}
-    console.log(sendData);
     fetch('api/sendInformation',opts).then(data=>console.log(data));
     closeSecondModal();
   };
@@ -173,9 +174,9 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
         <div style={{ display: "contents" }}>
           <p>Выберите категорию объекта:</p>
           <select name="categories" onChange={(e)=>updateSendDataProp(e,"type")}>
-            <option value="hospitals">Больницы</option>
-            <option value="roads">Дороги</option>
-            <option value="schools">Школы</option>
+            <option value={types.hospital}>Больницы</option>
+            <option value={types.roads}>Дороги</option>
+            <option value={types.schools}>Школы</option>
           </select>{" "}
           <br />
           <p>Название объекта:</p>
@@ -186,7 +187,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
       </Modal>
       <Modal
         isOpen={secondModalIsOpen}
-        onRequestClose={()=>areYouSureTo(closeSecondModal)} //and open another modal
+        onRequestClose={()=>areYouSureTo(closeSecondModal)} 
         style={customStyles}
         contentLabel="Example Modal"
       >
@@ -208,7 +209,7 @@ function AddPlacemarkModal(props: AddPlacemarkInterface) {
 }
 const AddPlacemarkModalwithNoSsr = (props: AddPlacemarkInterface) => {
   return (
-    //NOTE: because confirm only for browser
+    //NOTE: because window.confirm only for browser
     <NoSsr> 
       <AddPlacemarkModal isOpen={props.isOpen} setIsOpen={props.setIsOpen} userPlacemark={props.userPlacemark} />
     </NoSsr>

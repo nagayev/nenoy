@@ -30,13 +30,13 @@ function MapUnvailble() {
   );
 }
 function NormalMap(props:NormalMapInterface) {
-  const [placemarksCoords, setPlacemarksCoords] = React.useState([props.mapCenter]);
+  const [placemarksCoords, setPlacemarksCoords] = React.useState([props.mapCenter]); //for all placemarks on map
   const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(false);
   const [lock, setLock] = React.useState(false); //for only one user's placemark on map
-  const [userPlacemark,setUserPlacemark] = React.useState([]);
+  const [userPlacemark,setUserPlacemark] = React.useState([]); //for user placemark
   
   useEffect(() => {
-    fetch("api/getPlacemarks") //load coords
+    fetch("api/getPlacemarks") //load placemarks' coords
       .then((data) => data.json())
       .then((data) => setPlacemarksCoords(JSON.parse(data)));
   }, []);
@@ -49,7 +49,7 @@ function NormalMap(props:NormalMapInterface) {
   }
   const clickOnMap = (event: any) => {
     //NOTE: type of event is any
-    const coords = event._sourceEvent.originalEvent.coords; //get original coords
+    const coords = event._sourceEvent.originalEvent.coords; //get coords where user clicked
     if (!lock) {
       setPlacemarksCoords(placemarksCoords.concat([coords])); //add placemark to screen
       setUserPlacemark(coords);
