@@ -48,7 +48,7 @@ async function appendObject(arg){
         type: type,
         posts:[1,2,3],
         coords:coords,
-        checked:false
+        checked:true //NOTE: temporarly
     }
     await sequelize.models.objects.create(firstObject);
 }
@@ -81,6 +81,7 @@ async function append2DB(arg){
   appendObject({type,coords,name});
   appendPost({content,header});
 }
+//FIXME: why????
 async function readInformation(table,param,val){
   //TODO: add reading information
   let objects;
@@ -92,11 +93,24 @@ async function readInformation(table,param,val){
   }
   return objects;
 }
+async function readCoords(){
+  //FIXME: bad perfomance
+  let objects;
+  objects = await sequelize.query(`SELECT coords from objects WHERE checked=1;`,{ type: QueryTypes.SELECT });
+  objects=objects.map(value=>{
+    return eval(`[${value.coords}]`)
+  });
+  return objects;
+}
 //TEST
 if(require.main===module){
-    //Run directly from bash
+    //directly from bash
     //NOTE: works as INSERT
     //appendObject({type:1,coords:[22.1,23.2],name:'abc'});
     //appendPost({header:'Post header',content:'Content'})
+    readCoords().then(data=>console.log(data))
 }
-export {append2DB,appendObject,appendPost};
+else{
+  module.exports={append2DB,appendObject,appendPost,readCoords};
+}
+//export {append2DB,appendObject,appendPost};

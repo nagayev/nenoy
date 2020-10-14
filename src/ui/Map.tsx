@@ -38,7 +38,7 @@ function NormalMap(props:NormalMapInterface) {
   useEffect(() => {
     fetch("api/getPlacemarks") //load placemarks' coords
       .then((data) => data.json())
-      .then((data) => setPlacemarksCoords(JSON.parse(data)));
+      .then((data)=>setPlacemarksCoords(data))
   }, []);
   const Placemarks: any[] = [];
   for (let i = 0; i < placemarksCoords.length; i++) {
