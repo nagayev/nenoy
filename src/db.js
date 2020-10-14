@@ -9,7 +9,7 @@ const config =  {
     dialectOptions: {
       multipleStatements: true
     },
-    logging: false,//console.log, // function or false NOTE: false in future
+    logging: false,//console.log, // function or false
     storage: './objectswithposts.db', // Путь к файлу БД
     operatorsAliases: Sequelize.Op // Передаём алиасы параметров (дальше покажу нафига)
 }  
@@ -35,6 +35,9 @@ async function createObject(arg){
         },
         posts:{
           type: Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.INTEGER)
+        },
+        checked:{
+          type: Sequelize.DataTypes.BOOLEAN
         }
       }, {
         timestamps: false //NOTE:нужны ли таймстемпы????
@@ -44,8 +47,10 @@ async function createObject(arg){
         name: name,
         type: type,
         posts:[1,2,3],
-        coords:coords
+        coords:coords,
+        checked:false
     }
+    //console.log(objects)
     await sequelize.models.objects.create(firstObject);
 }
 async function createPost(arg){
@@ -56,15 +61,18 @@ async function createPost(arg){
       },
       content:{
         type:Sequelize.DataTypes.STRING
+      },
+      checked:{
+        type: Sequelize.DataTypes.BOOLEAN
       }
     },{
       timestamps: true // Колонки createdAt и updatedAt будут созданы автоматически
     })
     await sequelize.sync();
     let secondObject = {
-      //post_id:1,
       content,
-      header
+      header,
+      checked:false
     }
     await sequelize.models.posts.create(secondObject);
 }
@@ -89,7 +97,7 @@ async function readInformation(table,param,val){
 if(require.main===module){
     //Run directly from bash
     //NOTE: works as INSERT
-    //createObject({type:1,coords:[22.1,23.2],name:'abc'});
-    //createPost({header:'Post header',content:'Content'})
+    createObject({type:1,coords:[22.1,23.2],name:'abc'});
+    createPost({header:'Post header',content:'Content'})
 }
-export {createDB,createObject,createPost};
+//export {createDB,createObject,createPost};
