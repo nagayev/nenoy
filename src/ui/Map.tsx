@@ -6,7 +6,7 @@ import {
   YMaps,
   ZoomControl,
 } from "react-yandex-maps";
-import {AddPlacemarkModal} from "./Modal"
+import AddPlacemarkModal from "./AddPlacemarkModal"
 
 interface NormalMapInterface{
     mapCenter:Array<number>
@@ -35,6 +35,11 @@ function NormalMap(props:NormalMapInterface) {
   const [lock, setLock] = React.useState(false); //for only one user's placemark on map
   const [userPlacemark,setUserPlacemark] = React.useState([]); //for user placemark
   
+  const deleteUserPlacemark = () => {
+    setUserPlacemark([]);
+    placemarksCoords.pop(); //delete last placemark, it's user's placemark
+  }
+
   useEffect(() => {
     fetch("api/getPlacemarks") //load placemarks' coords
       .then((data) => data.json())
@@ -66,7 +71,7 @@ function NormalMap(props:NormalMapInterface) {
           <ZoomControl />
           {Placemarks}
           <AddPlacemarkModal isOpen={placemarkModalIsOpen}
-           setIsOpen={setPlacemarkModalIsOpen} userPlacemark={userPlacemark} />
+           setIsOpen={setPlacemarkModalIsOpen} userPlacemark={userPlacemark} deleteUserPlacemark={deleteUserPlacemark}/>
         </Map>
       </YMaps>
     </>

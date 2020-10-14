@@ -1,6 +1,6 @@
 import React from "react";
 
-import { LogModal, RegModal } from "./Modal";
+import { LogModal, RegModal } from "./Modals";
 import NoSsr from "./no";
 import { detectMobile, getDefaultTheme } from "./utils";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Sorry } from "./Modal";
+import { Sorry } from "./Modals";
 import { getDefaultTheme, wrap } from "./utils";
 
 function TopMenu() {

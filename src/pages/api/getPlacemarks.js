@@ -4,11 +4,10 @@ export default async function(req, res) {
   return new Promise((resolve, reject) => {
     db.readCoords()
       .then(data => {
-        res.statusCode = 200
+        //res.statusCode = 200
         res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Cache-Control', 'max-age=180000');
-        //console.log(JSON.stringify(data));
-        res.end(JSON.stringify(data))
+        res.setHeader('Cache-Control', 'max-age=180000'); //(?)
+        res.status(200).end(JSON.stringify(data))
         resolve();
       })
       .catch(error => {
