@@ -13,7 +13,7 @@ const config =  {
     storage: './objectswithposts.db', 
     operatorsAliases: Sequelize.Op // Передаём алиасы параметров (дальше покажу нафига)
 }  
-let sequelize = new Sequelize(config); // Создаём подключение
+let sequelize = new Sequelize(config); 
 async function appendObject(arg){
     const {type,coords,name} = arg;
     let objects = sequelize.define('objects', {

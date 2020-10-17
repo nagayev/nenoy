@@ -90,7 +90,7 @@ function AddPlacemarkModalWithoutSSR(props: AddPlacemarkInterface) {
           contentLabel="Example Modal"
           appElement={document.body}
         >
-          <button onClick={closeSecondModal}>close</button>
+          <button onClick={closeSecondModal}>закрыть</button>
           <h2>Спасибо за добавление информации!</h2>
           <p>Пожалуйста напишите о нем первую запись</p>
           <div style={{ display: "contents" }}>
