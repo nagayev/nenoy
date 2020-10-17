@@ -61,6 +61,9 @@ async function appendPost(arg){
       content:{
         type:Sequelize.DataTypes.STRING
       },
+      type:{
+        type:Sequelize.DataTypes.INTEGER
+      },
       checked:{
         type: Sequelize.DataTypes.BOOLEAN
       }
@@ -79,7 +82,7 @@ async function append2DB(arg){
   //FIXME: posts not used!
   const {type,name,posts,coords,content,header} = arg;
   appendObject({type,coords,name});
-  appendPost({content,header});
+  appendPost({content,header,type});
 }
 //FIXME: why????
 async function readInformation(table,param,val){
@@ -93,8 +96,13 @@ async function readInformation(table,param,val){
   }
   return objects;
 }
+async function getPosts(type){
+  const posts = await sequelize.query(`SELECT * from posts WHERE checked=1 and type=${type}`,{ type: QueryTypes.SELECT });
+  return posts
+}
+
 async function readCoords(){
-  //FIXME: bad perfomance
+  //FIXME: bad perfomance (eval is evil)
   let objects;
   objects = await sequelize.query(`SELECT coords from objects WHERE checked=1;`,{ type: QueryTypes.SELECT });
   objects=objects.map(value=>{
@@ -111,6 +119,6 @@ if(require.main===module){
     readCoords().then(data=>console.log(data))
 }
 else{
-  module.exports={append2DB,appendObject,appendPost,readCoords};
+  module.exports={append2DB,appendObject,appendPost,readCoords,getPosts};
 }
 //export {append2DB,appendObject,appendPost};

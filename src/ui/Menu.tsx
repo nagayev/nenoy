@@ -3,6 +3,7 @@ import React from "react";
 import { LogModal, RegModal } from "./Modals";
 import NoSsr from "./no";
 import { detectMobile, getDefaultTheme } from "./utils";
+import {types,headers} from './objectTypes';
 
 interface MenuInterface {
   updateState: (n: number) => any;
@@ -11,9 +12,13 @@ interface MenuInterface {
 function DesktopMenu(props: MenuInterface) {
   return (
     <div>
-      <a onClick={() => props.updateState(0)}>Блог редакции</a>&nbsp;
-      <a onClick={() => props.updateState(1)}>Больницы</a>&nbsp;
-      <a onClick={() => props.updateState(2)}>Заводы</a>
+      {Object.keys(types).map(key=>{
+        return (
+          <>
+          <a onClick={()=>{props.updateState(+types[key])}}>{headers[key]}</a>&nbsp;
+          </>
+        );
+      })}
     </div>
   );
 }
@@ -21,9 +26,9 @@ function MobileMenu(props: MenuInterface) {
   const handler = (event) => props.updateState(+event.target.value);
   return (
     <select onChange={handler}>
-      <option value="0">Блог редакции</option>
-      <option value="1">Больницы</option>
-      <option value="2">Заводы</option>
+      {Object.keys(types).map(key=>{
+        return <option value={types[key]}>{headers[key]}</option>
+      })}
     </select>
   );
 }

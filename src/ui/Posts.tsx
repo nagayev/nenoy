@@ -1,46 +1,22 @@
 import React from "react";
-
 import { Post } from "./Post";
+import {getPosts} from '../db';
 
-type postType = 0 | 1 | 2;
 
 interface PostData {
-  date: postType;
+  date: number;
   header: string;
   content: string;
 }
 interface PostsProps {
-  postType: number; //0 is blog, 1 is ambulances, 2 is zavod
+  number: number; 
 }
 
-const fetchSinglePost = async (postUrl: string): Promise<PostData> => {
-  const response = await fetch(postUrl);
-  return (await response.json()) as PostData;
-};
-const getListOfPosts = async (type: postType): Promise<any> =>
-  await fetchSinglePost(`${type}/posts.json`);
-const loadPosts = async (postUrls: string[], type: postType): Promise<any> =>
-  await Promise.all(
-    postUrls.map((postUrl) => fetchSinglePost(`${type}/${postUrl}`)),
-  );
-
 const Posts: any = (props: PostsProps) => {
-  const [postUrls, setPostUrls] = React.useState([]);
-  const [posts, setPosts] = React.useState([]);
-
-  React.useEffect(() => {
-    getListOfPosts(props.postType as postType).then((list) =>
-      setPostUrls(list),
-    );
-  }, [props.postType]);
-
-  React.useEffect(() => {
-    if (postUrls.length) {
-      loadPosts(postUrls, props.postType as postType).then((loadedPosts) =>
-        setPosts(loadedPosts),
-      );
-    }
-  }, [postUrls]);
+  const [posts,setPosts] = React.useState([]);
+  React.useEffect(()=>{
+    getPosts(1).then(data=>setPosts(data));
+  },[])
 
   return (
     <div className="posts">

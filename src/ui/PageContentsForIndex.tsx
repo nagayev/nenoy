@@ -7,16 +7,17 @@ import Menu from "./Menu";
 import Posts from "./Posts";
 import TopMenu from "./TopMenu";
 import { getDefaultTheme } from "./utils";
+import {headers} from "./objectTypes";
 
 const PageContentsForIndex: NextPage = () => {
   const style = getDefaultTheme();
   const [postType, setType] = useState(0);
-  const headers = ["Блог редакции", "Больницы", "Заводы"];
+  
   return (
     <div style={style.pageLayout}>
       <TopMenu />
       <h1>Неной</h1>
-      <img id="me" src={logo} alt="Украина не Россия" style={style.me} />
+      <img id="me" src={logo} alt="Неной" style={style.me} />
       <div id="menu">
         <Menu updateState={setType} />
       </div>
@@ -24,7 +25,6 @@ const PageContentsForIndex: NextPage = () => {
         &nbsp;
         <MapProvider />
       </div>
-      <p>Версия тестовая, буду обновлять</p>
       <h1>{headers[postType]}</h1>
       <Posts postType={postType} />
       <br />

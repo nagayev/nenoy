@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import NoSsr from "./no";
-import types from "./objectTypes";
+import {types} from "./objectTypes";
 
 interface AddPlacemarkInterface {
     isOpen: boolean;

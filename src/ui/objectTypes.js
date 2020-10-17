@@ -1,2 +1,3 @@
-const types = {hospital:'1',roads:'2',schools:'3'}
-export default types;
+const types = {blog:'0',hospitals:'1',roads:'2',schools:'3'}
+const headers = {blog:'Наш блог',hospitals:'Больницы',roads:'Дороги',schools:'Школы'}
+export {types,headers};
