@@ -12,7 +12,7 @@ import {headers} from "./objectTypes";
 const PageContentsForIndex: NextPage = () => {
   const style = getDefaultTheme();
   const [postType, setType] = useState(0);
-  
+  //console.warn('[DEBUG] postType: ',postType);
   return (
     <div style={style.pageLayout}>
       <TopMenu />

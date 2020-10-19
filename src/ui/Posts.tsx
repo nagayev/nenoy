@@ -1,29 +1,28 @@
 import React from "react";
 import { Post } from "./Post";
-import {getPosts} from '../db';
 
-
-interface PostData {
-  date: number;
-  header: string;
-  content: string;
-}
 interface PostsProps {
-  number: number; 
+  postType: number; 
 }
 
-const Posts: any = (props: PostsProps) => {
+function Posts(props:PostsProps) {
   const [posts,setPosts] = React.useState([]);
   React.useEffect(()=>{
-    getPosts(1).then(data=>setPosts(data));
-  },[])
-
-  return (
+    const opts = {
+      method:'POST',
+      body:props.postType.toString()
+    }
+    //console.warn(opts.body)
+    //console.warn('[DEBUG] from Posts opts.body',opts);
+    fetch('api/getPosts',opts).then(data=>data.json()).then(data=>setPosts(data));
+  },[props.postType]); 
+  return(
     <div className="posts">
       {posts.map((post, index) => {
         return <Post key={index} data={post} />;
       })}
     </div>
   );
-};
+}
+
 export default Posts;

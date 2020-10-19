@@ -6,15 +6,13 @@ import {
   YMaps,
   ZoomControl,
 } from "react-yandex-maps";
-import AddPlacemarkModal from "./AddPlacemarkModal"
+import AddInfoModal from "./AddInfoModal"
+import {InfoFromDBModal} from "./Modals";
 
 interface NormalMapInterface{
     mapCenter:Array<number>
 }
-/*
-Новая версия карт - теперь есть MapProvider (base), NormalMap и MapUnvailable
-Normal map это старый map без определения местоположения и недоступности карты (это в MapProvider)
-*/
+
 function MapUnvailble() {
   const LINE_ONE = "К сожалению, карта недоступна.";
   const LINE_TWO = "Похоже Вы не предоставили доступ к местоположению";
@@ -29,12 +27,13 @@ function MapUnvailble() {
     </YMaps>
   );
 }
-function NormalMap(props:NormalMapInterface) {
+function NormalMap(props:NormalMapInterface){
   const [placemarksCoords, setPlacemarksCoords] = React.useState([props.mapCenter]); //for all placemarks on map
   const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(false);
+  const [DBInfoIsOpen,setDBInfoIsOpen] = React.useState(false); 
+  const [DBInfoCoords,setDBInfoCoords] = React.useState([]);
   const [lock, setLock] = React.useState(false); //for only one user's placemark on map
   const [userPlacemark,setUserPlacemark] = React.useState([]); //for user placemark
-  
   const deleteUserPlacemark = () => {
     setUserPlacemark([]);
     placemarksCoords.pop(); //delete last placemark, it's user's placemark
@@ -46,11 +45,23 @@ function NormalMap(props:NormalMapInterface) {
       .then((data)=>setPlacemarksCoords(data))
   }, []);
   const Placemarks: any[] = [];
+  //TODO: rename function
+  const f = (coords) => {
+    setDBInfoIsOpen(true);
+    setDBInfoCoords(coords)
+  }
   for (let i = 0; i < placemarksCoords.length; i++) {
     const coords = placemarksCoords[i];
-    Placemarks.push(
-      <Placemark key={i} geometry={coords} onClick={() => setPlacemarkModalIsOpen(true)} />,
-    );
+    //different onClick for different types of placemarks
+    //NOTE: don't try to refactor userPlacemark.length!==0 to !Object.is(up,[])
+    if(userPlacemark.length!==0 && i===placemarksCoords.length-1){
+      Placemarks.push(<Placemark key={i} geometry={coords} 
+        onClick={() => setPlacemarkModalIsOpen(true)}/>);
+    }
+    else{
+      Placemarks.push(<Placemark key={i} geometry={coords} 
+        onClick={() => f(coords)}/>);
+    }
   }
   const clickOnMap = (event: any) => {
     //NOTE: type of event is any
@@ -70,8 +81,11 @@ function NormalMap(props:NormalMapInterface) {
           <GeolocationControl />
           <ZoomControl />
           {Placemarks}
-          <AddPlacemarkModal isOpen={placemarkModalIsOpen}
+          <AddInfoModal isOpen={placemarkModalIsOpen}
            setIsOpen={setPlacemarkModalIsOpen} userPlacemark={userPlacemark} deleteUserPlacemark={deleteUserPlacemark}/>
+          {DBInfoCoords!==[] && 
+          <InfoFromDBModal 
+          modalIsOpen={DBInfoIsOpen} setIsOpen={setDBInfoIsOpen} modalCoords={DBInfoCoords} /> }
         </Map>
       </YMaps>
     </>

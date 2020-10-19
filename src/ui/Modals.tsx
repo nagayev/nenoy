@@ -25,7 +25,7 @@ interface LogRegProps {
   setIsOpen: Function;
 }
 
-function MapModal(props: MapModalInterface) {
+function InfoFromDBModal(props: MapModalInterface) {
   const { modalIsOpen, setIsOpen, modalCoords } = props;
 
   return (
@@ -146,7 +146,7 @@ function Sorry(props) {
   );
 }
 export {
-  MapModal,
+  InfoFromDBModal,
   LogModal,
   RegModal,
   Sorry
