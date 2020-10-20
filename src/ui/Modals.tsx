@@ -1,7 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
 import { wrap,MD5,isValidEmail } from "./utils";
-import { check } from "prettier";
 
 const customStyles = {
   content: {
@@ -138,6 +137,11 @@ function RegModal(props: LogRegProps) {
 }
 function UserModal(props){
   const {isOpen,setIsOpen} = props;
+  const logOut = () => {
+    localStorage.removeItem('token');
+    setIsOpen(false);
+    location.reload();
+  }
   return (
     <>
       <Modal
@@ -154,6 +158,7 @@ function UserModal(props){
           <li>5 публикаций</li>
           <li>3 комментария</li>
         </ul>
+        <p onClick={logOut}>выйти</p>
       </Modal>
     </>
   );

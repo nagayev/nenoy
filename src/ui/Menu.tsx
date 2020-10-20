@@ -41,16 +41,13 @@ function _Menu(props: MenuInterface) {
   const showLogIn = () => setLogOpen(true);
   const showRegistration = () => setRegOpen(true);
   const isMobile = detectMobile();
-  let userName = '';
   const menu = isMobile ? (
     <MobileMenu updateState={updateState} />
   ) : (
     <DesktopMenu updateState={updateState} />
   );
-
-  return (
-    <div id="menu">
-      <User token={localStorage.getItem('token')} />
+  function LogAndReg(){
+    return (
       <div>
         <a style={style.log} onClick={showLogIn}>
           Вход
@@ -61,6 +58,13 @@ function _Menu(props: MenuInterface) {
         </a>
         &nbsp;
       </div>
+    );
+  }
+  const Top = localStorage.getItem('token')?<User token={localStorage.getItem('token')} />:
+    <LogAndReg />
+  return (
+    <div id="menu">   
+      {Top}
       <RegModal isOpen={isRegOpen} setIsOpen={setRegOpen} />
       <LogModal isOpen={isLogOpen} setIsOpen={setLogOpen} />
       {menu}
