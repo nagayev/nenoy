@@ -1,6 +1,7 @@
 import React from "react";
 
 import { LogModal, RegModal } from "./Modals";
+import User from "./User";
 import NoSsr from "./no";
 import { detectMobile, getDefaultTheme } from "./utils";
 import {types,headers} from './objectTypes';
@@ -40,13 +41,16 @@ function _Menu(props: MenuInterface) {
   const showLogIn = () => setLogOpen(true);
   const showRegistration = () => setRegOpen(true);
   const isMobile = detectMobile();
+  let userName = '';
   const menu = isMobile ? (
     <MobileMenu updateState={updateState} />
   ) : (
     <DesktopMenu updateState={updateState} />
   );
+
   return (
     <div id="menu">
+      <User token={localStorage.getItem('token')} />
       <div>
         <a style={style.log} onClick={showLogIn}>
           Вход

@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import { wrap,MD5,isValidEmail } from "./utils";
+import { check } from "prettier";
 
 const customStyles = {
   content: {
@@ -52,6 +53,10 @@ function LogModal(props: LogRegProps) {
   const { isOpen, setIsOpen } = props;
   const [login,setLogin] = React.useState('');
   const [password,setPassword] = React.useState('');
+  const check = (data) => {
+    //TODO: check
+    localStorage.setItem('token',data);
+  }
   function signin(){
     const sendData = {
       login,
@@ -59,7 +64,7 @@ function LogModal(props: LogRegProps) {
     }
     setIsOpen(false);
     let opts = {method:'post',body:JSON.stringify(sendData)}
-    fetch('/api/signin',opts).then(data=>data.json()).then(data=>localStorage.key=data);
+    fetch('/api/signin',opts).then(data=>data.json()).then(data=>check(data));
   }
   return (
     <>
@@ -131,6 +136,28 @@ function RegModal(props: LogRegProps) {
     </>
   );
 }
+function UserModal(props){
+  const {isOpen,setIsOpen} = props;
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={wrap(setIsOpen, false)}
+        style={customStyles}
+        /*contentLabel="Example Modal"  (?) */
+      >
+        <button onClick={wrap(setIsOpen, false)}>закрыть</button>
+        <h1>Marat Nagayev</h1>
+        <p>+50 Пенза, Россия</p>
+        <ul>
+          <li>1 место среди авторов (+50)</li>
+          <li>5 публикаций</li>
+          <li>3 комментария</li>
+        </ul>
+      </Modal>
+    </>
+  );
+}
 function Sorry(props) {
   const { isOpen, setIsOpen } = props;
   return (
@@ -149,5 +176,6 @@ export {
   InfoFromDBModal,
   LogModal,
   RegModal,
-  Sorry
+  Sorry,
+  UserModal
 };
