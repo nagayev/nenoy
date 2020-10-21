@@ -13,11 +13,11 @@ interface MenuInterface {
 function DesktopMenu(props: MenuInterface) {
   return (
     <div>
-      {Object.keys(types).map(key=>{
+      {Object.keys(types).map((key,i)=>{
         return (
-          <>
-          <a onClick={()=>{props.updateState(+types[key])}}>{headers[key]}</a>&nbsp;
-          </>
+          <span key={i}> 
+            <a onClick={()=>{props.updateState(+types[key])}}>{headers[key]}</a>&nbsp;
+          </span>
         );
       })}
     </div>
@@ -27,8 +27,8 @@ function MobileMenu(props: MenuInterface) {
   const handler = (event) => props.updateState(+event.target.value);
   return (
     <select onChange={handler}>
-      {Object.keys(types).map(key=>{
-        return <option value={types[key]}>{headers[key]}</option>
+      {Object.keys(types).map((key,i)=>{
+        return <option key={i} value={types[key]}>{headers[key]}</option>
       })}
     </select>
   );

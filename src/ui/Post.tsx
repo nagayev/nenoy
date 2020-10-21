@@ -11,6 +11,7 @@ interface PostData {
   content: string;
 }
 
+//FIXME: moment is legacy!
 function formatDate(ms: number): string {
   moment.locale("ru");
   return moment(ms).fromNow();

@@ -82,8 +82,6 @@ function LogModal(props: LogRegProps) {
         <p>Пароль</p>
         <input onChange={(e)=>setPassword(e.target.value)} type="password" />
         <br />
-        <p>Или войдите с помощью этих сервисов</p>
-        <p>Тут будет вк, гугл и т.д</p>
         <button onClick={signin}>Войти</button>
       </Modal>
     </>
@@ -110,7 +108,11 @@ function RegModal(props: LogRegProps) {
     }
     setIsOpen(false);
     let opts = {method:'post',body:JSON.stringify(sendData)}
-    fetch('/api/signup',opts).then(data=>console.log(data));
+    //FIXME: tmp, debug only
+    const tmp = (d) => {
+      console.log(d);
+    }
+    fetch('/api/signup',opts).then(data=>data.json()).then(data=>tmp(data));
   }
   return (
     <>
@@ -122,14 +124,12 @@ function RegModal(props: LogRegProps) {
       >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
         <h2>Регистрация</h2>
-        <p>Логин</p>
+        <p>Email</p>
         <input onChange={(e)=>setLogin(e.target.value)} type="text" /> <br />
         <p>Пароль</p>
         <input onChange={(e)=>setPassword(e.target.value)} type="password" /> <br />
         <p>Повторите пароль</p> <input onChange={(e)=>setAnotherPassword(e.target.value)} type="password" />
         <br />
-        <p>Или войдите с помощью этих сервисов</p>
-        <p>Тут будет вк, гугл и т.д</p>
         <button onClick={signup}>Зарегестрироваться</button>
       </Modal>
     </>

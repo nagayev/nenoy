@@ -22,5 +22,11 @@ function isValidEmail(email:string):boolean{
   //https://stackoverflow.com/a/46181
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+}
+function formatError(code:number):string{
+  return JSON.stringify({error:code});
+}
+function formatOk(){
+  return JSON.stringify({error:-1});
 } 
-export { wrap, getDefaultTheme, detectMobile,MD5,isValidEmail };
+export { wrap, getDefaultTheme, detectMobile,MD5,isValidEmail, formatError, formatOk };
