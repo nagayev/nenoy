@@ -1,20 +1,21 @@
+Hello! You can view this README at [Russian](https://github.com/nagayev/unr/blob/master/README_RU.MD)
 # About this project
 
-Hello! This is source code of [website](https://nenoy.ru), hosted using [Vercel](https://zeit.co).  
+This is source code of nenoy [website](https://nenoy.ru), hosted using [Vercel](https://zeit.co).  
 This project was written using Next.js and Typescript.
 
-# License
-
-MIT License. See LICENSE file for details.
-
-# Docs
-Are available [here](https://github.com/nagayev/unr/blob/master/DOCS.MD)
-
 # Quick start
-If you want to host this website with your Databases on your machine you can use Quick start guide.  
+If you want to host the copy of this website you can use Quick start guide.  
 Type in your terminal:  
-`git clone https://github.com/nagayev/`  
+`git clone https://github.com/nagayev/unr`  
 `cd unr`  
 `node quickstart.js`  
 It's all!
 
+# Docs
+Are available [here](https://github.com/nagayev/unr/blob/master/DOCS.MD)
+NOTE: only on Russian
+
+# License
+
+MIT License. See LICENSE file for details.  
