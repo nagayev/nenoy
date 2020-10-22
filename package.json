@@ -5,7 +5,10 @@
     "build": "next build",
     "dev": "next",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "lint:eslint":"",
+    "lint:prettier":"",
+    "lint:tsc":""
   },
   "dependencies": {
     "moment": "^2.27.0",
@@ -44,6 +47,5 @@
   },
   "run-if-changed": {
     "package-lock.json": "npm install"
-  },
-  "unused-deps": {}
+  }
 }
