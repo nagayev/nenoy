@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { wrap,MD5,isValidEmail } from "./utils";
 
@@ -94,13 +94,17 @@ function RegModal(props: LogRegProps) {
   const [anotherPassword,setAnotherPassword] = React.useState('');
 
   function signup(){
+    const emitError = alert;
     if(password!==anotherPassword){
-      alert('Пароли не совпадают!');
+      emitError('Пароли не совпадают!');
       return;
     }
     if(!isValidEmail(login)){
-      alert('Неверный email!');
+      emitError('Неверный email!');
       return;
+    }
+    if(password.length<8){
+      emitError('Пароль должен состоять минимум из 8 знаков')
     }
     const sendData = {
       login,
@@ -137,11 +141,30 @@ function RegModal(props: LogRegProps) {
 }
 function UserModal(props){
   const {isOpen,setIsOpen} = props;
+  const [rank,setRank] = React.useState(0);
+  const [place,setPlace] = React.useState('Penza, Russia')
   const logOut = () => {
-    localStorage.removeItem('token');
-    setIsOpen(false);
-    location.reload();
+    if(confirm('Вы уверены, что хотите выйти?')){
+      localStorage.removeItem('token');
+      setIsOpen(false);
+      location.reload();
+    }
   }
+
+  //TODO: add type for data
+  const callback = data => {
+    let rank = data[0].rank;
+    if(rank>0) rank='+'+rank;
+    setRank(rank);
+    setPlace(data[0].place);
+  }
+  useEffect(()=>{
+    //load info about user
+    fetch('/api/getUserInfo',{method:'POST',body:JSON.stringify({id:1})})
+    .then(data=>data.json())
+    .then(data=>callback(data))
+    .catch(err=>console.log(err))
+  },[]);
   return (
     <>
       <Modal
@@ -152,7 +175,8 @@ function UserModal(props){
       >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
         <h1>Marat Nagayev</h1>
-        <p>+50 Пенза, Россия</p>
+        <p>Рейтинг: {rank} </p>
+        <p>Город: {place}</p>
         <ul>
           <li>1 место среди авторов (+50)</li>
           <li>5 публикаций</li>

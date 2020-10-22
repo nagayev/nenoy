@@ -30,6 +30,12 @@ async function appendUser(login,password){
     },
     password:{
       type: Sequelize.DataTypes.STRING
+    },
+    rank:{
+      type:Sequelize.DataTypes.INTEGER
+    },
+    place:{
+      type:Sequelize.DataTypes.STRING
     }
   },{
     timestamps: false //NOTE:timestampts????
@@ -37,7 +43,9 @@ async function appendUser(login,password){
   await sequelize.sync();
   let data = {
     login,
-    password
+    password,
+    rank:0,
+    place:'не указано'
   }
   await sequelize.models.users.create(data);
 }
@@ -54,6 +62,13 @@ async function isLoginExists(login){
   if(ok.length===0) return false;
   return true;
 }
-module.exports={appendUser,getToken,isLoginExists}
+async function getUserInfo(id){
+  //rank and place
+  let response;
+  response = await sequelize.query(`SELECT rank,place from users WHERE id='${id}';`,
+  { type: QueryTypes.SELECT });
+  return response;
+}
+module.exports={appendUser,getToken,isLoginExists,getUserInfo}
 
 //export {appendUser,getToken};
