@@ -38,11 +38,13 @@ function NormalMap(props:NormalMapInterface){
     setUserPlacemark([]);
     placemarksCoords.pop(); //delete last placemark, it's user's placemark
   }
-
   useEffect(() => {
     fetch("api/getPlacemarks") //load placemarks' coords
       .then((data) => data.json())
       .then((data)=>setPlacemarksCoords(data))
+      .catch((err)=>{
+        console.error(err);
+      })
   }, []);
   const Placemarks: any[] = [];
   //TODO: rename function
@@ -93,19 +95,33 @@ function NormalMap(props:NormalMapInterface){
 }
 function MapProvider(){
     const [geoError, setGeoError] = React.useState(false);
-    const [mapCenter, setMapCenter] = React.useState([0.1, 0.1]); 
+    const [mapCenter, setMapCenter] = React.useState([0.1, 0.1]);
+    
     const opts = {
         enableHighAccuracy: true,
         timeout: 1e4,
         maximumAge: 0,
     };
+    function saveToCache(coords){
+      localStorage.setItem('coords',coords.join('_'));
+    }
+    function getInCache(){
+      return localStorage.getItem('coords')?.split('_');
+    } 
     function suc(pos) {
-        console.log(`Got coords: ${pos.coords.latitude}, ${pos.coords.longitude}`);
-        setMapCenter([pos.coords.latitude, pos.coords.longitude]);
+        const coords = [pos.coords.latitude, pos.coords.longitude];
+        console.log(`Got coords: ${coords}`);
+        saveToCache(coords);
+        setMapCenter(coords);
     }
     function err(err) {
         console.warn(`Can\'t get geolocation:${err.message}(${err.code})`);
-        setGeoError(true);
+        const coords = getInCache()?.map((v)=>+v);
+        if(coords){
+          console.warn(`Use cached coords ${coords}`);
+          setMapCenter(coords);
+        } 
+        else setGeoError(true);
     }
     useEffect(() => {
         console.log("Request user geolocation");
