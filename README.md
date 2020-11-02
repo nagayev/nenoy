@@ -1,4 +1,4 @@
-Hello! You can view this README at [Russian](https://github.com/nagayev/unr/blob/master/README_RU.MD)
+Hello! You can view this README at [Russian](README_RU.MD)
 # About this project
 
 This is source code of nenoy [website](https://nenoy.ru), hosted using [Vercel](https://zeit.co).  

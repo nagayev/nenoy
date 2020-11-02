@@ -6,12 +6,12 @@
     "dev": "next",
     "start": "next start",
     "test": "jest",
-    "lint:eslint":"",
-    "lint:prettier":"",
-    "lint:tsc":""
+    "lint:eslint": "",
+    "lint:prettier": "",
+    "lint:tsc": ""
   },
   "dependencies": {
-    "moment": "^2.27.0",
+    "date-diff-js": "^1.0.4",
     "next": "^9.4.2",
     "next-compose-plugins": "^2.2.0",
     "next-fonts": "^1.4.0",

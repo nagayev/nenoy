@@ -5,8 +5,6 @@ export default async function(req, res) {
   return new Promise((resolve, reject) => {
     db.getUserInfo(id)
       .then(data => {
-        console.log('server2',JSON.stringify(data));
-        //res.statusCode = 200
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Cache-Control', 'max-age=180000'); //(?)
         res.status(200).end(JSON.stringify(data))

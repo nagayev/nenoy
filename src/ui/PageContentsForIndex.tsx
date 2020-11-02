@@ -35,7 +35,7 @@ const PageContentsForIndex: NextPage = () => {
         </a>
         <br />
         Source code are available{" "}
-        <a style={style.a} href="https://github.com/nagayev/nenoy">
+        <a style={style.a} href="https://github.com/nagayev/unr">
           here
         </a>
       </div>

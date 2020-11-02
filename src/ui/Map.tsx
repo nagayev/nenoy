@@ -38,6 +38,7 @@ function NormalMap(props:NormalMapInterface){
     setUserPlacemark([]);
     placemarksCoords.pop(); //delete last placemark, it's user's placemark
   }
+  const MOSCOW = [55.4507,37.3656];
   useEffect(() => {
     fetch("api/getPlacemarks") //load placemarks' coords
       .then((data) => data.json())
@@ -79,7 +80,8 @@ function NormalMap(props:NormalMapInterface){
   return (
     <>
       <YMaps id="map">
-        <Map onClick={clickOnMap} defaultState={{ center: props.mapCenter, zoom: 8 }}>
+        <Map onClick={clickOnMap} defaultState={{ center: MOSCOW, zoom: 8 }}
+        state={{center:props.mapCenter,zoom:8}} >
           <GeolocationControl />
           <ZoomControl />
           {Placemarks}
@@ -94,8 +96,9 @@ function NormalMap(props:NormalMapInterface){
   );
 }
 function MapProvider(){
+    const MOSCOW = [55.4507,37.3656];
     const [geoError, setGeoError] = React.useState(false);
-    const [mapCenter, setMapCenter] = React.useState([0.1, 0.1]);
+    const [mapCenter, setMapCenter] = React.useState(MOSCOW);
     
     const opts = {
         enableHighAccuracy: true,

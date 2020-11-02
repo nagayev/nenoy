@@ -1,4 +1,5 @@
-import moment from "moment";
+const dateDiff =  require("date-diff-js");
+import {getDateWithCase} from "./utils";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -15,10 +16,35 @@ interface PostData {
   type:number;
 }
 
-//FIXME: moment is legacy!
 function formatDate(ms: number): string {
-  moment.locale("ru");
-  return moment(ms).fromNow();
+  //FIXME: dirty code
+  //1,2,5
+  const translations={
+    days: ['день','дня','дней'],
+    hours: ['час','часа','часов'], 
+    milliseconds: ['миллисекунда','миллисекунды','миллисекунд'], 
+    minutes: ['минута','минуты','минут'],
+    months: ['месяц','месяца','месяцев'], 
+    seconds: ['секунда','секунды','секунд'], 
+    weeks: ['неделя','недели','недель'],
+    years: ['год','года','лет']
+  }
+  const today = +new Date();
+  const diff = dateDiff(today,ms).totals;
+  const keys = Object.keys(diff);
+  let minValue = Number.MAX_SAFE_INTEGER;
+  let minKey = '';
+  for(let i=0;i<keys.length;i++){
+    let x = diff[keys[i]];
+    if(x<minValue && x!==0){
+      minValue=x;
+      minKey=keys[i];
+    }
+  }
+  const dateDiffWithCase = getDateWithCase(minValue,translations[minKey]);
+  //console.log(minValue,minKey);
+  //return `${minValue} ${translations[minKey]}`;
+  return `${minValue} ${dateDiffWithCase} назад`;
 }
 
 function getDate(createdAtDate,updatedAtDate=''){
