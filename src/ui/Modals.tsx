@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { wrap,MD5,isValidEmail } from "./utils";
+import ReactMarkdown from "react-markdown";
+import Commentaries from "./Commentaries";
 
 const customStyles = {
   content: {
@@ -142,7 +144,9 @@ function RegModal(props: LogRegProps) {
 function UserModal(props){
   const {isOpen,setIsOpen} = props;
   const [rank,setRank] = React.useState(0);
-  const [place,setPlace] = React.useState('Penza, Russia')
+  const [place,setPlace] = React.useState('Penza, Russia');
+  const [name,setName] = React.useState('');
+
   const logOut = () => {
     if(confirm('Вы уверены, что хотите выйти?')){
       localStorage.removeItem('token');
@@ -174,7 +178,7 @@ function UserModal(props){
         /*contentLabel="Example Modal"  (?) */
       >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
-        <h1>Marat Nagayev</h1>
+        <h1>{name} </h1>
         <p>Рейтинг: {rank} </p>
         <p>Город: {place}</p>
         <ul>
@@ -183,6 +187,28 @@ function UserModal(props){
           <li>3 комментария</li>
         </ul>
         <p onClick={logOut}>выйти</p>
+      </Modal>
+    </>
+  );
+}
+function PostModal(props){
+  const { isOpen, setIsOpen,data } = props;
+  const comments = [{user:'Марат Нагаев',text:'Отличная новость!',ranking:12}];
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={wrap(setIsOpen, false)}
+        style={customStyles}>
+        <button onClick={wrap(setIsOpen, false)}>закрыть</button> <br />
+        <div>
+          <h2>{data.header}</h2>
+          <p>
+            {data.date}
+          </p>
+          <ReactMarkdown source={data.content} />
+          <Commentaries data={comments} />
+        </div>
       </Modal>
     </>
   );
@@ -206,5 +232,6 @@ export {
   LogModal,
   RegModal,
   Sorry,
-  UserModal
+  UserModal,
+  PostModal
 };

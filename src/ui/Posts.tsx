@@ -12,8 +12,6 @@ function Posts(props:PostsProps) {
       method:'POST',
       body:props.postType.toString()
     }
-    //console.warn(opts.body)
-    //console.warn('[DEBUG] from Posts opts.body',opts);
     fetch('api/getPosts',opts).then(data=>data.json()).then(data=>setPosts(data));
   },[props.postType]); 
   return(

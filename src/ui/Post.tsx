@@ -1,7 +1,8 @@
 const dateDiff =  require("date-diff-js");
-import {getDateWithCase} from "./utils";
+import {getDateWithCase,saveFirstWords} from "./utils";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import {PostModal} from "./Modals";
 
 interface PostProps {
   data: PostData;
@@ -42,9 +43,7 @@ function formatDate(ms: number): string {
     }
   }
   const dateDiffWithCase = getDateWithCase(minValue,translations[minKey]);
-  //console.log(minValue,minKey);
-  //return `${minValue} ${translations[minKey]}`;
-  return `${minValue} ${dateDiffWithCase} назад`;
+  return `примерно ${minValue} ${dateDiffWithCase} назад`;
 }
 
 function getDate(createdAtDate,updatedAtDate=''){
@@ -59,25 +58,34 @@ function getDate(createdAtDate,updatedAtDate=''){
   );
 }
 export const Post: React.FunctionComponent<PostProps> = ({ data }) => {
-  console.log('DATA',data);
+  //console.log('DATA',data);
+  const [isOpen,setIsOpen] = React.useState(false);
   const createdAt = data.createdAt.slice(0,-11);
   const updatedAt = data.updatedAt.slice(0,-11);
   let date = <em></em>;
   const createdAtDate = formatDate(+new Date(createdAt));
   const updatedAtDate = formatDate(+new Date(updatedAt));
+  //если дата создания = дате обновления, то отображаем 1 дату
   if(createdAt===updatedAt){
     date=getDate(createdAtDate);
   }
   else{
     date=getDate(createdAtDate,updatedAtDate);
   }
+  //NOTE: we have content, if content > 300 symbols (~50 words we can trim it(save the first 50 words)) 
+  let trimedContent = data.content;
+  const LETTERS_PER_WORD = 6;
+  if(data.content.length>LETTERS_PER_WORD*50) trimedContent = saveFirstWords(data.content);
   return (
-    <div>
+    <>
+    <PostModal isOpen={isOpen} setIsOpen={setIsOpen} data={data} />
+    <div onClick={()=>setIsOpen(true)}>
       <h2>{data.header}</h2>
       <p>
         {date}
       </p>
-      <ReactMarkdown source={data.content} />
+      <ReactMarkdown source={trimedContent} />
     </div>
+    </>
   );
 };
