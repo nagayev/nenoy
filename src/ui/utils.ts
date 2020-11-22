@@ -16,7 +16,7 @@ function detectMobile():boolean {
   const ua = navigator.userAgent;
   const isAndroid = ua.match(/Android/i);
   const isIOS = ua.match(/iPhone|iPad|iPod/i);
-  return isAndroid===isIOS; //isAndroid maybe null
+  return isAndroid!==isIOS; //isAndroid maybe null
 }
 function isValidEmail(email:string):boolean{
   //https://stackoverflow.com/a/46181

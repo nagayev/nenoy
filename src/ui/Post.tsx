@@ -12,8 +12,8 @@ interface PostData {
   header: string;
   content: string;
   checked:number;
-  createdAt:string;
-  updatedAt:string;
+  createdAt:number;
+  updatedAt:number;
   type:number;
 }
 
@@ -60,11 +60,11 @@ function getDate(createdAtDate,updatedAtDate=''){
 export const Post: React.FunctionComponent<PostProps> = ({ data }) => {
   //console.log('DATA',data);
   const [isOpen,setIsOpen] = React.useState(false);
-  const createdAt = data.createdAt.slice(0,-11);
-  const updatedAt = data.updatedAt.slice(0,-11);
+  const createdAt = data.createdAt;
+  const updatedAt = data.updatedAt;
   let date = <em></em>;
-  const createdAtDate = formatDate(+new Date(createdAt));
-  const updatedAtDate = formatDate(+new Date(updatedAt));
+  const createdAtDate = formatDate(createdAt);
+  const updatedAtDate = formatDate(updatedAt);
   //если дата создания = дате обновления, то отображаем 1 дату
   if(createdAt===updatedAt){
     date=getDate(createdAtDate);
