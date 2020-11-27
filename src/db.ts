@@ -1,8 +1,7 @@
 export {};
 const { MongoClient } = require("mongodb");
 //NOTE: uri and client is global in order to backward compatibility
-const uri = process.env['mongodb_url'];
-console.log('URI',uri);
+const uri = process.env["mongodb_url"];
 const client = new MongoClient(uri);
 const DBNAME = "posts";
 const firstCollection = "objects";
@@ -19,23 +18,17 @@ type PostType = {
   header: string;
   content: string;
   type: number;
+  createdAt: number;
+  updatedAt: number;
   checked: boolean;
 };
-async function connect() {
-  let self=globalThis;
-  if(!self.connected){
-    console.log('set up connection');
-    self.connected=true;
-    await client.connect();
-  }
-}
 async function appendObject(arg) {
   const result = await client
     .db(DBNAME)
     .collection(firstCollection)
     .insertOne(arg);
   console.log(
-    `New listing created with the following id: ${result.insertedId}`
+    `New listing created with the following id: ${result.insertedId}`,
   );
 }
 async function appendPost(arg: PostType) {
@@ -44,20 +37,29 @@ async function appendPost(arg: PostType) {
     .collection(secondCollection)
     .insertOne(arg);
   console.log(
-    `New listing created with the following id: ${result.insertedId}`
+    `New listing created with the following id: ${result.insertedId}`,
   );
 }
 async function append2DB(arg) {
   //FIXME: posts not used!
   await client.connect();
-  const { type, name, posts, coords, content, header } = arg;
+  const {
+    type,
+    name,
+    posts,
+    coords,
+    content,
+    header,
+    createdAt,
+    updatedAt,
+  } = arg;
   appendObject({ type, coords, name });
-  appendPost({ content, header, type, checked: true }); //FIXME: temporally true
+  appendPost({ content, header, type, createdAt, updatedAt, checked: true }); //FIXME: temporally true
 }
 //FIXME:
-async function getPosts(type:number) {
+async function getPosts(type: number) {
   await client.connect();
-  const posts:any[] = [];
+  const posts: any[] = [];
   const addToPosts = (a) => posts.push(a);
   await client
     .db(DBNAME)
@@ -68,7 +70,7 @@ async function getPosts(type:number) {
 }
 async function getPlacemarks() {
   await client.connect();
-  const coords:any[] = [];
+  const coords: any[] = [];
   const addToCoords = (a) => coords.push(a.coords);
   await client
     .db(DBNAME)
@@ -85,7 +87,7 @@ async function main() {
   try {
     // Connect to the MongoDB cluster
     await client.connect();
-    await getPosts(0).then(data=>console.log(data));
+    await getPosts(0).then((data) => console.log(data));
     //appendObject({ type: 2, coords: [54.1, 33.2], name: "defg" });
     //select name, content from knowledgebase where applicationId='2955f3e174dce55190a87ed0e133adwdeb92';
     //db.knowledgebase.find({ "checked": true}, { "coords": 1});

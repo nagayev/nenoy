@@ -58,7 +58,6 @@ function getDate(createdAtDate,updatedAtDate=''){
   );
 }
 export const Post: React.FunctionComponent<PostProps> = ({ data }) => {
-  //console.log('DATA',data);
   const [isOpen,setIsOpen] = React.useState(false);
   const createdAt = data.createdAt;
   const updatedAt = data.updatedAt;

@@ -5,11 +5,11 @@ const uri = process.env['mongodb_url'];
 const client = new MongoClient(uri);
 const DBNAME = "users";
 const firstCollection = "users";
-//import MD5 from './ui/md5';
 type MD5Type = string
 const MD5 = require("./ui/md5"); 
 async function appendUser(login, password):Promise<void> {
   //console.warn(login,password);
+  await client.connect();
   let data = {
     login,
     password,
@@ -26,6 +26,7 @@ async function appendUser(login, password):Promise<void> {
 }
 async function getToken(login:string, password:string):Promise<MD5Type> {
   //`SELECT password from users WHERE login='${login}';
+  await client.connect();
   let password_from_db = await client
   .db(DBNAME)
   .collection(firstCollection)
@@ -34,6 +35,7 @@ async function getToken(login:string, password:string):Promise<MD5Type> {
   return MD5(`${login}_${password}`);
 }
 async function isLoginExists(login:string):Promise<boolean> {
+  await client.connect();
   let ok;
   //`SELECT * from users WHERE login='${login}';`
   ok = await client.db(DBNAME)
@@ -45,6 +47,7 @@ async function isLoginExists(login:string):Promise<boolean> {
 async function getUserInfo(id):Promise<any[]> {
   //rank and place
   // `SELECT rank,place from users WHERE id='${id}';`
+  await client.connect();
   const userInfo:any[] = [];
   const addToUserInfo = (a) => userInfo.push([a.rank,a.place]);
   let response;
