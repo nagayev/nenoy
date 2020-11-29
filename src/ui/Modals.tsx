@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
-import { wrap,MD5,isValidEmail } from "./utils";
+import { wrap, MD5, isValidEmail, isErrorWithCode } from "./utils";
 import ReactMarkdown from "react-markdown";
 import Commentaries from "./Commentaries";
 
@@ -52,20 +52,22 @@ function InfoFromDBModal(props: MapModalInterface) {
 }
 function LogModal(props: LogRegProps) {
   const { isOpen, setIsOpen } = props;
-  const [login,setLogin] = React.useState('');
-  const [password,setPassword] = React.useState('');
+  const [login, setLogin] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const check = (data) => {
     //TODO: check
-    localStorage.setItem('token',data);
-  }
-  function signin(){
+    localStorage.setItem("token", data);
+  };
+  function signin() {
     const sendData = {
       login,
-      password:MD5(password)
-    }
+      password: MD5(password),
+    };
     setIsOpen(false);
-    let opts = {method:'post',body:JSON.stringify(sendData)}
-    fetch('/api/signin',opts).then(data=>data.json()).then(data=>check(data));
+    let opts = { method: "post", body: JSON.stringify(sendData) };
+    fetch("/api/signin", opts)
+      .then((data) => data.json())
+      .then((data) => check(data));
   }
   return (
     <>
@@ -80,9 +82,9 @@ function LogModal(props: LogRegProps) {
         <h2>Вход</h2>
         <p>Пожалуйста, введите свой логин и пароль</p>
         <p>Логин</p>
-        <input onChange={(e)=>setLogin(e.target.value)} type="text" /> <br />
+        <input onChange={(e) => setLogin(e.target.value)} type="text" /> <br />
         <p>Пароль</p>
-        <input onChange={(e)=>setPassword(e.target.value)} type="password" />
+        <input onChange={(e) => setPassword(e.target.value)} type="password" />
         <br />
         <button onClick={signin}>Войти</button>
       </Modal>
@@ -91,34 +93,41 @@ function LogModal(props: LogRegProps) {
 }
 function RegModal(props: LogRegProps) {
   const { isOpen, setIsOpen } = props;
-  const [login,setLogin] = React.useState('');
-  const [password,setPassword] = React.useState('');
-  const [anotherPassword,setAnotherPassword] = React.useState('');
+  const [login, setLogin] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [anotherPassword, setAnotherPassword] = React.useState("");
 
-  function signup(){
+  function signup() {
     const emitError = alert;
-    if(password!==anotherPassword){
-      emitError('Пароли не совпадают!');
+    if (password !== anotherPassword) {
+      emitError("Пароли не совпадают!");
       return;
     }
-    if(!isValidEmail(login)){
-      emitError('Неверный email!');
+    if (!isValidEmail(login)) {
+      emitError("Неверный email!");
       return;
     }
-    if(password.length<8){
-      emitError('Пароль должен состоять минимум из 8 знаков')
+    if (password.length < 8) {
+      emitError("Пароль должен состоять минимум из 8 знаков");
+      return;
     }
     const sendData = {
       login,
-      password:MD5(password)
-    }
+      name,
+      password: MD5(password),
+    };
     setIsOpen(false);
-    let opts = {method:'post',body:JSON.stringify(sendData)}
+    let opts = { method: "post", body: JSON.stringify(sendData) };
     //FIXME: tmp, debug only
-    const tmp = (d) => {
-      console.log(d);
-    }
-    fetch('/api/signup',opts).then(data=>data.json()).then(data=>tmp(data));
+    const checkError = (error) => {
+      if (isErrorWithCode(error, 0)) {
+        alert("Пользователь с таким логином уже существует!");
+      }
+    };
+    fetch("/api/signup", opts)
+      .then((data) => data.json())
+      .then((data) => checkError(data));
   }
   return (
     <>
@@ -131,44 +140,57 @@ function RegModal(props: LogRegProps) {
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
         <h2>Регистрация</h2>
         <p>Email</p>
-        <input onChange={(e)=>setLogin(e.target.value)} type="text" /> <br />
+        <input onChange={(e) => setLogin(e.target.value)} type="text" /> <br />
+        <p>Имя</p>
+        <input onChange={(e) => setName(e.target.value)} type="text" /> <br />
         <p>Пароль</p>
-        <input onChange={(e)=>setPassword(e.target.value)} type="password" /> <br />
-        <p>Повторите пароль</p> <input onChange={(e)=>setAnotherPassword(e.target.value)} type="password" />
+        <input
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+        />{" "}
         <br />
+        <p>Повторите пароль</p>{" "}
+        <input
+          onChange={(e) => setAnotherPassword(e.target.value)}
+          type="password"
+        />
+        <br /> <br />
         <button onClick={signup}>Зарегестрироваться</button>
       </Modal>
     </>
   );
 }
-function UserModal(props){
-  const {isOpen,setIsOpen} = props;
-  const [rank,setRank] = React.useState(0);
-  const [place,setPlace] = React.useState('Penza, Russia');
-  const [name,setName] = React.useState('');
+function UserModal(props) {
+  const { isOpen, setIsOpen } = props;
+  const [rank, setRank] = React.useState(0);
+  const [place, setPlace] = React.useState("Penza, Russia");
+  const [name, setName] = React.useState("");
 
   const logOut = () => {
-    if(confirm('Вы уверены, что хотите выйти?')){
-      localStorage.removeItem('token');
+    if (confirm("Вы уверены, что хотите выйти?")) {
+      localStorage.removeItem("token");
       setIsOpen(false);
       location.reload();
     }
-  }
+  };
 
   //TODO: add type for data
-  const callback = data => {
+  const callback = (data) => {
     let rank = data[0].rank;
-    if(rank>0) rank='+'+rank;
+    if (rank > 0) rank = "+" + rank;
     setRank(rank);
     setPlace(data[0].place);
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     //load info about user
-    fetch('/api/getUserInfo',{method:'POST',body:JSON.stringify({id:1})})
-    .then(data=>data.json())
-    .then(data=>callback(data))
-    .catch(err=>console.log(err))
-  },[]);
+    fetch("/api/getUserInfo", {
+      method: "POST",
+      body: JSON.stringify({ id: 1 }),
+    })
+      .then((data) => data.json())
+      .then((data) => callback(data))
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <>
       <Modal
@@ -191,21 +213,22 @@ function UserModal(props){
     </>
   );
 }
-function PostModal(props){
-  const { isOpen, setIsOpen,data } = props;
-  const comments = [{user:'Марат Нагаев',text:'Отличная новость!',ranking:12}];
+function PostModal(props) {
+  const { isOpen, setIsOpen, data } = props;
+  const comments = [
+    { user: "Марат Нагаев", text: "Отличная новость!", ranking: 12 },
+  ];
   return (
     <>
       <Modal
         isOpen={isOpen}
         onRequestClose={wrap(setIsOpen, false)}
-        style={customStyles}>
+        style={customStyles}
+      >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button> <br />
         <div>
           <h2>{data.header}</h2>
-          <p>
-            {data.date}
-          </p>
+          <p>{data.date}</p>
           <ReactMarkdown source={data.content} />
           <Commentaries data={comments} />
         </div>
@@ -220,18 +243,12 @@ function Sorry(props) {
       <Modal
         isOpen={isOpen}
         onRequestClose={wrap(setIsOpen, false)}
-        style={customStyles}>
+        style={customStyles}
+      >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button> <br />
         Sorry, English version are coming
       </Modal>
     </>
   );
 }
-export {
-  InfoFromDBModal,
-  LogModal,
-  RegModal,
-  Sorry,
-  UserModal,
-  PostModal
-};
+export { InfoFromDBModal, LogModal, RegModal, Sorry, UserModal, PostModal };

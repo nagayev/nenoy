@@ -12,7 +12,7 @@ export default async function (req, res) {
         res.end(formatError(0));
         resolve();
       } else {
-        db.appendUser(content.login, content.password);
+        db.appendUser(content.login, content.password, content.name);
         res.end(formatOk());
         resolve();
       }
