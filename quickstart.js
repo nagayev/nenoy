@@ -5,8 +5,9 @@ function installDeps() {
   child_process.exec("npm i");
 }
 function createEnvLocal() {
-  const data = 'mongodb_url="YOUR_URL"';
-  fs.writeFileSync(".env.local", data);
+  fs.promises.readFile("envlocal.template").then((data) => {
+    fs.promises.writeFile("env.local", data);
+  });
 }
 function openEditor(path) {
   //const type = os.type();

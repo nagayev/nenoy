@@ -2,7 +2,11 @@ export {};
 const { MongoClient } = require("mongodb");
 //NOTE: uri and client is global in order to backward compibility
 const uri = process.env["mongodb_url"];
-const client = new MongoClient(uri);
+const opts = {
+  useUnifiedTopology: true, // установка опций
+  useNewUrlParser: true,
+};
+const client = new MongoClient(uri, opts);
 const DBNAME = "users";
 const firstCollection = "users";
 type MD5Type = string;
@@ -32,7 +36,8 @@ async function getToken(login: string, password: string): Promise<MD5Type> {
     .db(DBNAME)
     .collection(firstCollection)
     .findOne({ login: login });
-  if (password_from_db[0].password !== password) return "0";
+  if (password_from_db === null) return "INVALID"; //invalid login
+  if (password_from_db.password !== password) return "INVALID"; //correct login but incorrect password
   return MD5(`${login}_${password}`);
 }
 async function isLoginExists(login: string): Promise<boolean> {
@@ -63,8 +68,7 @@ async function getUserInfo(id): Promise<any[]> {
 async function main() {
   try {
     // Connect to the MongoDB cluster
-    await client.connect();
-    //appendUser('sidorovmarat1995@gmail.com','y5=#2248');
+    //await client.connect();
   } catch (e) {
     console.error(e);
   } finally {

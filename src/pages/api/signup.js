@@ -1,4 +1,6 @@
 const db = require("../../usersdb");
+import sendMail from "../../ui/email";
+import errors from "../../ui/errors";
 import { formatError, formatOk } from "../../ui/utils";
 export default async function (req, res) {
   //NOTE: don't delete new Promise(...)
@@ -9,10 +11,11 @@ export default async function (req, res) {
     const check = (ans) => {
       if (ans) {
         //login is unavailable
-        res.end(formatError(0));
+        res.end(formatError(errors.BUSY_LOGIN));
         resolve();
       } else {
         db.appendUser(content.login, content.password, content.name);
+        sendMail(content.login);
         res.end(formatOk());
         resolve();
       }

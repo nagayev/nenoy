@@ -2,7 +2,11 @@ export {};
 const { MongoClient } = require("mongodb");
 //NOTE: uri and client is global in order to backward compatibility
 const uri = process.env["mongodb_url"];
-const client = new MongoClient(uri);
+const opts = {
+  useUnifiedTopology: true, // установка опций
+  useNewUrlParser: true,
+};
+const client = new MongoClient(uri, opts);
 const DBNAME = "posts";
 const firstCollection = "objects";
 const secondCollection = "posts";

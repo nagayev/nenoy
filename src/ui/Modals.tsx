@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { wrap, MD5, isValidEmail, isErrorWithCode } from "./utils";
 import ReactMarkdown from "react-markdown";
 import Commentaries from "./Commentaries";
+const errors = require("./errors");
 
 const customStyles = {
   content: {
@@ -55,8 +56,10 @@ function LogModal(props: LogRegProps) {
   const [login, setLogin] = React.useState("");
   const [password, setPassword] = React.useState("");
   const check = (data) => {
-    //TODO: check
-    localStorage.setItem("token", data);
+    //TODO: check, if data is incorrect
+    if (isErrorWithCode(data, errors.INVALID_LOGIN)) {
+      alert("Неправильный логин и/или пароль");
+    } else localStorage.setItem("token", data);
   };
   function signin() {
     const sendData = {
@@ -119,9 +122,8 @@ function RegModal(props: LogRegProps) {
     };
     setIsOpen(false);
     let opts = { method: "post", body: JSON.stringify(sendData) };
-    //FIXME: tmp, debug only
     const checkError = (error) => {
-      if (isErrorWithCode(error, 0)) {
+      if (isErrorWithCode(error, errors.BUSY_LOGIN)) {
         alert("Пользователь с таким логином уже существует!");
       }
     };

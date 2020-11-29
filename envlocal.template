@@ -1,0 +1,3 @@
+mongodb_url="mongodb+srv:..."
+email_user="user"
+email_pass="password"
