@@ -1,9 +1,9 @@
 export {};
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 //NOTE: uri and client is global in order to backward compibility
 const uri = process.env["mongodb_url"];
 const opts = {
-  useUnifiedTopology: true, // установка опций
+  useUnifiedTopology: true,
   useNewUrlParser: true,
 };
 const client = new MongoClient(uri, opts);
@@ -29,16 +29,26 @@ async function appendUser(login, password, name): Promise<void> {
     `New listing created with the following id: ${result.insertedId}`,
   );
 }
-async function getToken(login: string, password: string): Promise<MD5Type> {
+type sigInType = {
+  token: MD5Type;
+  id: string;
+};
+async function signIn(
+  login: string,
+  password: string,
+): Promise<sigInType | string> {
   //`SELECT password from users WHERE login='${login}';
+  const data = { token: "", id: "" };
   await client.connect();
-  let password_from_db = await client
+  let data_from_db = await client
     .db(DBNAME)
     .collection(firstCollection)
     .findOne({ login: login });
-  if (password_from_db === null) return "INVALID"; //invalid login
-  if (password_from_db.password !== password) return "INVALID"; //correct login but incorrect password
-  return MD5(`${login}_${password}`);
+  if (data_from_db === null) return "INVALID"; //invalid login
+  if (data_from_db.password !== password) return "INVALID"; //correct login but incorrect password
+  data.token = MD5(`${login}_${password}`);
+  data.id = data_from_db._id;
+  return data;
 }
 async function isLoginExists(login: string): Promise<boolean> {
   await client.connect();
@@ -51,19 +61,20 @@ async function isLoginExists(login: string): Promise<boolean> {
   //console.log(ok);
   return ok !== null;
 }
-async function getUserInfo(id): Promise<any[]> {
+async function getUserInfo(id: string): Promise<any> {
   //rank and place
   // `SELECT rank,place from users WHERE id='${id}';`
+  //select name, content from knowledgebase where applicationId='1';
+  //db.knowledgebase.find({ "applicationId": "1"}, { "name": 1,    "content": 1});
   await client.connect();
-  const userInfo: any[] = [];
-  const addToUserInfo = (a) => userInfo.push([a.rank, a.place]);
-  let response;
-  response = await client
+  let result = await client
     .db(DBNAME)
     .collection(firstCollection)
-    .find({}, { rank: 1, id: 0 })
-    .forEach(addToUserInfo);
-  return userInfo;
+    .find({ _id: ObjectId(id) });
+  result.forEach((smt) => {
+    globalThis.UserInfo = smt;
+  });
+  return globalThis.UserInfo;
 }
 async function main() {
   try {
@@ -78,6 +89,6 @@ async function main() {
 if (require.main === module) {
   //directly from bash
   main().catch(console.error);
-} else module.exports = { appendUser, getToken, isLoginExists, getUserInfo };
+} else module.exports = { appendUser, signIn, isLoginExists, getUserInfo };
 
 //export {appendUser,getToken};

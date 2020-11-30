@@ -3,7 +3,7 @@ const { MongoClient } = require("mongodb");
 //NOTE: uri and client is global in order to backward compatibility
 const uri = process.env["mongodb_url"];
 const opts = {
-  useUnifiedTopology: true, // установка опций
+  useUnifiedTopology: true,
   useNewUrlParser: true,
 };
 const client = new MongoClient(uri, opts);
@@ -91,7 +91,6 @@ async function main() {
   try {
     // Connect to the MongoDB cluster
     await client.connect();
-    await getPosts(0).then((data) => console.log(data));
     //appendObject({ type: 2, coords: [54.1, 33.2], name: "defg" });
     //select name, content from knowledgebase where applicationId='2955f3e174dce55190a87ed0e133adwdeb92';
     //db.knowledgebase.find({ "checked": true}, { "coords": 1});

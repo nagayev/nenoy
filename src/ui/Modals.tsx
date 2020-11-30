@@ -42,8 +42,8 @@ function InfoFromDBModal(props: MapModalInterface) {
       >
         {/*<h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2> */}
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
-        <div>Кажется, об этом объекте никто не писал.</div>
-        <div>Станьте первым!</div>
+        <div>Это модальное окно пока не реализовано.</div>
+        <div>Будет в следующей версии.</div>
         <div>
           Объект с координатами ({modalCoords[0]});({modalCoords[1]}){" "}
         </div>
@@ -59,7 +59,11 @@ function LogModal(props: LogRegProps) {
     //TODO: check, if data is incorrect
     if (isErrorWithCode(data, errors.INVALID_LOGIN)) {
       alert("Неправильный логин и/или пароль");
-    } else localStorage.setItem("token", data);
+    } else {
+      //TODO: check this new feature
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("id", data.id);
+    }
   };
   function signin() {
     const sendData = {
@@ -165,29 +169,37 @@ function RegModal(props: LogRegProps) {
 function UserModal(props) {
   const { isOpen, setIsOpen } = props;
   const [rank, setRank] = React.useState(0);
-  const [place, setPlace] = React.useState("Penza, Russia");
+  const [place, setPlace] = React.useState("не указано");
   const [name, setName] = React.useState("");
 
   const logOut = () => {
     if (confirm("Вы уверены, что хотите выйти?")) {
       localStorage.removeItem("token");
+      localStorage.removeItem("id");
       setIsOpen(false);
       location.reload();
     }
   };
 
   //TODO: add type for data
-  const callback = (data) => {
-    let rank = data[0].rank;
-    if (rank > 0) rank = "+" + rank;
-    setRank(rank);
-    setPlace(data[0].place);
+  type UserType = {
+    _id: any;
+    login: string;
+    password: string;
+    name: string;
+    rank: number;
+    place: string;
+  };
+  const callback = (data: UserType) => {
+    setRank(data.rank);
+    setName(data.name);
+    setPlace(data.place);
   };
   useEffect(() => {
     //load info about user
     fetch("/api/getUserInfo", {
       method: "POST",
-      body: JSON.stringify({ id: 1 }),
+      body: JSON.stringify({ id: localStorage.getItem("id") }),
     })
       .then((data) => data.json())
       .then((data) => callback(data))
@@ -205,11 +217,7 @@ function UserModal(props) {
         <h1>{name} </h1>
         <p>Рейтинг: {rank} </p>
         <p>Город: {place}</p>
-        <ul>
-          <li>1 место среди авторов (+50)</li>
-          <li>5 публикаций</li>
-          <li>3 комментария</li>
-        </ul>
+        <p>Личный кабинет дорабатывается...</p>
         <p onClick={logOut}>выйти</p>
       </Modal>
     </>

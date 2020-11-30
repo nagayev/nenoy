@@ -9,7 +9,7 @@ let transporter = nodemailer.createTransport({
 async function sendMail(email) {
   await transporter.sendMail({
     from: '"Nenoy" <sidorovmarat1995@example.com>',
-    to: "nagaevmt@yandex.ru",
+    to: email,
     subject: "Nenoy registration",
     text: "Вы успешно зарегистрировались на сайте nenoy.ru",
   });
