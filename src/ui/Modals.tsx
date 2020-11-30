@@ -56,11 +56,9 @@ function LogModal(props: LogRegProps) {
   const [login, setLogin] = React.useState("");
   const [password, setPassword] = React.useState("");
   const check = (data) => {
-    //TODO: check, if data is incorrect
     if (isErrorWithCode(data, errors.INVALID_LOGIN)) {
       alert("Неправильный логин и/или пароль");
     } else {
-      //TODO: check this new feature
       localStorage.setItem("token", data.token);
       localStorage.setItem("id", data.id);
     }
@@ -181,11 +179,8 @@ function UserModal(props) {
     }
   };
 
-  //TODO: add type for data
+  //_id,login,password are excluded
   type UserType = {
-    _id: any;
-    login: string;
-    password: string;
     name: string;
     rank: number;
     place: string;

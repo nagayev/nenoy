@@ -6,16 +6,23 @@
 
 Сайт сделан на NextJS (как клиент, так и сервер). Используется vercel.com для хостинга + github  
 База данных хранится в Облаке на [cloud.mongodb.com](https://cloud.mongodb.com)
-Версия: 0.9
+Версия: 0.9.1
 
 ## Стек технологий
 
 JavaScript, React, NextJS
-react-modal,react-yandex-maps,react-markdown, date-diff-js, mongodb
+
+- react-modal - для Модалок :)
+- react-yandex-maps - Яндекс карты
+- react-markdown - для постов и комментариев
+- date-diff-js
+- mongodb - база данных
+- nodemailer - отправка письма после регистрации
 
 ## Комментарий
 
 Стабилизация апи уже прошла, но документация пока устаревшая.
+В будущем документация будет активно улучшаться.
 
 ## Описание страниц
 
@@ -51,9 +58,9 @@ TODO: add description
 ### Работа с БД
 
 src/usersdb.js  
-appendUser,getToken,isLoginExists  
+appendUser,sigIn (в прошлом getToken),isLoginExists  
 async appendUser(login:string,password:string)
 Insert new user to DB  
 NOTE: не проверяет существование пользователя!  
-async getToken(login:string,password:string):Promise<string>
+async sigIn(login:string,password:string):Promise<signInType>
 isLoginExists:Promise<boolean>

@@ -74,6 +74,11 @@ async function getUserInfo(id: string): Promise<any> {
   result.forEach((smt) => {
     globalThis.UserInfo = smt;
   });
+  //TODO: rename removeKeys
+  const removeKeys = ["_id", "login", "password"];
+  for (let key in globalThis.UserInfo) {
+    if (removeKeys.includes(key)) delete globalThis.UserInfo[key];
+  }
   return globalThis.UserInfo;
 }
 async function main() {
