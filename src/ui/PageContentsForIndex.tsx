@@ -12,6 +12,7 @@ import { headers } from "./objectTypes";
 const PageContentsForIndex: NextPage = () => {
   const style = getDefaultTheme();
   const [postType, setType] = useState(0);
+  const [posts, setPosts] = useState([]);
   return (
     <div style={style.pageLayout}>
       <TopMenu />
@@ -22,10 +23,10 @@ const PageContentsForIndex: NextPage = () => {
       </div>
       <div id="map">
         &nbsp;
-        <MapProvider />
+        <MapProvider posts={posts} setPosts={setPosts} />
       </div>
       <h1>{headers[postType]}</h1>
-      <Posts postType={postType} />
+      <Posts posts={posts} setPosts={setPosts} postType={postType} />
       <br />
       <div id="bottom">
         nenoy.ru, 2020 <br />

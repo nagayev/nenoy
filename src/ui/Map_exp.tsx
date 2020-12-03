@@ -12,6 +12,8 @@ import { InfoFromDBModal } from "./Modals";
 
 interface NormalMapInterface {
   mapCenter: Array<number>;
+  posts: any[];
+  setPosts: Function;
 }
 
 function NormalMap(props: NormalMapInterface) {
@@ -36,7 +38,7 @@ function NormalMap(props: NormalMapInterface) {
       });
   }, []);
   const Placemarks: any[] = [];
-  //NOTE: we have unused modal and console.log for posts
+  //NOTE: we have unused modal
   const getPostsByCoords = (coords) => {
     const opts = {
       method: "POST",
@@ -44,8 +46,8 @@ function NormalMap(props: NormalMapInterface) {
     };
     fetch("api/getPostsByCoords", opts)
       .then((data) => data.json())
-      .then((data) => console.log(data)); //data is array of posts
-    //setDBInfoIsOpen(true);
+      .then((data) => props.setPosts(data)); //data is array of posts
+    //setDBInfoIsOpen(true); //TODO: something with modal
     //setDBInfoCoords(coords);
   };
   for (let i = 0; i < placemarksCoords.length; i++) {
@@ -70,7 +72,8 @@ function NormalMap(props: NormalMapInterface) {
       );
     }
   }
-  const clickOnMap = (event: any) => {
+  type EventType = { _sourceEvent: any }; //TODO: rework
+  const clickOnMap = (event: EventType) => {
     //NOTE: type of event is any
     const coords = event._sourceEvent.originalEvent.coords; //get coords where user clicked
     if (!lock) {
@@ -115,7 +118,7 @@ function NormalMap(props: NormalMapInterface) {
     </>
   );
 }
-function MapProvider() {
+function MapProvider(props) {
   const MOSCOW = [55.4507, 37.3656];
   const [mapCenter, setMapCenter] = React.useState(MOSCOW);
 
@@ -139,6 +142,12 @@ function MapProvider() {
     console.log("Request user geolocation");
     navigator.geolocation.getCurrentPosition(suc, err, opts);
   }, []);
-  return <NormalMap mapCenter={mapCenter} />;
+  return (
+    <NormalMap
+      mapCenter={mapCenter}
+      setPosts={props.setPosts}
+      posts={props.posts}
+    />
+  );
 }
 export default MapProvider;

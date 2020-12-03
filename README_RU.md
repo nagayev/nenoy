@@ -16,7 +16,7 @@ Hello! You can view this README at [English](https://github.com/nagayev/unr/blob
 
 # Документация
 
-Доступна [здесь](https://github.com/nagayev/unr/blob/master/DOCS.MD)
+Доступна [здесь](https://github.com/nagayev/unr/blob/master/DOCS.MD)(на английском).
 
 # История изменений
 

@@ -2,11 +2,15 @@
 
 ## Current
 
+Current is now 0.9.2
+
+## 0.9.2
+
 - Add link to changelog to README (both Russian and English versions)
 - Add experimental map with search (but without token)
 - Fix signin close and add nice alert
 - Implement new api method: getPostsByCoords
-- Start implement object-to-post's connection
+- Implement object-to-post's link
 - Fix usersdb.ts: Add import of deleteKeys
 
 ## 0.9.1
