@@ -1,3 +1,4 @@
 mongodb_url="mongodb+srv:..."
 email_user="user"
 email_pass="password"
+yamaps_api_key="yamaps_api_key"

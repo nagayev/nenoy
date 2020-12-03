@@ -61,6 +61,8 @@ function LogModal(props: LogRegProps) {
     } else {
       localStorage.setItem("token", data.token);
       localStorage.setItem("id", data.id);
+      alert("Вы успешно авторизировались");
+      setIsOpen(false);
     }
   };
   function signin() {
@@ -68,7 +70,6 @@ function LogModal(props: LogRegProps) {
       login,
       password: MD5(password),
     };
-    setIsOpen(false);
     let opts = { method: "post", body: JSON.stringify(sendData) };
     fetch("/api/signin", opts)
       .then((data) => data.json())
@@ -122,11 +123,15 @@ function RegModal(props: LogRegProps) {
       name,
       password: MD5(password),
     };
-    setIsOpen(false);
     let opts = { method: "post", body: JSON.stringify(sendData) };
     const checkError = (error) => {
       if (isErrorWithCode(error, errors.BUSY_LOGIN)) {
         alert("Пользователь с таким логином уже существует!");
+        return;
+      } else {
+        alert("Вы успешно зарегистрировались.");
+        setIsOpen(false);
+        return;
       }
     };
     fetch("/api/signup", opts)

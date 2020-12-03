@@ -18,6 +18,11 @@ function detectMobile(): boolean {
   const isIOS = ua.match(/iPhone|iPad|iPod/i);
   return isAndroid !== isIOS; //isAndroid maybe null
 }
+function deleteKeys(obj: object, deleteKeys: string[]): void {
+  for (let i in obj) {
+    if (deleteKeys.includes(i)) delete obj[i];
+  }
+}
 function isValidEmail(email: string): boolean {
   //https://stackoverflow.com/a/46181
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -57,6 +62,7 @@ export {
   wrap,
   getDefaultTheme,
   detectMobile,
+  deleteKeys,
   MD5,
   isValidEmail,
   isErrorWithCode,

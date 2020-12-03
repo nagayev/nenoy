@@ -1,5 +1,7 @@
+import { deleteKeys } from "./ui/utils";
+
 export {};
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 //NOTE: uri and client is global in order to backward compatibility
 const uri = process.env["mongodb_url"];
 const opts = {
@@ -60,7 +62,7 @@ async function append2DB(arg) {
   appendObject({ type, coords, name });
   appendPost({ content, header, type, createdAt, updatedAt, checked: true }); //FIXME: temporally true
 }
-//FIXME:
+//FIXME: (???)
 async function getPosts(type: number) {
   await client.connect();
   const posts: any[] = [];
@@ -70,6 +72,29 @@ async function getPosts(type: number) {
     .collection(secondCollection)
     .find({ checked: true, type: type })
     .forEach(addToPosts);
+  return posts;
+}
+//NOTE: inner function, we don't export it!
+async function getObjectIdByCoords(coords: number[]): Promise<string> {
+  await client.connect();
+  const id = await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .findOne({ coords: coords });
+  return id._id;
+}
+async function getPostsByCoords(coords: number[]): Promise<any> {
+  const posts: any[] = [];
+  function addPosts(post) {
+    deleteKeys(post, ["_id", "parent_object_id", "type", "checked"]); //remove unused in client information
+    posts.push(post);
+  }
+  const id = await getObjectIdByCoords(coords);
+  await client
+    .db(DBNAME)
+    .collection(secondCollection)
+    .find({ parent_object_id: ObjectId(id) })
+    .forEach(addPosts);
   return posts;
 }
 async function getPlacemarks() {
@@ -91,9 +116,7 @@ async function main() {
   try {
     // Connect to the MongoDB cluster
     await client.connect();
-    //appendObject({ type: 2, coords: [54.1, 33.2], name: "defg" });
-    //select name, content from knowledgebase where applicationId='2955f3e174dce55190a87ed0e133adwdeb92';
-    //db.knowledgebase.find({ "checked": true}, { "coords": 1});
+    getPostsByCoords([55.34127762643805, 37.61828554687499]);
   } catch (e) {
     console.error(e);
   } finally {
@@ -113,6 +136,7 @@ if (require.main === module) {
     appendPost,
     getPlacemarks,
     getPosts,
+    getPostsByCoords,
   };
 }
 //export {append2DB,appendObject,appendPost};
