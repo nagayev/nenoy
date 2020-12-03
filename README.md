@@ -19,6 +19,10 @@ It's all!
 Are available [here](https://github.com/nagayev/unr/blob/master/DOCS.MD)  
 NOTE: only on Russian
 
+# Changelog
+
+Is available [here](https://github.com/nagayev/unr/blob/master/CHANGELOG.MD)
+
 # License
 
 MIT License. See LICENSE file for details.

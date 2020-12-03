@@ -1,3 +1,5 @@
+import { deleteKeys } from "./ui/utils";
+
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
 //NOTE: uri and client is global in order to backward compibility
@@ -74,11 +76,7 @@ async function getUserInfo(id: string): Promise<any> {
   result.forEach((smt) => {
     globalThis.UserInfo = smt;
   });
-  //TODO: rename removeKeys
-  const removeKeys = ["_id", "login", "password"];
-  for (let key in globalThis.UserInfo) {
-    if (removeKeys.includes(key)) delete globalThis.UserInfo[key];
-  }
+  deleteKeys(globalThis.UserInfo, ["_id", "login", "password"]);
   return globalThis.UserInfo;
 }
 async function main() {

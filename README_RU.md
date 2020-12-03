@@ -18,6 +18,10 @@ Hello! You can view this README at [English](https://github.com/nagayev/unr/blob
 
 Доступна [здесь](https://github.com/nagayev/unr/blob/master/DOCS.MD)
 
+# История изменений
+
+История изменений доступна [здесь](https://github.com/nagayev/unr/blob/master/CHANGELOG.MD)
+
 # Лицензия
 
 Лицензия MIT. Смотри файл LICENSE для получения более подробной информации.
