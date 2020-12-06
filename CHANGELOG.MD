@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is now 0.9.2
+- Add test.js (Yandex Maps)
 
 ## 0.9.2
 
