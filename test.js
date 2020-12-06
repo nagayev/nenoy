@@ -3606,7 +3606,7 @@
           geoxml: "https://api-maps.yandex.ru/services/geoxml/",
           inception: "https://api-maps.yandex.ru/services/inception/",
           panoramaLocate: "https://api-maps.yandex.ru/services/panoramas/",
-          search: "https://api-maps.yandex.ru/services/search/",
+          search: "https://unr.nagayev.vercel.app/api/search",
           suggest: "https://suggest-maps.yandex.ru/",
           regions: "https://api-maps.yandex.ru/services/regions/",
           route: "https://api-maps.yandex.ru/services/route/",
