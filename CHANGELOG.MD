@@ -2,7 +2,18 @@
 
 ## Current
 
-Current is 0.9.3 now
+Current is 0.9.4 now
+
+## 0.9.4
+
+- Implement new modal  
+  User can choose what he want: add post or view posts
+- Update README  
+  add info about Contributing and Roadmap
+  add status
+- Delete experimental version of map  
+  Now Map is stable!
+- Add TODO fix for MongoDB
 
 ## 0.9.3
 

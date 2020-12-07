@@ -7,6 +7,7 @@ const uri = process.env["mongodb_url"];
 const opts = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
+  //TODO: experimental opts below
 };
 const client = new MongoClient(uri, opts);
 const DBNAME = "users";

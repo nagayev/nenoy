@@ -20,7 +20,8 @@ const customStyles = {
 interface MapModalInterface {
   modalIsOpen: boolean;
   setIsOpen: Function;
-  modalCoords: number[];
+  data: any;
+  setPosts: Function;
 }
 
 interface LogRegProps {
@@ -28,9 +29,17 @@ interface LogRegProps {
   setIsOpen: Function;
 }
 
+//TODO: rename this function!
 function InfoFromDBModal(props: MapModalInterface) {
-  const { modalIsOpen, setIsOpen, modalCoords } = props;
-
+  const { modalIsOpen, setIsOpen, data, setPosts } = props;
+  const show = () => {
+    setPosts(data);
+    setIsOpen(false);
+  };
+  const write = () => {
+    //TODO:
+    setIsOpen(false);
+  };
   return (
     <>
       <Modal
@@ -40,12 +49,16 @@ function InfoFromDBModal(props: MapModalInterface) {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        {/*<h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2> */}
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
-        <div>Это модальное окно пока не реализовано.</div>
-        <div>Будет в следующей версии.</div>
+        <h1>Что вы хотите?</h1>
         <div>
-          Объект с координатами ({modalCoords[0]});({modalCoords[1]}){" "}
+          <p>
+            <button onClick={write}>Написать</button>&nbsp;об объекте
+          </p>
+          <p>
+            {" "}
+            <button onClick={show}>Посмотреть</button>&nbsp;записи об объекте
+          </p>
         </div>
       </Modal>
     </>
