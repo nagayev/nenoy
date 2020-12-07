@@ -2,7 +2,13 @@
 
 ## Current
 
-- Add test.js (Yandex Maps)
+Current is 0.9.3 now
+
+## 0.9.3
+
+- Add test server for Yandex Maps (very experimental)
+- Add Markdown Editor for news
+- Fix small bug with AddInfoModal
 
 ## 0.9.2
 

@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import Editor from "./Editor";
 import NoSsr from "./no";
 import { types } from "./objectTypes";
 
@@ -28,13 +29,20 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
   const { isOpen, setIsOpen, userPlacemark, deleteUserPlacemark } = props;
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
   const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
+
   const closeFirstModal = () => setFirstIsOpen(false);
+  const closeSecondModal = () => setSecondIsOpen(false);
+
   const savetlyOpenSecondModal = () => {
     closeFirstModal();
     setSecondIsOpen(true);
   };
   const savetlyCloseFirstModal = () => {
     closeFirstModal();
+    deleteUserPlacemark();
+  };
+  const savetlyCloseSecondModal = () => {
+    closeSecondModal();
     deleteUserPlacemark();
   };
 
@@ -48,7 +56,6 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
     f: VoidFunction,
     m = "Выйти без сохранения?",
   ) => (confirm(m) ? f() : undefined);
-  const closeSecondModal = () => setSecondIsOpen(false);
   const sendInformation = () => {
     const thanks =
       "Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее";
@@ -100,12 +107,14 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
       </Modal>
       <Modal
         isOpen={secondModalIsOpen}
-        onRequestClose={() => areYouSureTo(closeSecondModal)}
+        onRequestClose={closeSecondModal}
         style={customStyles}
         contentLabel="Example Modal"
         appElement={document.body}
       >
-        <button onClick={closeSecondModal}>закрыть</button>
+        <button onClick={() => areYouSureTo(savetlyCloseSecondModal)}>
+          закрыть
+        </button>
         <h2>Спасибо за добавление информации!</h2>
         <p>Пожалуйста напишите о нем первую запись</p>
         <div style={{ display: "contents" }}>
@@ -116,9 +125,7 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
           />
           <br />
           <p>Содержимое поста:</p>
-          <textarea
-            onChange={(e) => updateSendDataProp(e, "content")}
-          ></textarea>
+          <Editor setState={updateSendDataProp} />
         </div>{" "}
         <br />
         <button onClick={sendInformation}>Отправить</button>

@@ -1,6 +1,7 @@
 //import "react-awesome-slider/dist/styles.css";
 import "../ui/index.css";
 import "../ui/PageContentsForIndex.css";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 // https://github.com/roylee0704/react-flexbox-grid/issues/173#issuecomment-628984004
 //import "react-flexbox-grid/dist/react-flexbox-grid.css";
