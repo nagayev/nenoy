@@ -17,9 +17,8 @@ const secondCollection = "posts";
 type ObjectType = {
   name: string;
   coords: number[];
+  checked?: boolean;
   type: number;
-  //posts:any,
-  checked: boolean;
 };
 type PostType = {
   header: string;
@@ -27,9 +26,20 @@ type PostType = {
   type: number;
   createdAt: number;
   updatedAt: number;
-  checked: boolean;
+  checked?: boolean;
 };
-async function appendObject(arg) {
+globalThis.connected = false;
+async function maybe_connect() {
+  console.log("maybe_connect");
+  if (!globalThis.connected) {
+    console.log("real connect");
+    await client.connect();
+    globalThis.connected = true;
+  }
+}
+async function appendObject(arg: ObjectType) {
+  await maybe_connect();
+  arg.checked = true; //TODO:
   const result = await client
     .db(DBNAME)
     .collection(firstCollection)
@@ -39,6 +49,8 @@ async function appendObject(arg) {
   );
 }
 async function appendPost(arg: PostType) {
+  await maybe_connect();
+  arg.checked = true; //TODO:
   const result = await client
     .db(DBNAME)
     .collection(secondCollection)
@@ -48,24 +60,16 @@ async function appendPost(arg: PostType) {
   );
 }
 async function append2DB(arg) {
-  //FIXME: posts not used!
-  await client.connect();
-  const {
-    type,
-    name,
-    posts,
-    coords,
-    content,
-    header,
-    createdAt,
-    updatedAt,
-  } = arg;
+  //await client.connect();
+  await maybe_connect();
+  const { type, name, coords, content, header, createdAt, updatedAt } = arg;
   appendObject({ type, coords, name });
-  appendPost({ content, header, type, createdAt, updatedAt, checked: true }); //FIXME: temporally true
+  appendPost({ content, header, type, createdAt, updatedAt });
 }
 //FIXME: (???)
 async function getPosts(type: number) {
-  await client.connect();
+  //await client.connect();
+  await maybe_connect();
   const posts: any[] = [];
   const addToPosts = (a) => posts.push(a);
   await client
@@ -77,7 +81,8 @@ async function getPosts(type: number) {
 }
 //NOTE: inner function, we don't export it!
 async function getObjectIdByCoords(coords: number[]): Promise<string> {
-  await client.connect();
+  //await client.connect();
+  await maybe_connect();
   const id = await client
     .db(DBNAME)
     .collection(firstCollection)
@@ -85,6 +90,7 @@ async function getObjectIdByCoords(coords: number[]): Promise<string> {
   return id._id;
 }
 async function getPostsByCoords(coords: number[]): Promise<any> {
+  await maybe_connect();
   const posts: any[] = [];
   function addPosts(post) {
     deleteKeys(post, ["_id", "parent_object_id", "type", "checked"]); //remove unused in client information
@@ -99,7 +105,8 @@ async function getPostsByCoords(coords: number[]): Promise<any> {
   return posts;
 }
 async function getPlacemarks() {
-  await client.connect();
+  //await client.connect();
+  await maybe_connect();
   const coords: any[] = [];
   const addToCoords = (a) => coords.push(a.coords);
   await client
@@ -116,7 +123,7 @@ async function getPlacemarks() {
 async function main() {
   try {
     // Connect to the MongoDB cluster
-    await client.connect();
+    //await client.connect();
     getPostsByCoords([55.34127762643805, 37.61828554687499]);
   } catch (e) {
     console.error(e);

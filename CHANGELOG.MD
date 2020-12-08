@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is 0.9.4 now
+- Add new connection to DB (test)
 
 ## 0.9.4
 

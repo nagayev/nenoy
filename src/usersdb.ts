@@ -14,9 +14,18 @@ const DBNAME = "users";
 const firstCollection = "users";
 type MD5Type = string;
 const MD5 = require("./ui/md5");
+globalThis.connected = false;
+async function maybe_connect() {
+  console.log("maybe_connect");
+  if (!globalThis.connected) {
+    console.log("real connect");
+    await client.connect();
+    globalThis.connected = true;
+  }
+}
 async function appendUser(login, password, name): Promise<void> {
   //console.warn(login,password);
-  await client.connect();
+  await maybe_connect();
   let data = {
     login,
     password,
@@ -42,7 +51,7 @@ async function signIn(
 ): Promise<sigInType | string> {
   //`SELECT password from users WHERE login='${login}';
   const data = { token: "", id: "" };
-  await client.connect();
+  await maybe_connect();
   let data_from_db = await client
     .db(DBNAME)
     .collection(firstCollection)
@@ -54,7 +63,7 @@ async function signIn(
   return data;
 }
 async function isLoginExists(login: string): Promise<boolean> {
-  await client.connect();
+  await maybe_connect();
   let ok;
   //`SELECT * from users WHERE login='${login}';`
   ok = await client
@@ -69,7 +78,7 @@ async function getUserInfo(id: string): Promise<any> {
   // `SELECT rank,place from users WHERE id='${id}';`
   //select name, content from knowledgebase where applicationId='1';
   //db.knowledgebase.find({ "applicationId": "1"}, { "name": 1,    "content": 1});
-  await client.connect();
+  await maybe_connect();
   let result = await client
     .db(DBNAME)
     .collection(firstCollection)
@@ -83,7 +92,7 @@ async function getUserInfo(id: string): Promise<any> {
 async function main() {
   try {
     // Connect to the MongoDB cluster
-    //await client.connect();
+    await maybe_connect();
   } catch (e) {
     console.error(e);
   } finally {
@@ -93,6 +102,8 @@ async function main() {
 if (require.main === module) {
   //directly from bash
   main().catch(console.error);
-} else module.exports = { appendUser, signIn, isLoginExists, getUserInfo };
+} else {
+  module.exports = { appendUser, signIn, isLoginExists, getUserInfo };
+}
 
 //export {appendUser,getToken};

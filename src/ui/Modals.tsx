@@ -20,7 +20,7 @@ const customStyles = {
 interface MapModalInterface {
   modalIsOpen: boolean;
   setIsOpen: Function;
-  data: any;
+  data: any; //TODO:
   setPosts: Function;
 }
 
