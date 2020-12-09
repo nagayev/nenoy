@@ -1,4 +1,4 @@
-import { deleteKeys } from "./ui/utils";
+const { deleteKeys } = require("./ui/utils");
 
 export {};
 const { MongoClient, ObjectId } = require("mongodb");

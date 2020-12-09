@@ -2,7 +2,13 @@
 
 ## Current
 
-- Add new connection to DB (test)
+Current is 0.9.5 now
+
+## 0.9.5
+
+- Add new connection to DB
+- Add password recovery
+- Add custom 404
 
 ## 0.9.4
 

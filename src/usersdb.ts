@@ -15,20 +15,21 @@ const firstCollection = "users";
 type MD5Type = string;
 const MD5 = require("./ui/md5");
 globalThis.connected = false;
+
 async function maybe_connect() {
   console.log("maybe_connect");
   if (!globalThis.connected) {
-    console.log("real connect");
+    console.log("Real connect");
     await client.connect();
     globalThis.connected = true;
   }
 }
 async function appendUser(login, password, name): Promise<void> {
-  //console.warn(login,password);
   await maybe_connect();
   let data = {
     login,
     password,
+    token: MD5(`${login}_${password}`),
     name,
     rank: 0,
     place: "не указано",
@@ -37,9 +38,28 @@ async function appendUser(login, password, name): Promise<void> {
     .db(DBNAME)
     .collection(firstCollection)
     .insertOne(data);
-  console.log(
-    `New listing created with the following id: ${result.insertedId}`,
-  );
+  console.log(`Append user with id: ${result.insertedId}`);
+}
+//FIXME:
+async function changePassword(
+  token: string,
+  new_password: string,
+): Promise<void> {
+  await maybe_connect();
+  let user = await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .findOne({ token: token });
+  const login = user.login;
+  const new_token = MD5(`${login}_${new_password}`);
+  await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .updateOne(
+      { token: token },
+      { $set: { password: new_password, token: new_token } },
+    );
+  //.updateOne({ token: token }, { password: new_password, token: new_token });
 }
 type sigInType = {
   token: MD5Type;
@@ -58,7 +78,7 @@ async function signIn(
     .findOne({ login: login });
   if (data_from_db === null) return "INVALID"; //invalid login
   if (data_from_db.password !== password) return "INVALID"; //correct login but incorrect password
-  data.token = MD5(`${login}_${password}`);
+  data.token = data_from_db.token;
   data.id = data_from_db._id;
   return data;
 }
@@ -86,24 +106,22 @@ async function getUserInfo(id: string): Promise<any> {
   result.forEach((smt) => {
     globalThis.UserInfo = smt;
   });
-  deleteKeys(globalThis.UserInfo, ["_id", "login", "password"]);
+  deleteKeys(globalThis.UserInfo, ["_id", "login", "password", "token"]);
   return globalThis.UserInfo;
 }
-async function main() {
-  try {
-    // Connect to the MongoDB cluster
-    await maybe_connect();
-  } catch (e) {
-    console.error(e);
-  } finally {
-    await client.close();
-  }
+async function getToken(login: string): Promise<string> {
+  await maybe_connect();
+  let result = await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .findOne({ login: login });
+  return result.token;
 }
-if (require.main === module) {
-  //directly from bash
-  main().catch(console.error);
-} else {
-  module.exports = { appendUser, signIn, isLoginExists, getUserInfo };
-}
-
-//export {appendUser,getToken};
+export {
+  appendUser,
+  changePassword,
+  signIn,
+  isLoginExists,
+  getUserInfo,
+  getToken,
+};

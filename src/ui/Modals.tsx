@@ -78,6 +78,21 @@ function LogModal(props: LogRegProps) {
       setIsOpen(false);
     }
   };
+  function recoverPassword() {
+    const sendData = {
+      login,
+    };
+    let opts = { method: "post", body: JSON.stringify(sendData) };
+    fetch("/api/recover", opts).then((data) => {
+      if (isErrorWithCode(data, errors.INVALID_LOGIN)) {
+        alert("Неправильный логин");
+      } else {
+        alert(
+          "Письмо с информацией о восстановлении пароля отправлено Вам на почту",
+        );
+      }
+    });
+  }
   function signin() {
     const sendData = {
       login,
@@ -106,6 +121,8 @@ function LogModal(props: LogRegProps) {
         <input onChange={(e) => setPassword(e.target.value)} type="password" />
         <br />
         <button onClick={signin}>Войти</button>
+        <p>Забыли пароль?</p>
+        <button onClick={recoverPassword}>Восстановить</button>
       </Modal>
     </>
   );

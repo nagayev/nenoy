@@ -1,5 +1,5 @@
 const db = require("../../usersdb");
-import sendMail from "../../ui/email";
+import { sendAfterRegistrationMail } from "../../ui/email";
 import errors from "../../ui/errors";
 import { formatError, formatOk } from "../../ui/utils";
 export default async function (req, res) {
@@ -15,7 +15,7 @@ export default async function (req, res) {
         resolve();
       } else {
         db.appendUser(content.login, content.password, content.name);
-        sendMail(content.login);
+        sendAfterRegistrationMail(content.login);
         res.end(formatOk());
         resolve();
       }
