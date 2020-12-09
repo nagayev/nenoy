@@ -2,13 +2,17 @@ import Head from "next/head";
 import MD5 from "../ui/md5";
 import React, { useState } from "react";
 import NoSSR from "../ui/no";
+import { errors } from "../ui/errors";
+import { isErrorWithCode } from "../ui/utils";
 
 function ChangePasswordContent() {
   //TODO: add check
   const updatePassword = (e) => setPassword(e.target.value);
   const [password, setPassword] = useState("");
   function check(data) {
-    alert("Пароль успешно сменен!");
+    if (isErrorWithCode(data, errors.INVALID_TOKEN)) {
+      alert("Произошла ошибка");
+    } else alert("Пароль успешно сменен!");
   }
   function send() {
     const opts = {
@@ -19,8 +23,8 @@ function ChangePasswordContent() {
       .then((data) => data.json())
       .then((data) => check(data));
   }
-  //MAGIC, hahah 7 is 5 (length of token) + '?' + '='
-  const MAGIC = 7;
+  //MAGIC, hahah 6 is 4 (length of hash) + '?' + '='
+  const MAGIC = 6;
   const token = location.href.slice(location.href.indexOf("?") + MAGIC);
   console.log(token);
   return (

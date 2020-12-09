@@ -2,6 +2,7 @@ import dark from "./dark";
 import MD5 from "./md5";
 
 type voidFunction = () => void;
+type JSONString = string;
 
 function wrap(f: Function, ...args): voidFunction {
   return () => {
@@ -33,10 +34,10 @@ function isErrorWithCode(error: object, code: number): boolean {
   //because {a:1}!=={a:1}
   return JSON.stringify(error) === JSON.stringify({ error: code });
 }
-function formatError(code: number): string {
+function formatError(code: number): JSONString {
   return JSON.stringify({ error: code });
 }
-function formatOk(): string {
+function formatOk(): JSONString {
   return JSON.stringify({ error: -1 });
 }
 function getDateWithCase(n: number, textForms: string[]): string {

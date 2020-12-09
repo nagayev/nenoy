@@ -1,4 +1,5 @@
-import { deleteKeys } from "./ui/utils";
+import { errors } from "./ui/errors";
+import { deleteKeys, formatError } from "./ui/utils";
 
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
@@ -7,7 +8,6 @@ const uri = process.env["mongodb_url"];
 const opts = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  //TODO: experimental opts below
 };
 const client = new MongoClient(uri, opts);
 const DBNAME = "users";
@@ -40,16 +40,16 @@ async function appendUser(login, password, name): Promise<void> {
     .insertOne(data);
   console.log(`Append user with id: ${result.insertedId}`);
 }
-//FIXME:
 async function changePassword(
   token: string,
   new_password: string,
-): Promise<void> {
+): Promise<void | string> {
   await maybe_connect();
   let user = await client
     .db(DBNAME)
     .collection(firstCollection)
     .findOne({ token: token });
+  if (!user) return "INVALID";
   const login = user.login;
   const new_token = MD5(`${login}_${new_password}`);
   await client
@@ -59,7 +59,6 @@ async function changePassword(
       { token: token },
       { $set: { password: new_password, token: new_token } },
     );
-  //.updateOne({ token: token }, { password: new_password, token: new_token });
 }
 type sigInType = {
   token: MD5Type;

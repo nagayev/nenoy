@@ -1,13 +1,11 @@
-const { deleteKeys } = require("./ui/utils");
-
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
+const { deleteKeys } = require("./ui/utils");
 //NOTE: uri and client is global in order to backward compatibility
 const uri = process.env["mongodb_url"];
 const opts = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  //TODO: experimental opts below
 };
 const client = new MongoClient(uri, opts);
 const DBNAME = "posts";

@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is 0.9.5 now
+- Fix password recovery
 
 ## 0.9.5
 

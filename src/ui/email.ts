@@ -35,10 +35,11 @@ async function _sendMail(
 function sendAfterRegistrationMail(email: string): Promise<void> {
   return _sendMail(email, regMailTemplate);
 }
-function sendRecoveryMail(email: string): Promise<void> {
+function sendRecoveryMail(email: string): void {
   const copy = Object.assign({}, recoveryMailTemplate);
-  const token = db.getToken(email); //TODO: check this!
-  copy.text += ` https://nenoy.ru/changePassword?tonen=${token}`;
-  return _sendMail(email, copy);
+  db.getToken(email).then((token) => {
+    copy.text += ` https://nenoy.ru/changePassword?hash=${token}`;
+    _sendMail(email, copy);
+  });
 }
 export { sendAfterRegistrationMail, sendRecoveryMail };
