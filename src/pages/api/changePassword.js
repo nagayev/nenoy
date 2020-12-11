@@ -1,5 +1,5 @@
 const db = require("../../usersdb");
-const { errors } = require("../../ui/errors");
+const errors = require("../../ui/errors");
 import { formatError, formatOk } from "../../ui/utils";
 
 export default async function (req, res) {
@@ -11,6 +11,7 @@ export default async function (req, res) {
     db.changePassword(token, password)
       .then((data) => {
         if (data === "INVALID") {
+          //sendAfterPasswordChange();
           res.status(200).end(formatError(errors.INVALID_TOKEN));
         } else res.status(200).end(formatOk());
         resolve();

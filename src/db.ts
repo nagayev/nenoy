@@ -11,6 +11,7 @@ const client = new MongoClient(uri, opts);
 const DBNAME = "posts";
 const firstCollection = "objects";
 const secondCollection = "posts";
+const commentariesCollection = "commentaries";
 
 type ObjectType = {
   name: string;
@@ -57,19 +58,29 @@ async function appendPost(arg: PostType) {
     `New listing created with the following id: ${result.insertedId}`,
   );
 }
-async function append2DB(arg) {
+async function append2DB(arg): Promise<void> {
   //await client.connect();
   await maybe_connect();
   const { type, name, coords, content, header, createdAt, updatedAt } = arg;
   appendObject({ type, coords, name });
   appendPost({ content, header, type, createdAt, updatedAt });
 }
+async function getComments(id: string) {
+  await maybe_connect();
+  let commentaries: any[] = [];
+  const addToCommentaries = (commentary) => commentaries.push(commentary);
+  await client
+    .db(DBNAME)
+    .collection(commentariesCollection)
+    .find({ post_id: ObjectId(id) })
+    .forEach(addToCommentaries);
+  return commentaries;
+}
 //FIXME: (???)
 async function getPosts(type: number) {
-  //await client.connect();
   await maybe_connect();
   const posts: any[] = [];
-  const addToPosts = (a) => posts.push(a);
+  const addToPosts = (post) => posts.push(post);
   await client
     .db(DBNAME)
     .collection(secondCollection)
@@ -140,6 +151,7 @@ if (require.main === module) {
     append2DB,
     appendObject,
     appendPost,
+    getComments,
     getPlacemarks,
     getPosts,
     getPostsByCoords,

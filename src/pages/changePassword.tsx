@@ -2,8 +2,9 @@ import Head from "next/head";
 import MD5 from "../ui/md5";
 import React, { useState } from "react";
 import NoSSR from "../ui/no";
-import { errors } from "../ui/errors";
 import { isErrorWithCode } from "../ui/utils";
+
+const errors = require("../ui/errors");
 
 function ChangePasswordContent() {
   //TODO: add check
@@ -12,7 +13,10 @@ function ChangePasswordContent() {
   function check(data) {
     if (isErrorWithCode(data, errors.INVALID_TOKEN)) {
       alert("Произошла ошибка");
-    } else alert("Пароль успешно сменен!");
+    } else {
+      alert("Пароль успешно сменен!");
+      location.pathname = "/";
+    }
   }
   function send() {
     const opts = {

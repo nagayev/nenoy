@@ -1,6 +1,6 @@
 const db = require("../../usersdb");
 import { sendAfterRegistrationMail } from "../../ui/email";
-import { errors } from "../../ui/errors";
+import errors from "../../ui/errors";
 import { formatError, formatOk } from "../../ui/utils";
 export default async function (req, res) {
   //NOTE: don't delete new Promise(...)

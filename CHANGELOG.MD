@@ -3,6 +3,7 @@
 ## Current
 
 - Fix password recovery
+- Add normal commentaries (not stub)
 
 ## 0.9.5
 

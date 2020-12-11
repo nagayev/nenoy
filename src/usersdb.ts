@@ -1,5 +1,4 @@
-import { errors } from "./ui/errors";
-import { deleteKeys, formatError } from "./ui/utils";
+import { deleteKeys } from "./ui/utils";
 
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
@@ -84,13 +83,20 @@ async function signIn(
 async function isLoginExists(login: string): Promise<boolean> {
   await maybe_connect();
   let ok;
-  //`SELECT * from users WHERE login='${login}';`
   ok = await client
     .db(DBNAME)
     .collection(firstCollection)
     .findOne({ login: login });
-  //console.log(ok);
   return ok !== null;
+}
+async function isTokenCorrect(token: string): Promise<boolean> {
+  await maybe_connect();
+  let ok;
+  ok = await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .findOne({ token: token });
+  return ok === token;
 }
 async function getUserInfo(id: string): Promise<any> {
   //rank and place
@@ -121,6 +127,7 @@ export {
   changePassword,
   signIn,
   isLoginExists,
+  isTokenCorrect,
   getUserInfo,
   getToken,
 };

@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { wrap, MD5, isValidEmail, isErrorWithCode } from "./utils";
 import ReactMarkdown from "react-markdown";
 import Commentaries from "./Commentaries";
 const errors = require("./errors");
-
+console.log(errors);
 const customStyles = {
   content: {
     color: "black",
@@ -84,6 +84,7 @@ function LogModal(props: LogRegProps) {
     };
     let opts = { method: "post", body: JSON.stringify(sendData) };
     fetch("/api/recover", opts).then((data) => {
+      console.log(data);
       if (isErrorWithCode(data, errors.INVALID_LOGIN)) {
         alert("Неправильный логин");
       } else {
@@ -255,9 +256,17 @@ function UserModal(props) {
 }
 function PostModal(props) {
   const { isOpen, setIsOpen, data } = props;
-  const comments = [
-    { user: "Марат Нагаев", text: "Отличная новость!", ranking: 12 },
-  ];
+  const [comments, setComments] = useState([]);
+  console.log(data);
+  useEffect(() => {
+    const opts = {
+      method: "POST",
+      body: `${data._id}`,
+    };
+    fetch("api/getComments", opts)
+      .then((data) => data.json())
+      .then((data) => setComments(data));
+  }, [data._id]);
   return (
     <>
       <Modal

@@ -17,6 +17,13 @@ const recoveryMailTemplate = {
   from: '"Nenoy" <sidorovmarat1995@gmail.com>',
   text: "Для восстановления пароля перейдите по ссылке",
 };
+const changePasswordTemplate = {
+  subject: "Изменение пароля на Неной",
+  from: '"Nenoy" <sidorovmarat1995@gmail.com>',
+  text:
+    "Вы успешно изменили пароль от своей учетной записи\n \
+  Если это были не Вы - напишите нам в поддержку vp@nenoy.ru ",
+};
 async function _sendMail(
   email: string,
   mail: typeof regMailTemplate,
@@ -42,4 +49,7 @@ function sendRecoveryMail(email: string): void {
     _sendMail(email, copy);
   });
 }
-export { sendAfterRegistrationMail, sendRecoveryMail };
+function sendAfterPasswordChange(email: string): void {
+  _sendMail(email, changePasswordTemplate);
+}
+export { sendAfterRegistrationMail, sendRecoveryMail, sendAfterPasswordChange };

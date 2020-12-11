@@ -1,4 +1,5 @@
 //See docs in DOCS.MD
+export {};
 type ErrorsType = {
   BUSY_LOGIN: number;
   INVALID_LOGIN: number;
@@ -9,4 +10,4 @@ const errors: ErrorsType = {
   INVALID_LOGIN: 1,
   INVALID_TOKEN: 2,
 };
-export { errors };
+module.exports = errors;
