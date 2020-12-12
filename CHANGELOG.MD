@@ -2,8 +2,14 @@
 
 ## Current
 
+- Current is 0.9.6 now
+
+## 0.9.6
+
 - Fix password recovery
 - Add normal commentaries (not stub)
+- Add check for token
+- Fix getUserInfo
 
 ## 0.9.5
 

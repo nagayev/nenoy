@@ -1,5 +1,4 @@
 import { deleteKeys } from "./ui/utils";
-
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
 //NOTE: uri and client is global in order to backward compibility
@@ -89,30 +88,31 @@ async function isLoginExists(login: string): Promise<boolean> {
     .findOne({ login: login });
   return ok !== null;
 }
-async function isTokenCorrect(token: string): Promise<boolean> {
+async function isSomethingCorrect(
+  key: string,
+  expected_value: string,
+): Promise<boolean> {
   await maybe_connect();
-  let ok;
-  ok = await client
+  let response;
+  const searchParam = {};
+  searchParam[key] = expected_value;
+  response = await client
     .db(DBNAME)
     .collection(firstCollection)
-    .findOne({ token: token });
-  return ok === token;
+    .findOne(searchParam);
+  if (!response) return false;
+  return true;
 }
-async function getUserInfo(id: string): Promise<any> {
-  //rank and place
-  // `SELECT rank,place from users WHERE id='${id}';`
-  //select name, content from knowledgebase where applicationId='1';
-  //db.knowledgebase.find({ "applicationId": "1"}, { "name": 1,    "content": 1});
+async function getUserInfo(id: string): Promise<any[]> {
   await maybe_connect();
   let result = await client
     .db(DBNAME)
     .collection(firstCollection)
-    .find({ _id: ObjectId(id) });
-  result.forEach((smt) => {
-    globalThis.UserInfo = smt;
-  });
-  deleteKeys(globalThis.UserInfo, ["_id", "login", "password", "token"]);
-  return globalThis.UserInfo;
+    .findOne({ _id: ObjectId(id) });
+  if (result === null) return [];
+  deleteKeys(result, ["_id", "login", "password", "token"]); //NOTE: exclude private info
+  //console.log(result);
+  return result;
 }
 async function getToken(login: string): Promise<string> {
   await maybe_connect();
@@ -127,7 +127,7 @@ export {
   changePassword,
   signIn,
   isLoginExists,
-  isTokenCorrect,
+  isSomethingCorrect,
   getUserInfo,
   getToken,
 };

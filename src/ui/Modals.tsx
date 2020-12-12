@@ -91,6 +91,7 @@ function LogModal(props: LogRegProps) {
         alert(
           "Письмо с информацией о восстановлении пароля отправлено Вам на почту",
         );
+        setIsOpen(false);
       }
     });
   }
@@ -257,7 +258,6 @@ function UserModal(props) {
 function PostModal(props) {
   const { isOpen, setIsOpen, data } = props;
   const [comments, setComments] = useState([]);
-  console.log(data);
   useEffect(() => {
     const opts = {
       method: "POST",

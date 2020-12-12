@@ -1,4 +1,5 @@
 //Thanks to: https://snipp.ru/jquery/md5-js
+//TODO: may be we should replace with to SHA256
 const MD5 = (d) => {
   var d, result;
   d = unescape(encodeURIComponent(d));
