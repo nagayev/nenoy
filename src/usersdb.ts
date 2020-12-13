@@ -1,4 +1,4 @@
-import { deleteKeys } from "./ui/utils";
+import { debugLog, deleteKeys } from "./ui/utils";
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
 //NOTE: uri and client is global in order to backward compibility
@@ -86,7 +86,7 @@ async function isLoginExists(login: string): Promise<boolean> {
     .db(DBNAME)
     .collection(firstCollection)
     .findOne({ login: login });
-  return ok !== null;
+  return ok != null;
 }
 async function isSomethingCorrect(
   key: string,
@@ -100,6 +100,7 @@ async function isSomethingCorrect(
     .db(DBNAME)
     .collection(firstCollection)
     .findOne(searchParam);
+  console.log("r", response);
   if (!response) return false;
   return true;
 }

@@ -2,7 +2,11 @@
 
 ## Current
 
-- Current is 0.9.6 now
+- Optimise Modals.tsx: split file into multiple
+- Add comment writing (TODO: )
+- Now you can add posts to existing objects (TODO:)
+- Replace markdown to HTML
+- Improve checking token (made it faster)
 
 ## 0.9.6
 

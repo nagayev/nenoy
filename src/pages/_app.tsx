@@ -1,7 +1,8 @@
 import "../ui/index.css";
 import "../ui/404.css";
 import "../ui/PageContentsForIndex.css";
-import "react-mde/lib/styles/css/react-mde-all.css";
+//import "react-mde/lib/styles/css/react-mde-all.css";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";

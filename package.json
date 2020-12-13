@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "date-diff-js": "^1.0.4",
-    "dotenv": "^8.2.0",
+    "jodit-react": "^1.0.66",
     "mongodb": "^3.6.3",
-    "next": "^9.4.2",
+    "next": "^10.0.0",
     "next-compose-plugins": "^2.2.0",
     "next-fonts": "^1.4.0",
     "next-images": "^1.6.0",
@@ -23,8 +23,6 @@
     "nodemailer": "^6.4.16",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-markdown": "^4.3.1",
-    "react-mde": "^11.0.0",
     "react-modal": "^3.11.2",
     "react-yandex-maps": "^4.5.0"
   },

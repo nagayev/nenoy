@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import Editor from "./Editor";
+import customStyles from "./ModalStyles";
 import NoSsr from "./no";
 import { types } from "./objectTypes";
 
@@ -13,22 +14,11 @@ interface AddPlacemarkInterface {
 
 type VoidFunction = (...args: any[]) => undefined;
 
-const customStyles = {
-  content: {
-    color: "black",
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
-
 function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
   const { isOpen, setIsOpen, userPlacemark, deleteUserPlacemark } = props;
   const [firstModalIsOpen, setFirstIsOpen] = [isOpen, setIsOpen];
   const [secondModalIsOpen, setSecondIsOpen] = React.useState(false);
+  const [content, setContent] = React.useState("");
 
   const closeFirstModal = () => setFirstIsOpen(false);
   const closeSecondModal = () => setSecondIsOpen(false);
@@ -125,7 +115,11 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
           />
           <br />
           <p>Содержимое поста:</p>
-          <Editor setState={updateSendDataProp} />
+          <Editor
+            content={content}
+            setContent={setContent}
+            setState={updateSendDataProp}
+          />
         </div>{" "}
         <br />
         <button onClick={sendInformation}>Отправить</button>

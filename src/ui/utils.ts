@@ -59,9 +59,15 @@ function getDateWithCase(n: number, textForms: string[]): string {
 function saveFirstWords(content: string): string {
   return content.split(" ").slice(0, 50).join(" ");
 }
+function debugLog(...args) {
+  let caller = debugLog.caller.name; //TODO: check browser support
+  if (!caller) caller = "Неопределенная функция";
+  console.log(caller, " ", ...args);
+}
 export {
   wrap,
   getDefaultTheme,
+  debugLog,
   detectMobile,
   deleteKeys,
   MD5,

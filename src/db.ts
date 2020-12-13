@@ -20,6 +20,7 @@ type ObjectType = {
   type: number;
 };
 type PostType = {
+  parent_object_id: string;
   header: string;
   content: string;
   type: number;
@@ -46,10 +47,11 @@ async function appendObject(arg: ObjectType) {
   console.log(
     `New listing created with the following id: ${result.insertedId}`,
   );
+  return result.insertedId;
 }
 async function appendPost(arg: PostType) {
   await maybe_connect();
-  arg.checked = true; //TODO:
+  arg.checked = true; //TODO: false in production
   const result = await client
     .db(DBNAME)
     .collection(secondCollection)
@@ -59,11 +61,10 @@ async function appendPost(arg: PostType) {
   );
 }
 async function append2DB(arg): Promise<void> {
-  //await client.connect();
   await maybe_connect();
   const { type, name, coords, content, header, createdAt, updatedAt } = arg;
-  appendObject({ type, coords, name });
-  appendPost({ content, header, type, createdAt, updatedAt });
+  const parent_object_id = ObjectId(await appendObject({ type, coords, name }));
+  appendPost({ content, header, type, createdAt, updatedAt, parent_object_id });
 }
 async function getComments(id: string) {
   await maybe_connect();

@@ -25,11 +25,12 @@ body {
   width: 100px;
   height: 100px;
   float: right;
+  /*
   -moz-filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
   -o-filter: grayscale(100%);
   -ms-filter: grayscale(100%);
-  filter: grayscale(100%);
+  filter: grayscale(100%); */
 }
 
 a {

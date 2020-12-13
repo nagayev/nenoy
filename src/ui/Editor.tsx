@@ -1,61 +1,41 @@
-import React from "react";
-import ReactMde from "react-mde";
-import ReactMarkdown from "react-markdown";
+import React, { useState, useRef } from "react";
+import dynamic from "next/dynamic";
+const importJodit = () => import("jodit-react");
+
+const _Editor = dynamic(importJodit, {
+  ssr: false,
+});
 
 type EditorProps = {
-  setState: Function;
+  setState?: Function;
+  content: string;
+  setContent: any;
 };
-function Editor(props: EditorProps) {
-  const [value, setValue] = React.useState("Напишите здесь текст новости");
-  const [selectedTab, setSelectedTab] = React.useState("write");
-  const onChange = (text) => {
-    const e = {
-      target: { value: text },
-    };
-    props.setState(e, "content"); //e is "event" (duck typing)
-    setValue(text);
+
+const Editor = (props: EditorProps) => {
+  const editor = useRef(null);
+  const { content, setContent } = props;
+
+  const config = {
+    readonly: false, // all options from https://xdsoft.net/jodit/doc/
   };
-  const save = async function* (data) {
-    // Promise that waits for "time" milliseconds
-    const wait = function (time) {
-      return new Promise((a, r) => {
-        setTimeout(() => a(), time);
-      });
-    };
-
-    // Upload "data" to your server
-    // Use XMLHttpRequest.send to send a FormData object containing
-    // "data"
-    // Check this question: https://stackoverflow.com/questions/18055422/how-to-receive-php-image-data-over-copy-n-paste-javascript-with-xmlhttprequest
-
-    await wait(2000);
-    // yields the URL that should be inserted in the markdown
-    yield "https://picsum.photos/300";
-    await wait(2000);
-
-    // returns true meaning that the save was successful
-    return true;
+  const onBlur = (content) => {
+    const html = content.target.innerHTML;
+    const e = { target: { value: html } }; //emulate event
+    if (props && props.setState) props.setState(e, "content");
+    setContent(html);
   };
-
-  //NOTE: we can use loadSuggestions below
   return (
-    <ReactMde
-      value={value}
-      onChange={onChange}
-      selectedTab={selectedTab as "write"}
-      onTabChange={setSelectedTab}
-      generateMarkdownPreview={(markdown) =>
-        Promise.resolve(<ReactMarkdown source={markdown} />)
-      }
-      childProps={{
-        writeButton: {
-          tabIndex: -1,
-        },
-      }}
-      paste={{
-        saveImage: save,
-      }}
-    />
+    <>
+      <_Editor
+        ref={editor}
+        value={content}
+        config={config}
+        tabIndex={1} // tabIndex of textarea
+        onBlur={(newContent) => onBlur(newContent)} // preferred to use only this option to update the content for performance reasons
+        //onChange={(newContent) => test(newContent)}
+      />
+    </>
   );
-}
+};
 export default Editor;

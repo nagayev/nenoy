@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 
-import { LogModal, RegModal } from "./Modals";
+import { LogModal, RegModal } from "./LogRegModals";
 import User from "./User";
 import NoSsr from "./no";
 import { detectMobile, getDefaultTheme } from "./utils";
 import { types, headers } from "./objectTypes";
-import { check } from "prettier";
 
 interface MenuInterface {
   updateState: (n: number) => any;
@@ -72,15 +71,19 @@ function _Menu(props: MenuInterface) {
       </div>
     );
   }
-  let [isTokenValid, setIsTokenValid] = React.useState(false);
-  const check = (data) => {
-    console.log("Check: token", data);
-    if (data) setIsTokenValid(true);
+  const token = localStorage.getItem("token");
+  let [isTokenValid, setIsTokenValid] = React.useState(!!token);
+  const check = (data: boolean): void => {
+    if (!data) {
+      console.warn("Token is deprecated!");
+      setIsTokenValid(false);
+      alert("Ваша сессия закончилась.\nПожалуйста, перезайдите в аккаунт");
+      localStorage.clear();
+    }
   };
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
-      //check token
+      //Checking token...
       const opts = { method: "post", body: JSON.stringify({ token }) };
       fetch("api/isCorrect", opts)
         .then((data) => data.json())
@@ -88,11 +91,7 @@ function _Menu(props: MenuInterface) {
         .catch((err) => console.error(err));
     }
   }, []);
-  const Top = isTokenValid ? (
-    <User token={localStorage.getItem("token")} />
-  ) : (
-    <LogAndReg />
-  );
+  const Top = isTokenValid ? <User token={token} /> : <LogAndReg />;
   return (
     <div id="menu">
       {Top}
