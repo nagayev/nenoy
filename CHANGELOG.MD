@@ -2,7 +2,12 @@
 
 ## Current
 
+Current is 0.9.8 now
+
+## 0.9.8
+
 - Fix build
+- Implement OSM geocoder
 - Delete experimental Yandex Maps Geocoder
 - Fix bug #8 (TypeError: props.data.map is not a function)
 - Delete some old commented lines of code

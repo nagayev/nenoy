@@ -47,15 +47,6 @@ function Commentaries(props: { data: CommentaryType[] }) {
       .then((data) => data.json())
       .then((data) => {
         //NOTE: we iterate over commentaries and add name and rank to each comment
-        /*
-        commentary_data = props.data.map((v) => {
-          v.rank = data.rank;
-          v.name = data.name;
-          return v;
-        });
-        commentary_data = commentary_data.map((v, i) => {
-          return <Commentary data={v} key={i} />;
-        }); */
         commentary_data = props.data.map((v, i) => {
           v.rank = data.rank;
           v.name = data.name;

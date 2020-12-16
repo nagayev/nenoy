@@ -16,11 +16,18 @@ interface NormalMapInterface {
 }
 type EventType = { _sourceEvent: any }; //TODO: rework
 
-function Search() {
+function Search(props) {
   const [place, setPlace] = React.useState("");
   function search() {
     //TODO:
-    console.log(`Searching ${place}...`);
+    const sendData = { place };
+    const opts = { method: "post", body: JSON.stringify(sendData) };
+    fetch("api/geocoder", opts)
+      .then((data) => data.json())
+      .then((data) => {
+        const mapCenter = [data[0].latitude, data[0].longitude];
+        props.setMapCenter(mapCenter);
+      });
   }
   return (
     <div style={{ textAlign: "left" }}>
@@ -100,7 +107,6 @@ function NormalMap(props: NormalMapInterface) {
   };
   return (
     <>
-      <Search />
       <YMaps id="map">
         <Map
           onClick={clickOnMap}
@@ -154,11 +160,14 @@ function MapProvider(props) {
     navigator.geolocation.getCurrentPosition(suc, err, opts);
   }, []);
   return (
-    <NormalMap
-      mapCenter={mapCenter}
-      setPosts={props.setPosts}
-      posts={props.posts}
-    />
+    <>
+      <Search setMapCenter={setMapCenter} />
+      <NormalMap
+        mapCenter={mapCenter}
+        setPosts={props.setPosts}
+        posts={props.posts}
+      />
+    </>
   );
 }
 export default MapProvider;

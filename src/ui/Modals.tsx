@@ -14,7 +14,7 @@ type DataType = {
 interface MapModalInterface {
   modalIsOpen: boolean;
   setIsOpen: Function;
-  data: DataType;
+  data: any; //DataType;
   setPosts: Function;
 }
 
