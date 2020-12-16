@@ -5,7 +5,6 @@ import {
   Placemark,
   YMaps,
   ZoomControl,
-  SearchControl,
 } from "react-yandex-maps";
 import AddInfoModal from "./AddInfoModal";
 import { InfoFromDBModal } from "./Modals";
@@ -15,7 +14,21 @@ interface NormalMapInterface {
   posts: any[];
   setPosts: Function;
 }
+type EventType = { _sourceEvent: any }; //TODO: rework
 
+function Search() {
+  const [place, setPlace] = React.useState("");
+  function search() {
+    //TODO:
+    console.log(`Searching ${place}...`);
+  }
+  return (
+    <div style={{ textAlign: "left" }}>
+      <input onChange={(e) => setPlace(e.target.value)} />
+      <button onClick={search}>Искать</button>
+    </div>
+  );
+}
 function NormalMap(props: NormalMapInterface) {
   const [placemarksCoords, setPlacemarksCoords] = React.useState([
     props.mapCenter,
@@ -46,9 +59,11 @@ function NormalMap(props: NormalMapInterface) {
     };
     fetch("api/getPostsByCoords", opts)
       .then((data) => data.json())
-      .then((data) => setDBInfoData(data)); //data is array of posts
+      .then((data) => {
+        setDBInfoData(data);
+        //console.log("data: ", data);
+      }); //data is array of posts
     setDBInfoIsOpen(true); //TODO: something with modal
-    //setDBInfoData(data);
   };
   for (let i = 0; i < placemarksCoords.length; i++) {
     const coords = placemarksCoords[i];
@@ -72,7 +87,6 @@ function NormalMap(props: NormalMapInterface) {
       );
     }
   }
-  type EventType = { _sourceEvent: any }; //TODO: rework
   const clickOnMap = (event: EventType) => {
     //NOTE: type of event is any
     const coords = event._sourceEvent.originalEvent.coords; //get coords where user clicked
@@ -86,19 +100,15 @@ function NormalMap(props: NormalMapInterface) {
   };
   return (
     <>
-      <YMaps
-        //query={{ apikey: "4f8f22c0-8eb6-4572-8dcd-ca1a2a078877" }}
-        id="map"
-      >
+      <Search />
+      <YMaps id="map">
         <Map
           onClick={clickOnMap}
-          //defaultState={{ center: MOSCOW, zoom: 8 }}
           state={{ center: props.mapCenter, zoom: 8 }}
           options={{ width: 1000, height: 500 }}
         >
           <GeolocationControl />
           <ZoomControl />
-          <SearchControl />
           {Placemarks}
           <AddInfoModal
             isOpen={placemarkModalIsOpen}
@@ -131,7 +141,6 @@ function MapProvider(props) {
   function suc(pos) {
     const coords = [pos.coords.latitude, pos.coords.longitude];
     console.log(`Got coords: ${coords}`);
-    //saveToCache(coords);
     setMapCenter(coords);
   }
   function err(err) {

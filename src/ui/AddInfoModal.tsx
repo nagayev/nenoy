@@ -4,6 +4,7 @@ import Editor from "./Editor";
 import customStyles from "./ModalStyles";
 import NoSsr from "./no";
 import { types } from "./objectTypes";
+import { areYouSureTo } from "./utils";
 
 interface AddPlacemarkInterface {
   isOpen: boolean;
@@ -11,8 +12,7 @@ interface AddPlacemarkInterface {
   userPlacemark: number[];
   deleteUserPlacemark: Function;
 }
-
-type VoidFunction = (...args: any[]) => undefined;
+//TODO: file structure rework
 
 function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
   const { isOpen, setIsOpen, userPlacemark, deleteUserPlacemark } = props;
@@ -42,10 +42,6 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
     header: "",
     content: "",
   }); //NOTE: without coords!
-  const areYouSureTo: VoidFunction = (
-    f: VoidFunction,
-    m = "Выйти без сохранения?",
-  ) => (confirm(m) ? f() : undefined);
   const sendInformation = () => {
     const thanks =
       "Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее";

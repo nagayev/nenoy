@@ -1,6 +1,16 @@
+import { sendData } from "next/dist/next-server/server/api-utils";
 import React from "react";
+import Viwer from "./Viewer";
 
-type CommentaryType = { rank: number; username: string; text: string };
+type HTML = string;
+type CommentaryType = {
+  _id: string;
+  text: HTML;
+  post_id: string;
+  user_id: string;
+  rank: number;
+  name: string;
+};
 
 function Commentary(props: { data: CommentaryType }) {
   //const data = {props};
@@ -10,23 +20,45 @@ function Commentary(props: { data: CommentaryType }) {
   return (
     <div>
       <div style={{ display: "inline-flex" }}>
-        <p>{props.data.username}&nbsp;</p>
+        <p>{props.data.name}&nbsp;</p>
         <p style={{ color: color }}>
           ({sign}
           {props.data.rank})
         </p>
       </div>
-      <p>{props.data.text}</p>
+      <Viwer source={props.data.text} />
+      <hr />
     </div>
   );
 }
 function Commentaries(props: { data: CommentaryType[] }) {
-  const commentaries = props.data.map((v, i) => {
-    return <Commentary data={v} key={i} />;
-  });
+  const sendData = {};
+  //TODO: get rid of globalThis
+  globalThis.commentary_data = []; // = props.data;
+  let [commentaries, setCommentaries] = React.useState([]);
+  React.useEffect(() => {
+    sendData["id"] = props.data[0].user_id;
+    const opts = { method: "post", body: JSON.stringify(sendData) };
+    fetch("api/getUserInfo", opts)
+      .then((data) => data.json())
+      .then((data) => {
+        //NOTE: we iterate over commentaries and add name and rank to each comment
+        globalThis.commentary_data = props.data.map((v) => {
+          v.rank = data.rank;
+          v.name = data.name;
+          return v;
+        });
+        setCommentaries(
+          globalThis.commentary_data.map((v, i) => {
+            return <Commentary data={v} key={i} />;
+          }),
+        );
+      });
+  }, []);
   return (
     <>
       <h2>Комментарии ({props.data.length})</h2>
+      <hr />
       {commentaries}
     </>
   );

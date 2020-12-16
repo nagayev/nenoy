@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
-import { wrap } from "./utils";
+//import AddPostModal from "./AddPostModal";
+import Editor from "./Editor";
+import { wrap, areYouSureTo } from "./utils";
 
 import customStyles from "./ModalStyles";
+import NoSsr from "./no";
 
 interface MapModalInterface {
   modalIsOpen: boolean;
@@ -14,12 +17,43 @@ interface MapModalInterface {
 //TODO: rename this function!
 function InfoFromDBModal(props: MapModalInterface) {
   const { modalIsOpen, setIsOpen, data, setPosts } = props;
+  const [addPostIsOpen, setAddPostIsOpen] = React.useState(false);
+  const [content, setContent] = React.useState("");
+  //console.log("ifdm", props.data);
+  let [sendData, setSendData] = React.useState({
+    header: "",
+    content: "",
+  });
+  let id, type;
+  const sendInformation = () => {
+    const thanks =
+      "Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее";
+    alert(thanks);
+    const date = +new Date();
+    sendData["createdAt"] = date;
+    sendData["updatedAt"] = date;
+    sendData["parent_object_id"] = props.data[0].parent_object_id;
+    sendData["type"] = props.data[0].type;
+    let opts = { method: "post", body: JSON.stringify(sendData) };
+    fetch("api/sendInformation", opts).then((data) => console.log(data));
+    setAddPostIsOpen(false);
+    setIsOpen(false);
+  };
+  const updateSendDataProp = (event, prop) => {
+    const copy = Object.assign({}, sendData);
+    copy[prop] = event.target.value;
+    setSendData(copy);
+  };
   const show = () => {
     setPosts(data);
     setIsOpen(false);
   };
   const write = () => {
     //TODO:
+    id = props.data[0].parent_object_id;
+    type = props.data[0].type;
+    console.log("id: ", id, "type: ", type);
+    setAddPostIsOpen(true);
     setIsOpen(false);
   };
   return (
@@ -43,6 +77,35 @@ function InfoFromDBModal(props: MapModalInterface) {
           </p>
         </div>
       </Modal>
+      <NoSsr>
+        <Modal
+          isOpen={addPostIsOpen}
+          onRequestClose={wrap(setAddPostIsOpen, false)}
+          style={customStyles}
+          contentLabel="Example Modal"
+          appElement={document.body}
+        >
+          <button onClick={() => areYouSureTo(wrap(setAddPostIsOpen, false))}>
+            закрыть
+          </button>
+          <div style={{ display: "contents" }}>
+            <p>Заголовок записи:</p>
+            <input
+              type="text"
+              onChange={(e) => updateSendDataProp(e, "header")}
+            />
+            <br />
+            <p>Содержимое поста:</p>
+            <Editor
+              content={content}
+              setContent={setContent}
+              setState={updateSendDataProp}
+            />
+          </div>{" "}
+          <br />
+          <button onClick={sendInformation}>Отправить</button>
+        </Modal>
+      </NoSsr>
     </>
   );
 }

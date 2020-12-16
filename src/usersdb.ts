@@ -1,4 +1,4 @@
-import { debugLog, deleteKeys } from "./ui/utils";
+import { deleteKeys } from "./ui/utils";
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
 //NOTE: uri and client is global in order to backward compibility
@@ -106,13 +106,13 @@ async function isSomethingCorrect(
 }
 async function getUserInfo(id: string): Promise<any[]> {
   await maybe_connect();
-  let result = await client
+  let result;
+  result = await client
     .db(DBNAME)
     .collection(firstCollection)
     .findOne({ _id: ObjectId(id) });
   if (result === null) return [];
   deleteKeys(result, ["_id", "login", "password", "token"]); //NOTE: exclude private info
-  //console.log(result);
   return result;
 }
 async function getToken(login: string): Promise<string> {

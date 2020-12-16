@@ -1,6 +1,7 @@
 export {};
 const { MongoClient, ObjectId } = require("mongodb");
 const { deleteKeys } = require("./ui/utils");
+//import { getIdByToken } from "./usersdb";
 //NOTE: uri and client is global in order to backward compatibility
 const uri = process.env["mongodb_url"];
 const opts = {
@@ -52,6 +53,8 @@ async function appendObject(arg: ObjectType) {
 async function appendPost(arg: PostType) {
   await maybe_connect();
   arg.checked = true; //TODO: false in production
+  console.log("DELETE ME db.ts:55 ", arg.parent_object_id);
+  arg.parent_object_id = ObjectId(arg.parent_object_id);
   const result = await client
     .db(DBNAME)
     .collection(secondCollection)
@@ -63,8 +66,35 @@ async function appendPost(arg: PostType) {
 async function append2DB(arg): Promise<void> {
   await maybe_connect();
   const { type, name, coords, content, header, createdAt, updatedAt } = arg;
-  const parent_object_id = ObjectId(await appendObject({ type, coords, name }));
+  const parent_object_id = await appendObject({ type, coords, name });
   appendPost({ content, header, type, createdAt, updatedAt, parent_object_id });
+}
+//NOTE: don't move this to usersdb yet (connection error)
+//TODO: move this function to usersdb.ts
+async function _getIdByToken(token: string): Promise<string> {
+  await maybe_connect();
+  let result;
+  result = await client
+    .db("users")
+    .collection("users")
+    .findOne({ token: token });
+  if (!result) return "";
+  return result._id;
+}
+async function addComment(arg): Promise<void | string> {
+  await maybe_connect();
+  //TODO: check token, if incorrect return invalid
+  arg.post_id = ObjectId(arg.post_id);
+  arg.user_id = ObjectId(await _getIdByToken(arg.token));
+  arg.checked = false;
+  delete arg.token;
+  const result = await client
+    .db(DBNAME)
+    .collection(commentariesCollection)
+    .insertOne(arg);
+  console.log(
+    `New listing created with the following id: ${result.insertedId}`,
+  );
 }
 async function getComments(id: string) {
   await maybe_connect();
@@ -73,7 +103,7 @@ async function getComments(id: string) {
   await client
     .db(DBNAME)
     .collection(commentariesCollection)
-    .find({ post_id: ObjectId(id) })
+    .find({ post_id: ObjectId(id), checked: true })
     .forEach(addToCommentaries);
   return commentaries;
 }
@@ -89,9 +119,7 @@ async function getPosts(type: number) {
     .forEach(addToPosts);
   return posts;
 }
-//NOTE: inner function, we don't export it!
-async function getObjectIdByCoords(coords: number[]): Promise<string> {
-  //await client.connect();
+async function _getObjectIdByCoords(coords: number[]): Promise<string> {
   await maybe_connect();
   const id = await client
     .db(DBNAME)
@@ -103,10 +131,10 @@ async function getPostsByCoords(coords: number[]): Promise<any> {
   await maybe_connect();
   const posts: any[] = [];
   function addPosts(post) {
-    deleteKeys(post, ["_id", "parent_object_id", "type", "checked"]); //remove unused in client information
+    deleteKeys(post, ["_id", "checked"]); //remove unused in client information
     posts.push(post);
   }
-  const id = await getObjectIdByCoords(coords);
+  const id = await _getObjectIdByCoords(coords);
   await client
     .db(DBNAME)
     .collection(secondCollection)
@@ -149,6 +177,7 @@ if (require.main === module) {
   main().catch(console.error);
 } else {
   module.exports = {
+    addComment,
     append2DB,
     appendObject,
     appendPost,

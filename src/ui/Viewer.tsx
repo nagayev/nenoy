@@ -1,6 +1,6 @@
 import React from "react";
 type ViewerProps = {
-  source: any;
+  source: string;
 };
 function Viewer(props: ViewerProps) {
   const { source } = props;

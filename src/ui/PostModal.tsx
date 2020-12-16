@@ -8,10 +8,37 @@ import { wrap } from "./utils";
 
 import customStyles from "./ModalStyles";
 
-function AddCommentaryModal(props) {
-  const { isOpen, setIsOpen } = props;
+type AddCommentaryModalProps = {
+  isOpen: boolean;
+  setIsOpen: Function;
+  post_id: string;
+};
+function AddCommentaryModal(props: AddCommentaryModalProps) {
+  const { isOpen, setIsOpen, post_id } = props;
   const [content, setContent] = React.useState("");
-  const send = (arg) => console.log(arg);
+  const token = localStorage.getItem("token");
+  const body = {
+    text: content,
+    post_id: post_id,
+    token: localStorage.token,
+  };
+  const opts = {
+    method: "post",
+    body: JSON.stringify(body),
+  };
+  function send() {
+    if (!token) {
+      alert("Вы не авторизированы. \nВойдите чтобы комментрировать записи");
+      setIsOpen(false);
+      return <div />;
+    }
+    //console.log("PostModal.tsx:35", opts);
+    fetch("api/addComment", opts)
+      .then((data) => data.json())
+      .then((data) => console.log(data));
+    alert("Ваш комментарий отправлен на модерацию");
+    setIsOpen(false);
+  }
   return (
     <>
       <Modal
@@ -22,12 +49,13 @@ function AddCommentaryModal(props) {
         <button onClick={wrap(setIsOpen, false)}>закрыть</button> <br />
         <h2>Написать комментарий</h2>
         <Editor content={content} setContent={setContent} />
-        <button onClick={send}></button>
+        <button onClick={send}>Отправить</button>
       </Modal>
     </>
   );
 }
 function PostModal(props) {
+  console.log("PostModal.tsx:50: ", props);
   const { isOpen, setIsOpen, data } = props;
   const [comments, setComments] = useState([]);
   const [commentaryIsOpen, setCommentaryIsOpen] = React.useState(false);
@@ -58,6 +86,7 @@ function PostModal(props) {
           <AddCommentaryModal
             isOpen={commentaryIsOpen}
             setIsOpen={setCommentaryIsOpen}
+            post_id={data._id}
           />
         </div>
       </Modal>
