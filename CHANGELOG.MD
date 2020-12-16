@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is now 0.9.7
+- Fix build
 
 ## 0.9.7
 

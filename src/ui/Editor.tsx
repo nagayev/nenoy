@@ -28,10 +28,9 @@ const Editor = (props: EditorProps) => {
   return (
     <>
       <_Editor
-        ref={editor}
         value={content}
-        config={config}
-        tabIndex={1} // tabIndex of textarea
+        //tabIndex={1} // tabIndex of textarea
+        //config={}
         onBlur={(newContent) => onBlur(newContent)} // preferred to use only this option to update the content for performance reasons
         //onChange={(newContent) => test(newContent)}
       />
