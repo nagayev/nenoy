@@ -131,7 +131,7 @@ async function getPostsByCoords(coords: number[]): Promise<any> {
   await maybe_connect();
   const posts: any[] = [];
   function addPosts(post) {
-    deleteKeys(post, ["_id", "checked"]); //remove unused in client information
+    deleteKeys(post, ["checked"]); //remove unused in client information
     posts.push(post);
   }
   const id = await _getObjectIdByCoords(coords);

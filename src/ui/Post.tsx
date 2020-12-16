@@ -1,7 +1,6 @@
 const dateDiff = require("date-diff-js");
 import { getDateWithCase, saveFirstWords } from "./utils";
 import React from "react";
-//import ReactMarkdown from "react-markdown";
 import Viewer from "./Viewer";
 import { PostModal } from "./PostModal";
 

@@ -1,5 +1,6 @@
 import { sendData } from "next/dist/next-server/server/api-utils";
-import React from "react";
+import { send } from "process";
+import React, { SetStateAction } from "react";
 import Viwer from "./Viewer";
 
 type HTML = string;
@@ -33,26 +34,34 @@ function Commentary(props: { data: CommentaryType }) {
 }
 function Commentaries(props: { data: CommentaryType[] }) {
   const sendData = {};
-  //TODO: get rid of globalThis
-  globalThis.commentary_data = []; // = props.data;
+  let commentary_data: any = []; // = props.data;
   let [commentaries, setCommentaries] = React.useState([]);
   React.useEffect(() => {
-    sendData["id"] = props.data[0].user_id;
+    sendData["id"] = props.data[0]?.user_id;
+    //If count of comments is 0, we don't need to fetch
+    if (!sendData["id"]) {
+      return;
+    }
     const opts = { method: "post", body: JSON.stringify(sendData) };
     fetch("api/getUserInfo", opts)
       .then((data) => data.json())
       .then((data) => {
         //NOTE: we iterate over commentaries and add name and rank to each comment
-        globalThis.commentary_data = props.data.map((v) => {
+        /*
+        commentary_data = props.data.map((v) => {
           v.rank = data.rank;
           v.name = data.name;
           return v;
         });
-        setCommentaries(
-          globalThis.commentary_data.map((v, i) => {
-            return <Commentary data={v} key={i} />;
-          }),
-        );
+        commentary_data = commentary_data.map((v, i) => {
+          return <Commentary data={v} key={i} />;
+        }); */
+        commentary_data = props.data.map((v, i) => {
+          v.rank = data.rank;
+          v.name = data.name;
+          return <Commentary data={v} key={i} />;
+        });
+        setCommentaries(commentary_data);
       });
   }, []);
   return (

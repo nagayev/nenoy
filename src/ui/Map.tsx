@@ -116,6 +116,7 @@ function NormalMap(props: NormalMapInterface) {
             userPlacemark={userPlacemark}
             deleteUserPlacemark={deleteUserPlacemark}
           />
+          {/* props.setPosts instead of wrapper */}
           {DBInfoData !== [] && (
             <InfoFromDBModal
               modalIsOpen={DBInfoIsOpen}

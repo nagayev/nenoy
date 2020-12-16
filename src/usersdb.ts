@@ -100,7 +100,6 @@ async function isSomethingCorrect(
     .db(DBNAME)
     .collection(firstCollection)
     .findOne(searchParam);
-  console.log("r", response);
   if (!response) return false;
   return true;
 }

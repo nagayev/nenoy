@@ -32,7 +32,6 @@ function AddCommentaryModal(props: AddCommentaryModalProps) {
       setIsOpen(false);
       return <div />;
     }
-    //console.log("PostModal.tsx:35", opts);
     fetch("api/addComment", opts)
       .then((data) => data.json())
       .then((data) => console.log(data));
@@ -55,7 +54,6 @@ function AddCommentaryModal(props: AddCommentaryModalProps) {
   );
 }
 function PostModal(props) {
-  console.log("PostModal.tsx:50: ", props);
   const { isOpen, setIsOpen, data } = props;
   const [comments, setComments] = useState([]);
   const [commentaryIsOpen, setCommentaryIsOpen] = React.useState(false);

@@ -3,6 +3,9 @@
 ## Current
 
 - Fix build
+- Delete experimental Yandex Maps Geocoder
+- Fix bug #8 (TypeError: props.data.map is not a function)
+- Delete some old commented lines of code
 
 ## 0.9.7
 

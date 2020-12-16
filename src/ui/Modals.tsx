@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
-//import AddPostModal from "./AddPostModal";
+//import AddPostModal from "./AddPostModal"; //TODO: split modals.tsx
 import Editor from "./Editor";
 import { wrap, areYouSureTo } from "./utils";
 
 import customStyles from "./ModalStyles";
 import NoSsr from "./no";
 
+type DataType = {
+  parent_object_id: string;
+  type: number;
+};
 interface MapModalInterface {
   modalIsOpen: boolean;
   setIsOpen: Function;
-  data: any; //TODO:
+  data: DataType;
   setPosts: Function;
 }
 
@@ -19,7 +23,6 @@ function InfoFromDBModal(props: MapModalInterface) {
   const { modalIsOpen, setIsOpen, data, setPosts } = props;
   const [addPostIsOpen, setAddPostIsOpen] = React.useState(false);
   const [content, setContent] = React.useState("");
-  //console.log("ifdm", props.data);
   let [sendData, setSendData] = React.useState({
     header: "",
     content: "",
@@ -48,11 +51,9 @@ function InfoFromDBModal(props: MapModalInterface) {
     setPosts(data);
     setIsOpen(false);
   };
-  const write = () => {
-    //TODO:
+  const writeAboutObject = () => {
     id = props.data[0].parent_object_id;
     type = props.data[0].type;
-    console.log("id: ", id, "type: ", type);
     setAddPostIsOpen(true);
     setIsOpen(false);
   };
@@ -69,7 +70,7 @@ function InfoFromDBModal(props: MapModalInterface) {
         <h1>Что вы хотите?</h1>
         <div>
           <p>
-            <button onClick={write}>Написать</button>&nbsp;об объекте
+            <button onClick={writeAboutObject}>Написать</button>&nbsp;об объекте
           </p>
           <p>
             {" "}
