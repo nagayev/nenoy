@@ -9,6 +9,41 @@ interface LogRegProps {
   setIsOpen: Function;
 }
 
+function ChangeRegLogModal(props) {
+  const [regOpen, setRegOpen] = React.useState(false);
+  const [logOpen, setLogOpen] = React.useState(false);
+  const log = () => {
+    setLogOpen(true);
+    props.setIsOpen(false);
+  };
+  const reg = () => {
+    setRegOpen(true);
+    props.setIsOpen(false);
+  };
+  return (
+    <>
+      <Modal
+        isOpen={props.isOpen}
+        onRequestClose={wrap(props.setIsOpen, false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button onClick={wrap(props.setIsOpen, false)}>закрыть</button>
+        <h2>Вы не представились системе</h2>
+        <p>
+          <span onClick={log}>Войдите</span>, чтобы получить доступ к
+          комментированию, рейтингу.
+        </p>
+        <p>
+          <span onClick={reg}>Зарегистрируйтесь</span>, если у Вас нет учетной
+          записи.
+        </p>
+      </Modal>
+      <RegModal isOpen={regOpen} setIsOpen={setRegOpen} />
+      <LogModal isOpen={logOpen} setIsOpen={setLogOpen} />
+    </>
+  );
+}
 function RegModal(props: LogRegProps) {
   const { isOpen, setIsOpen } = props;
   const [login, setLogin] = React.useState("");
@@ -147,4 +182,4 @@ function LogModal(props: LogRegProps) {
     </>
   );
 }
-export { RegModal, LogModal };
+export { RegModal, LogModal, ChangeRegLogModal };

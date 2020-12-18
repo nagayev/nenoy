@@ -30,10 +30,13 @@ function Search(props) {
       });
   }
   return (
-    <div style={{ textAlign: "left" }}>
-      <input onChange={(e) => setPlace(e.target.value)} />
-      <button onClick={search}>Искать</button>
-    </div>
+    <>
+      <div style={{ textAlign: "left" }}>
+        <input onChange={(e) => setPlace(e.target.value)} />
+        <button onClick={search}>Искать</button>
+      </div>{" "}
+      <br />
+    </>
   );
 }
 function NormalMap(props: NormalMapInterface) {

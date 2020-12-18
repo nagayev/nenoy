@@ -1,15 +1,15 @@
 import React from "react";
 import { UserModal } from "./Modals";
+import { getDefaultTheme } from "./utils";
 
-interface UserInterface {
-  token: null | string;
-}
-
-function User(props: UserInterface) {
+function User() {
+  const style = getDefaultTheme();
   const [modalIsOpen, setIsOpen] = React.useState(false);
   return (
     <>
-      <p onClick={() => setIsOpen(true)}>Личный кабинет</p>
+      <div onClick={() => setIsOpen(true)} style={style.user}>
+        ЛК
+      </div>
       <UserModal isOpen={modalIsOpen} setIsOpen={setIsOpen} />
     </>
   );

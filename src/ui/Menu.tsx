@@ -15,7 +15,7 @@ function DesktopMenu(props: MenuInterface) {
     <div>
       {Object.keys(types).map((key, i) => {
         return (
-          <span key={i}>
+          <span style={{ paddingLeft: "50px" }} key={i}>
             <a
               onClick={() => {
                 props.updateState(+types[key]);
@@ -57,20 +57,6 @@ function _Menu(props: MenuInterface) {
   ) : (
     <DesktopMenu updateState={updateState} />
   );
-  function LogAndReg() {
-    return (
-      <div>
-        <a style={style.log} onClick={showLogIn}>
-          Вход
-        </a>
-        &nbsp;
-        <a style={style.reg} onClick={showRegistration}>
-          Регистрация
-        </a>
-        &nbsp;
-      </div>
-    );
-  }
   const token = localStorage.getItem("token");
   let [isTokenValid, setIsTokenValid] = React.useState(!!token);
   const check = (data: boolean): void => {
@@ -91,10 +77,8 @@ function _Menu(props: MenuInterface) {
         .catch((err) => console.error(err));
     }
   }, []);
-  const Top = isTokenValid ? <User token={token} /> : <LogAndReg />;
   return (
     <div id="menu">
-      {Top}
       <RegModal isOpen={isRegOpen} setIsOpen={setRegOpen} />
       <LogModal isOpen={isLogOpen} setIsOpen={setLogOpen} />
       {menu}

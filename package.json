@@ -1,5 +1,5 @@
 {
-  "version": "0.9.8",
+  "version": "0.9.9",
   "private": true,
   "homepage": ".",
   "scripts": {
@@ -24,7 +24,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-modal": "^3.11.2",
-    "react-yandex-maps": "^4.5.0"
+    "react-yandex-maps": "^4.6.0"
   },
   "devDependencies": {
     "@hkdobrev/run-if-changed": "^0.3.1",

@@ -42,10 +42,19 @@ const pageLayout: CSSProperties = {
 const languages: CSSProperties = {
   float: "right",
   marginRight: "5%",
+  display: "flex",
 };
 const dots: CSSProperties = {
   textDecoration: "underline",
   color: "white",
+};
+const user: CSSProperties = {
+  marginLeft: "30px",
+  width: "32px",
+  height: "32px",
+  borderRadius: "50%",
+  border: "1px solid white",
+  fontSize: "16px",
 };
 const dark = {
   a,
@@ -54,6 +63,7 @@ const dark = {
   map,
   me,
   menu,
+  user,
   languages,
   log,
   reg,

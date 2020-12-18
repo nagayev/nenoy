@@ -2,7 +2,11 @@
 
 ## Current
 
-Current is 0.9.8 now
+Current is 0.9.9 now
+
+## 0.9.9
+
+- New site design
 
 ## 0.9.8
 
