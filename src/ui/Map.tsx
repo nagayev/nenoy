@@ -13,13 +13,17 @@ interface NormalMapInterface {
   mapCenter: Array<number>;
   posts: any[];
   setPosts: Function;
+  zoom: number;
 }
-type EventType = { _sourceEvent: any }; //TODO: rework
+interface SearchProps {
+  setMapCenter: Function;
+  setZoom: Function;
+}
+type EventType = { _sourceEvent: any }; //without type
 
-function Search(props) {
+function Search(props: SearchProps) {
   const [place, setPlace] = React.useState("");
   function search() {
-    //TODO:
     const sendData = { place };
     const opts = { method: "post", body: JSON.stringify(sendData) };
     fetch("api/geocoder", opts)
@@ -27,6 +31,7 @@ function Search(props) {
       .then((data) => {
         const mapCenter = [data[0].latitude, data[0].longitude];
         props.setMapCenter(mapCenter);
+        props.setZoom(17); //make the map bigger
       });
   }
   return (
@@ -48,6 +53,7 @@ function NormalMap(props: NormalMapInterface) {
   const [DBInfoData, setDBInfoData] = React.useState([]);
   const [lock, setLock] = React.useState(false); //for only one user's placemark on map
   const [userPlacemark, setUserPlacemark] = React.useState([]); //for user placemark
+
   const deleteUserPlacemark = () => {
     setUserPlacemark([]);
     placemarksCoords.pop(); //delete last placemark, it's user's placemark
@@ -61,6 +67,7 @@ function NormalMap(props: NormalMapInterface) {
       });
   }, []);
   const Placemarks: any[] = [];
+  //TODO: check is TODO below correct
   //NOTE: we have unused modal
   const getPostsByCoords = (coords) => {
     const opts = {
@@ -113,7 +120,7 @@ function NormalMap(props: NormalMapInterface) {
       <YMaps id="map">
         <Map
           onClick={clickOnMap}
-          state={{ center: props.mapCenter, zoom: 8 }}
+          state={{ center: props.mapCenter, zoom: props.zoom }}
           options={{ width: 1000, height: 500 }}
         >
           <GeolocationControl />
@@ -142,6 +149,7 @@ function NormalMap(props: NormalMapInterface) {
 function MapProvider(props) {
   const MOSCOW = [55.4507, 37.3656];
   const [mapCenter, setMapCenter] = React.useState(MOSCOW);
+  const [zoom, setZoom] = React.useState(10);
 
   const opts = {
     enableHighAccuracy: true,
@@ -164,9 +172,10 @@ function MapProvider(props) {
   }, []);
   return (
     <>
-      <Search setMapCenter={setMapCenter} />
+      <Search setMapCenter={setMapCenter} setZoom={setZoom} />
       <NormalMap
         mapCenter={mapCenter}
+        zoom={zoom}
         setPosts={props.setPosts}
         posts={props.posts}
       />

@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is 0.9.9 now
+- Improve map's zoom
 
 ## 0.9.9
 
