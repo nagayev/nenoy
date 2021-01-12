@@ -6,6 +6,7 @@ import { wrap, areYouSureTo } from "./utils";
 
 import customStyles from "./ModalStyles";
 import NoSsr from "./no";
+import { send } from "process";
 
 type DataType = {
   parent_object_id: string;
@@ -22,30 +23,35 @@ interface MapModalInterface {
 function InfoFromDBModal(props: MapModalInterface) {
   const { modalIsOpen, setIsOpen, data, setPosts } = props;
   const [addPostIsOpen, setAddPostIsOpen] = React.useState(false);
+  const [header, setHeader] = React.useState("");
   const [content, setContent] = React.useState("");
-  let [sendData, setSendData] = React.useState({
-    header: "",
-    content: "",
-  });
   let id, type;
   const sendInformation = () => {
+    const date = +new Date();
+    let sendData = {
+      header,
+      content,
+      type: props.data[0].type,
+      parent_object_id: props.data[0].parent_object_id,
+      createdAt: date,
+      updatedAt: date,
+    };
+    let opts = { method: "post", body: JSON.stringify(sendData) };
+    console.log(sendData);
+    if (sendData.header === "") {
+      alert("Заголовок не может быть пустым");
+      return;
+    }
+    if (sendData.content === "") {
+      alert("Содержимое не должно быть пустым");
+      return;
+    }
     const thanks =
       "Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее";
     alert(thanks);
-    const date = +new Date();
-    sendData["createdAt"] = date;
-    sendData["updatedAt"] = date;
-    sendData["parent_object_id"] = props.data[0].parent_object_id;
-    sendData["type"] = props.data[0].type;
-    let opts = { method: "post", body: JSON.stringify(sendData) };
     fetch("api/sendInformation", opts).then((data) => console.log(data));
     setAddPostIsOpen(false);
     setIsOpen(false);
-  };
-  const updateSendDataProp = (event, prop) => {
-    const copy = Object.assign({}, sendData);
-    copy[prop] = event.target.value;
-    setSendData(copy);
   };
   const show = () => {
     setPosts(data);
@@ -91,16 +97,13 @@ function InfoFromDBModal(props: MapModalInterface) {
           </button>
           <div style={{ display: "contents" }}>
             <p>Заголовок записи:</p>
-            <input
-              type="text"
-              onChange={(e) => updateSendDataProp(e, "header")}
-            />
+            <input type="text" onChange={(e) => setHeader(e.target.value)} />
             <br />
             <p>Содержимое поста:</p>
             <Editor
               content={content}
               setContent={setContent}
-              setState={updateSendDataProp}
+              //setState={(e) => updateSendDataProp(e, "content")}
             />
           </div>{" "}
           <br />

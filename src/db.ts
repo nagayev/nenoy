@@ -52,8 +52,7 @@ async function appendObject(arg: ObjectType) {
 }
 async function appendPost(arg: PostType) {
   await maybe_connect();
-  arg.checked = true; //TODO: false in production
-  console.log("DELETE ME db.ts:55 ", arg.parent_object_id);
+  arg.checked = false;
   arg.parent_object_id = ObjectId(arg.parent_object_id);
   const result = await client
     .db(DBNAME)

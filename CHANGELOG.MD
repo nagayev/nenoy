@@ -3,8 +3,10 @@
 ## Current
 
 - Improve map's zoom
+- Fixed sending posts related to existing object
 - Disable annoying debug logs
 - location reload after log-in
+- Fixed CI build by deleting test.ts
 
 ## 0.9.9
 
