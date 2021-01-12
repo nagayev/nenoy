@@ -106,8 +106,9 @@ async function getComments(id: string) {
     .forEach(addToCommentaries);
   return commentaries;
 }
-//FIXME: (???)
-async function getPosts(type: number) {
+
+async function getPosts(type: number, page: number) {
+  const POST_PER_PAGE = 3;
   await maybe_connect();
   const posts: any[] = [];
   const addToPosts = (post) => posts.push(post);
@@ -115,9 +116,12 @@ async function getPosts(type: number) {
     .db(DBNAME)
     .collection(secondCollection)
     .find({ checked: true, type: type })
+    .skip(POST_PER_PAGE * (page - 1))
+    .limit(POST_PER_PAGE)
     .forEach(addToPosts);
   return posts;
 }
+
 async function _getObjectIdByCoords(coords: number[]): Promise<string> {
   await maybe_connect();
   const id = await client

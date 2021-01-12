@@ -2,7 +2,12 @@
 
 ## Current
 
-Current is 1.0.0 now
+Current is 1.0.1 now
+
+### 1.0.1
+
+- Add pages for posts
+- Disable annoying debug logs
 
 ## 1.0.0
 
@@ -10,7 +15,6 @@ First public release 🎉
 
 - Improve map's zoom
 - Fixed sending posts related to existing object
-- Disable annoying debug logs
 - location reload after log-in
 - Fixed CI build by deleting test.ts
 
