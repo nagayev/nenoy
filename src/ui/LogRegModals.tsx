@@ -129,6 +129,7 @@ function LogModal(props: LogRegProps) {
       localStorage.setItem("id", data.id);
       alert("Вы успешно авторизировались");
       setIsOpen(false);
+      location.reload(); //See the first bug https://github.com/nagayev/nenoy/issues/9
     }
   };
   function recoverPassword() {

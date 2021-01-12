@@ -3,6 +3,8 @@
 ## Current
 
 - Improve map's zoom
+- Disable annoying debug logs
+- location reload after log-in
 
 ## 0.9.9
 
