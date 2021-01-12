@@ -6,7 +6,6 @@ import { wrap, areYouSureTo } from "./utils";
 
 import customStyles from "./ModalStyles";
 import NoSsr from "./no";
-import { send } from "process";
 
 type DataType = {
   parent_object_id: string;
@@ -100,11 +99,7 @@ function InfoFromDBModal(props: MapModalInterface) {
             <input type="text" onChange={(e) => setHeader(e.target.value)} />
             <br />
             <p>Содержимое поста:</p>
-            <Editor
-              content={content}
-              setContent={setContent}
-              //setState={(e) => updateSendDataProp(e, "content")}
-            />
+            <Editor content={content} setContent={setContent} />
           </div>{" "}
           <br />
           <button onClick={sendInformation}>Отправить</button>
@@ -129,13 +124,13 @@ function UserModal(props) {
     }
   };
 
-  //_id,login,password are excluded
+  //NOTE: _id,login,password are excluded (private data)
   type UserType = {
     name: string;
     rank: number;
     place: string;
   };
-  const callback = (data: UserType) => {
+  const setUserInfo = (data: UserType) => {
     setRank(data.rank);
     setName(data.name);
     setPlace(data.place);
@@ -147,23 +142,26 @@ function UserModal(props) {
       body: JSON.stringify({ id: localStorage.getItem("id") }),
     })
       .then((data) => data.json())
-      .then((data) => callback(data))
+      .then((data) => setUserInfo(data))
       .catch((err) => console.log(err));
   }, []);
+  function sendUserData() {
+    //TODO:
+  }
   return (
     <>
       <Modal
         isOpen={isOpen}
         onRequestClose={wrap(setIsOpen, false)}
         style={customStyles}
-        /*contentLabel="Example Modal"  (?) */
       >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
         <h1>{name} </h1>
         <p>Рейтинг: {rank} </p>
         <p>Город: {place}</p>
         <p>Личный кабинет дорабатывается...</p>
-        <p onClick={logOut}>выйти</p>
+        <button onClick={sendUserData}>Сохранить</button> &nbsp;
+        <button onClick={logOut}>выйти</button>
       </Modal>
     </>
   );

@@ -8,7 +8,7 @@ This project was written using Next.js and Typescript.
 # Status
 
 In active development,
-beta version (stable will be released at 18 December 2020)
+stable version
 
 # Quick start
 

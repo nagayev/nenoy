@@ -2,6 +2,12 @@
 
 ## Current
 
+Current is 1.0.0 now
+
+## 1.0.0
+
+First public release 🎉
+
 - Improve map's zoom
 - Fixed sending posts related to existing object
 - Disable annoying debug logs

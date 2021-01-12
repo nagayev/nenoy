@@ -47,16 +47,12 @@ const PageContentsForIndex: NextPage = () => {
       </NoSSR>
       <br />
       <div id="bottom">
-        nenoy.ru, 2020 <br />
+        nenoy.ru, 2021 <br />
         Made by{" "}
         <a style={style.a} href="https://nagayev.ru">
           nagayev.ru
         </a>
         <br />
-        Source code are available{" "}
-        <a style={style.a} href="https://github.com/nagayev/unr">
-          here
-        </a>
       </div>
     </div>
   );

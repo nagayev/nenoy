@@ -8,7 +8,7 @@ Hello! You can view this README at [English](https://github.com/nagayev/unr/blob
 # Статус
 
 В активной разработке,  
-бета версия (стабильная будет выпущена 18 декабря 2020)
+стабильная версия
 
 # Быстрый старт
 
