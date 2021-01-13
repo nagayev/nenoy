@@ -108,7 +108,7 @@ async function getComments(id: string) {
 }
 
 async function getPosts(type: number, page: number) {
-  const POST_PER_PAGE = 3;
+  const POSTS_PER_PAGE = 3;
   await maybe_connect();
   const posts: any[] = [];
   const addToPosts = (post) => posts.push(post);
@@ -116,8 +116,8 @@ async function getPosts(type: number, page: number) {
     .db(DBNAME)
     .collection(secondCollection)
     .find({ checked: true, type: type })
-    .skip(POST_PER_PAGE * (page - 1))
-    .limit(POST_PER_PAGE)
+    .skip(POSTS_PER_PAGE * (page - 1))
+    .limit(POSTS_PER_PAGE)
     .forEach(addToPosts);
   return posts;
 }

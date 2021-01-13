@@ -15,13 +15,14 @@ const MD5 = require("./ui/md5");
 globalThis.connected = false;
 
 async function maybe_connect() {
-  console.log("maybe_connect");
+  //console.log("maybe_connect");
   if (!globalThis.connected) {
-    console.log("Real connect");
+    //console.log("Real connect");
     await client.connect();
     globalThis.connected = true;
   }
 }
+
 async function appendUser(login, password, name): Promise<void> {
   await maybe_connect();
   let data = {
@@ -31,6 +32,9 @@ async function appendUser(login, password, name): Promise<void> {
     name,
     rank: 0,
     place: "не указано",
+    vk: "не указан",
+    type: "user", //TODO: in future we will have admin
+    registration: +new Date(),
   };
   const result = await client
     .db(DBNAME)
@@ -58,6 +62,23 @@ async function changePassword(
       { $set: { password: new_password, token: new_token } },
     );
 }
+async function updateUserInfo(userData: {
+  token: string;
+}): Promise<void | string> {
+  await maybe_connect();
+  let token = userData.token;
+  delete userData.token; //it's typescript bug, we should update our Typescript to 4.0
+  let user = await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .findOne({ token });
+  if (!user) return "INVALID";
+  await client
+    .db(DBNAME)
+    .collection(firstCollection)
+    .updateOne({ token }, { $set: userData });
+}
+
 type sigInType = {
   token: MD5Type;
   id: string;
@@ -125,6 +146,7 @@ async function getToken(login: string): Promise<string> {
 export {
   appendUser,
   changePassword,
+  updateUserInfo,
   signIn,
   isLoginExists,
   isSomethingCorrect,

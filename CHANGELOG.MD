@@ -2,9 +2,14 @@
 
 ## Current
 
-Current is 1.0.1 now
+Current is 1.0.2 now
 
-### 1.0.1
+## 1.0.2
+
+- Added new fields to user (vk, date of registration)
+- Added alert in case if user forgot enter your login
+
+## 1.0.1
 
 - Add pages for posts
 - Disable annoying debug logs

@@ -137,6 +137,12 @@ function LogModal(props: LogRegProps) {
       login,
     };
     let opts = { method: "post", body: JSON.stringify(sendData) };
+    if (login === "") {
+      alert(
+        "Кажется Вы забыли ввести свой логин\n Пароль вводить не надо - Вы же его восстанавливаете",
+      );
+      return;
+    }
     fetch("/api/recover", opts).then((data) => {
       console.log(data);
       if (isErrorWithCode(data, errors.INVALID_LOGIN)) {

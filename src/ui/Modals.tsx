@@ -114,6 +114,7 @@ function UserModal(props) {
   const [rank, setRank] = React.useState(0);
   const [place, setPlace] = React.useState("не указано");
   const [name, setName] = React.useState("");
+  let [place2, setPlace2] = React.useState("не указано"); //FIXME: refactor
 
   const logOut = () => {
     if (confirm("Вы уверены, что хотите выйти?")) {
@@ -146,7 +147,17 @@ function UserModal(props) {
       .catch((err) => console.log(err));
   }, []);
   function sendUserData() {
-    //TODO:
+    const sendData = {
+      token: localStorage.getItem("token"),
+      place: place2,
+    };
+    fetch("/api/updateUserInfo", {
+      method: "POST",
+      body: JSON.stringify(sendData),
+    })
+      .then((data) => data.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
   }
   return (
     <>
@@ -156,9 +167,27 @@ function UserModal(props) {
         style={customStyles}
       >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
-        <h1>{name} </h1>
-        <p>Рейтинг: {rank} </p>
-        <p>Город: {place}</p>
+        <div>
+          <h1>{name} </h1>
+          <p>Дата регистрации: 13.01.2021</p>
+          <p>Рейтинг: {rank} </p>
+          <div style={{ display: "inline-flex" }}>
+            ВК:&nbsp;
+            <div
+              contentEditable={true}
+              dangerouslySetInnerHTML={{ __html: "не указан" }}
+            ></div>
+          </div>{" "}
+          <br />
+          <div style={{ display: "inline-flex" }}>
+            Город:{" "}
+            <div
+              contentEditable={true}
+              onInput={(e) => setPlace2((e.target as HTMLDivElement).innerHTML)}
+              dangerouslySetInnerHTML={{ __html: place }}
+            ></div>
+          </div>
+        </div>
         <p>Личный кабинет дорабатывается...</p>
         <button onClick={sendUserData}>Сохранить</button> &nbsp;
         <button onClick={logOut}>выйти</button>
