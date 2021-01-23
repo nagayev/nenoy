@@ -36,7 +36,7 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
 
   const savetlyOpenSecondModal = () => {
     const name = getInputValue("prop_name");
-    const type = getInputValue("categories");
+    const type = +getInputValue("categories");
     globalThis.firstModalData={
       name,
       type
@@ -53,13 +53,6 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
     deleteUserPlacemark();
   };
 
-  /*const [sendData, setSendData] = React.useState({
-    type: types.hospitals,
-    name: "",
-    header: "",
-    content: "",
-  }); //NOTE: without coords! */
-  //const getInputValue = (id:string) => (document.getElementById(id) as HTMLInputElement).value
   const sendInformation = () => {
     const header = getInputValue("prop_header");
     const date = +new Date;
@@ -75,17 +68,10 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
     const thanks =
       "Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее";
     alert(thanks);
-    //let opts = { method: "post", body: JSON.stringify(sendData) };
-    //fetch("api/sendInformation", opts).then((data) => console.log(data));
+    let opts = { method: "post", body: JSON.stringify(sendData) };
+    fetch("api/sendInformation", opts).then((data) => console.log(data));
     closeSecondModal();
   };
-  /*
-  const updateSendDataProp = (event, prop) => {
-    console.log(event.target.value);
-    var copy = Object.assign({}, sendData);
-    copy[prop] = event.target.value;
-    setSendData(copy);
-  }; */
   return (
     <>
       <Modal
