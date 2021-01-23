@@ -1,3 +1,5 @@
+import { sendData } from "next/dist/next-server/server/api-utils";
+import { send } from "process";
 import React from "react";
 import Modal from "react-modal";
 import Editor from "./Editor";
@@ -23,7 +25,22 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
   const closeFirstModal = () => setFirstIsOpen(false);
   const closeSecondModal = () => setSecondIsOpen(false);
 
+  function getInputValue(id:string){
+    const h = (document.getElementById(id) as HTMLInputElement);
+    if (h===null){
+      console.log(`id ${id} is null`);
+      return ""
+    }
+    return h.value;
+  }
+
   const savetlyOpenSecondModal = () => {
+    const name = getInputValue("prop_name");
+    const type = getInputValue("categories");
+    globalThis.firstModalData={
+      name,
+      type
+    };
     closeFirstModal();
     setSecondIsOpen(true);
   };
@@ -36,29 +53,39 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
     deleteUserPlacemark();
   };
 
-  const [sendData, setSendData] = React.useState({
+  /*const [sendData, setSendData] = React.useState({
     type: types.hospitals,
     name: "",
     header: "",
     content: "",
-  }); //NOTE: without coords!
+  }); //NOTE: without coords! */
+  //const getInputValue = (id:string) => (document.getElementById(id) as HTMLInputElement).value
   const sendInformation = () => {
+    const header = getInputValue("prop_header");
+    const date = +new Date;
+    const sendData = {
+      header,
+      content,
+      coords: userPlacemark,
+      createdAt: date,
+      updatedAt: date
+    };
+    Object.assign(sendData,globalThis.firstModalData); 
+    console.log(sendData);
     const thanks =
       "Спасибо за отправку записи!\nВ ближайшее время наш модератор проверит ее";
     alert(thanks);
-    sendData["coords"] = userPlacemark; //NOTE: it's too hard to explain this hack
-    const date = +new Date();
-    sendData["createdAt"] = date;
-    sendData["updatedAt"] = date;
-    let opts = { method: "post", body: JSON.stringify(sendData) };
-    fetch("api/sendInformation", opts).then((data) => console.log(data));
+    //let opts = { method: "post", body: JSON.stringify(sendData) };
+    //fetch("api/sendInformation", opts).then((data) => console.log(data));
     closeSecondModal();
   };
+  /*
   const updateSendDataProp = (event, prop) => {
+    console.log(event.target.value);
     var copy = Object.assign({}, sendData);
     copy[prop] = event.target.value;
     setSendData(copy);
-  };
+  }; */
   return (
     <>
       <Modal
@@ -78,7 +105,7 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
           <p>Выберите категорию объекта:</p>
           <select
             name="categories"
-            onChange={(e) => updateSendDataProp(e, "type")}
+            id="categories"
           >
             <option value={types.hospitals}>Больницы</option>
             <option value={types.roads}>Дороги</option>
@@ -86,7 +113,8 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
           </select>{" "}
           <br />
           <p>Название объекта:</p>
-          <input type="text" onChange={(e) => updateSendDataProp(e, "name")} />
+          <input type="text" id="prop_name" 
+          />
         </div>{" "}
         <br />
         <button onClick={savetlyOpenSecondModal}>Сохранить</button>
@@ -107,14 +135,15 @@ function AddInfoModalWithoutSSR(props: AddPlacemarkInterface) {
           <p>Заголовок записи:</p>
           <input
             type="text"
-            onChange={(e) => updateSendDataProp(e, "header")}
+            id="prop_header"
+            //onChange={(e) => updateSendDataProp(e, "header")}
           />
           <br />
           <p>Содержимое поста:</p>
           <Editor
             content={content}
             setContent={setContent}
-            setState={updateSendDataProp}
+            //setState={updateSendDataProp}
           />
         </div>{" "}
         <br />

@@ -51,7 +51,6 @@ function NormalMap(props: NormalMapInterface) {
   const [placemarkModalIsOpen, setPlacemarkModalIsOpen] = React.useState(false);
   const [DBInfoIsOpen, setDBInfoIsOpen] = React.useState(false);
   const [DBInfoData, setDBInfoData] = React.useState([]);
-  const [lock, setLock] = React.useState(false); //for only one user's placemark on map
   const [userPlacemark, setUserPlacemark] = React.useState([]); //for user placemark
 
   const deleteUserPlacemark = () => {
@@ -107,10 +106,11 @@ function NormalMap(props: NormalMapInterface) {
   const clickOnMap = (event: EventType) => {
     //NOTE: type of event is any
     const coords = event._sourceEvent.originalEvent.coords; //get coords where user clicked
+    const lock = userPlacemark.length !== 0;
     if (!lock) {
       setPlacemarksCoords(placemarksCoords.concat([coords])); //add placemark to screen
       setUserPlacemark(coords);
-      setLock(true);
+      //setLock(true);
     } else {
       alert("Пожалуйста, добавьте информацию о предыдущем объекте");
     }

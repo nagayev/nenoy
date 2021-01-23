@@ -3,6 +3,8 @@
 ## Current
 
 - Fix issue #11
+- Optimisation for AddInfoModal.tsx
+- Fix map lock
 
 ## 1.0.2
 
