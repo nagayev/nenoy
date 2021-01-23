@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is 1.0.2 now
+- Fix issue #11
 
 ## 1.0.2
 

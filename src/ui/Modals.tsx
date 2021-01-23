@@ -111,11 +111,16 @@ function InfoFromDBModal(props: MapModalInterface) {
 
 function UserModal(props) {
   const { isOpen, setIsOpen } = props;
-  const [rank, setRank] = React.useState(0);
-  const [place, setPlace] = React.useState("не указано");
-  const [name, setName] = React.useState("");
-  let [place2, setPlace2] = React.useState("не указано"); //FIXME: refactor
-
+  const [place2, setPlace2] = React.useState("не указано"); //FIXME: refactor
+  const [vk2, setVk2] = React.useState("не указан"); //FIXME: refactor
+  const [userData,setUserData] = React.useState({
+    rank:0,
+    place:'не указано',
+    vk:'не указан',
+    name:'',
+    registration:''
+  });
+  
   const logOut = () => {
     if (confirm("Вы уверены, что хотите выйти?")) {
       localStorage.removeItem("token");
@@ -130,11 +135,20 @@ function UserModal(props) {
     name: string;
     rank: number;
     place: string;
+    vk: string;
+    registration: string; 
   };
+  function getFormatedDate(date){
+    return new Intl.DateTimeFormat().format(date);
+  } 
+  //const getFormatedDate = (date) => `${date.getDate()}:${date.getMonth()+1}:${date.getFullYear()}`;
   const setUserInfo = (data: UserType) => {
-    setRank(data.rank);
-    setName(data.name);
-    setPlace(data.place);
+    data.registration=getFormatedDate(new Date(data.registration));
+    const copy = Object.assign({},userData,data);
+    setUserData(copy);
+    //NOTE: this's fix for #11 (https://github.com/nagayev/nenoy/issues/11)
+    setPlace2(data.place);
+    setVk2(data.vk);
   };
   useEffect(() => {
     //load info about user
@@ -150,7 +164,9 @@ function UserModal(props) {
     const sendData = {
       token: localStorage.getItem("token"),
       place: place2,
+      vk: vk2
     };
+    //console.log(userData);
     fetch("/api/updateUserInfo", {
       method: "POST",
       body: JSON.stringify(sendData),
@@ -168,14 +184,15 @@ function UserModal(props) {
       >
         <button onClick={wrap(setIsOpen, false)}>закрыть</button>
         <div>
-          <h1>{name} </h1>
-          <p>Дата регистрации: 13.01.2021</p>
-          <p>Рейтинг: {rank} </p>
+          <h1>{userData.name}</h1>
+          <p>Дата регистрации: {userData.registration}</p>
+          <p>Рейтинг: {userData.rank} </p>
           <div style={{ display: "inline-flex" }}>
             ВК:&nbsp;
             <div
               contentEditable={true}
-              dangerouslySetInnerHTML={{ __html: "не указан" }}
+              onInput={(e) => setVk2((e.target as HTMLDivElement).innerHTML)}
+              dangerouslySetInnerHTML={{ __html: userData.vk }}
             ></div>
           </div>{" "}
           <br />
@@ -184,7 +201,7 @@ function UserModal(props) {
             <div
               contentEditable={true}
               onInput={(e) => setPlace2((e.target as HTMLDivElement).innerHTML)}
-              dangerouslySetInnerHTML={{ __html: place }}
+              dangerouslySetInnerHTML={{ __html: userData.place }}
             ></div>
           </div>
         </div>
