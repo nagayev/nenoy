@@ -142,7 +142,7 @@ async function getPostsByCoords(coords: number[]): Promise<any> {
   await client
     .db(DBNAME)
     .collection(secondCollection)
-    .find({ parent_object_id: ObjectId(id)})
+    .find({ parent_object_id: ObjectId(id),checked:true})
     .forEach(addPosts);
   return posts;
 }

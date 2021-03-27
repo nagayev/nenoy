@@ -3,6 +3,7 @@
 ## Current
 
 - Add support of voting for commentaries
+- Fix #13 (extra posts)
 
 ## 1.0.3
 
