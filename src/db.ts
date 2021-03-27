@@ -85,6 +85,7 @@ async function addComment(arg): Promise<void | string> {
   //TODO: check token, if incorrect return invalid
   arg.post_id = ObjectId(arg.post_id);
   arg.user_id = ObjectId(await _getIdByToken(arg.token));
+  arg.rank = 0;
   arg.checked = false;
   delete arg.token;
   const result = await client
@@ -141,7 +142,7 @@ async function getPostsByCoords(coords: number[]): Promise<any> {
   await client
     .db(DBNAME)
     .collection(secondCollection)
-    .find({ parent_object_id: ObjectId(id) })
+    .find({ parent_object_id: ObjectId(id)})
     .forEach(addPosts);
   return posts;
 }
@@ -160,6 +161,26 @@ async function getPlacemarks() {
 
   //console.log(objects);
   return coords;
+}
+async function voteForComment(
+  token: string,
+  commentId: string,
+  vote:number
+): Promise<void | string> {
+  await maybe_connect();
+  let comment = await client
+    .db(DBNAME)
+    .collection("commentaries")
+    .findOne({ _id: ObjectId(commentId) });
+  console.log(comment,vote)
+  if (!comment || !(vote==-1 || vote==1) ) return "INVALID";
+  await client
+    .db(DBNAME)
+    .collection(commentariesCollection)
+    .updateOne(
+      { _id: ObjectId(commentId) },
+      { $set: { rank:comment.rank+vote } },
+    );
 }
 async function main() {
   try {
@@ -188,6 +209,7 @@ if (require.main === module) {
     getPlacemarks,
     getPosts,
     getPostsByCoords,
+    voteForComment
   };
 }
 //export {append2DB,appendObject,appendPost};

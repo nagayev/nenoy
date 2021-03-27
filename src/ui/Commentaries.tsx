@@ -1,7 +1,7 @@
-import { sendData } from "next/dist/next-server/server/api-utils";
-import { send } from "process";
-import React, { SetStateAction } from "react";
+import React from "react";
+import { isErrorWithCode } from "./utils";
 import Viwer from "./Viewer";
+const errors = require("./errors");
 
 type HTML = string;
 type CommentaryType = {
@@ -15,18 +15,41 @@ type CommentaryType = {
 
 function Commentary(props: { data: CommentaryType }) {
   //const data = {props};
+  const [rank,setRank] = React.useState(props.data.rank);
   let color = props.data.rank > 0 ? "green" : "red";
   if (props.data.rank === 0) color = "black";
   const sign = props.data.rank > 0 ? "+" : "";
+  console.log(props);
+  const voteForComment = (vote) => {
+    const sendData = {
+      token:localStorage.token,
+      commentId:props.data._id,
+      vote
+    }
+    const opts = { method: "post", body: JSON.stringify(sendData)};
+    fetch("api/voteForComment", opts)
+      .then((data) => data.json())
+      .then((data)=>{
+        if(isErrorWithCode(data,errors.VOTE)){
+          alert("Ошибка голосования");
+        } else {
+          setRank(rank+vote);  //update cache and show new rank
+        }
+      })
+      .catch(err=>console.error(err));
+  }
+  
   return (
     <div>
       <div style={{ display: "inline-flex" }}>
         <p>{props.data.name}&nbsp;</p>
         <p style={{ color: color }}>
           ({sign}
-          {props.data.rank})
+          {rank})
         </p>
       </div>
+      <button onClick={()=>voteForComment(1)}>+</button>
+      <button onClick={()=>voteForComment(-1)}>-</button>
       <Viwer source={props.data.text} />
       <hr />
     </div>
@@ -48,7 +71,7 @@ function Commentaries(props: { data: CommentaryType[] }) {
       .then((data) => {
         //NOTE: we iterate over commentaries and add name and rank to each comment
         commentary_data = props.data.map((v, i) => {
-          v.rank = data.rank;
+          //v.rank = data.rank;
           v.name = data.name;
           return <Commentary data={v} key={i} />;
         });

@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is now 1.0.3
+- Add support of voting for commentaries
 
 ## 1.0.3
 
