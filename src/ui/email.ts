@@ -1,25 +1,27 @@
 const db = require("../usersdb");
 const nodemailer = require("nodemailer");
+const auth = {
+  user: process.env.email_user,
+  pass: process.env.email_pass,
+};
 let transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.email_user,
-    pass: process.env.email_pass,
-  },
+  service: "yandex",
+  auth 
 });
+const from = '"Nenoy" <nagaevmt@yandex.ru>';
 const regMailTemplate = {
   subject: "Регистрация на Неной",
-  from: '"Nenoy" <sidorovmarat1995@gmail.com>',
+  from,
   text: "Вы успешно зарегистрировались на сайте nenoy.ru",
 };
 const recoveryMailTemplate = {
   subject: "Восстановление пароля на Неной",
-  from: '"Nenoy" <sidorovmarat1995@gmail.com>',
+  from,
   text: "Для восстановления пароля перейдите по ссылке",
 };
 const changePasswordTemplate = {
   subject: "Изменение пароля на Неной",
-  from: '"Nenoy" <sidorovmarat1995@gmail.com>',
+  from,
   text:
     "Вы успешно изменили пароль от своей учетной записи\n \
   Если это были не Вы - напишите нам в поддержку vp@nenoy.ru ",
@@ -36,12 +38,14 @@ async function _sendMail(
       text: mail.text,
     });
   } catch (e) {
-    console.error(`Mail to ${email} isn't delivered`);
+    console.error(`Mail to ${email} isn't delivered, error: ${e}`);
   }
 }
+
 function sendAfterRegistrationMail(email: string): Promise<void> {
   return _sendMail(email, regMailTemplate);
 }
+
 function sendRecoveryMail(email: string): void {
   const copy = Object.assign({}, recoveryMailTemplate);
   db.getToken(email).then((token) => {
@@ -49,7 +53,9 @@ function sendRecoveryMail(email: string): void {
     _sendMail(email, copy);
   });
 }
+
 function sendAfterPasswordChange(email: string): void {
   _sendMail(email, changePasswordTemplate);
 }
+
 export { sendAfterRegistrationMail, sendRecoveryMail, sendAfterPasswordChange };

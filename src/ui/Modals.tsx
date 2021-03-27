@@ -166,7 +166,6 @@ function UserModal(props) {
       place: place2,
       vk: vk2
     };
-    //console.log(userData);
     fetch("/api/updateUserInfo", {
       method: "POST",
       body: JSON.stringify(sendData),
@@ -174,6 +173,9 @@ function UserModal(props) {
       .then((data) => data.json())
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
+    alert("Данные сохранены");
+    //TODO: test this
+    setIsOpen(false);
   }
   return (
     <>

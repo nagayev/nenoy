@@ -2,9 +2,14 @@
 
 ## Current
 
+Current is now 1.0.3
+
+## 1.0.3
+
 - Fix issue #11
 - Optimisation for AddInfoModal.tsx
 - Fix map lock
+- Fix sending email
 
 ## 1.0.2
 
