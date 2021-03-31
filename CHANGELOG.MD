@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## Current
+Current is now 1.0.4
+
+## 1.0.4
 
 - Add support of voting for commentaries
 - Fix #13 (extra posts)
