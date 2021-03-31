@@ -14,7 +14,6 @@ type CommentaryType = {
 };
 
 function Commentary(props: { data: CommentaryType }) {
-  //const data = {props};
   const [rank,setRank] = React.useState(props.data.rank);
   let color = props.data.rank > 0 ? "green" : "red";
   if (props.data.rank === 0) color = "black";
@@ -23,7 +22,8 @@ function Commentary(props: { data: CommentaryType }) {
   const voteForComment = (vote) => {
     const sendData = {
       token:localStorage.token,
-      commentId:props.data._id,
+      comment_id:props.data._id,
+      user_id:props.data.user_id,
       vote
     }
     const opts = { method: "post", body: JSON.stringify(sendData)};
@@ -38,7 +38,7 @@ function Commentary(props: { data: CommentaryType }) {
       })
       .catch(err=>console.error(err));
   }
-  
+
   return (
     <div>
       <div style={{ display: "inline-flex" }}>
@@ -69,9 +69,9 @@ function Commentaries(props: { data: CommentaryType[] }) {
     fetch("api/getUserInfo", opts)
       .then((data) => data.json())
       .then((data) => {
-        //NOTE: we iterate over commentaries and add name and rank to each comment
+        //NOTE: we iterate over commentaries and add user's name to each comment
         commentary_data = props.data.map((v, i) => {
-          //v.rank = data.rank;
+          //NOTE: we don't add rank (because comments have rank too)
           v.name = data.name;
           return <Commentary data={v} key={i} />;
         });

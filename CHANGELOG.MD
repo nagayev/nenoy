@@ -4,6 +4,8 @@
 
 - Add support of voting for commentaries
 - Fix #13 (extra posts)
+- Add user ranking
+- Fix links in README
 
 ## 1.0.3
 

@@ -163,25 +163,36 @@ async function getPlacemarks() {
   return coords;
 }
 async function voteForComment(
-  token: string,
-  commentId: string,
-  vote:number
+  data
 ): Promise<void | string> {
   await maybe_connect();
   let comment = await client
     .db(DBNAME)
     .collection("commentaries")
-    .findOne({ _id: ObjectId(commentId) });
-  console.log(comment,vote)
-  if (!comment || !(vote==-1 || vote==1) ) return "INVALID";
+    .findOne({ _id: ObjectId(data.comment_id) });
+  if (!comment || !(data.vote==-1 || data.vote==1) ) return "INVALID";
+  //update ranking of commentary
   await client
     .db(DBNAME)
     .collection(commentariesCollection)
     .updateOne(
-      { _id: ObjectId(commentId) },
-      { $set: { rank:comment.rank+vote } },
+      { _id: ObjectId(data.comment_id) },
+      { $set: { rank:comment.rank+data.vote } },
     );
+  let user = await client
+    .db("users")
+    .collection("users")
+    .findOne({ _id: ObjectId(data.user_id) });
+  if(!user) return "INVALID";
+  await client
+      .db("users")
+      .collection("users")
+      .updateOne(
+        { _id: ObjectId(data.user_id) },
+        { $set: { rank:user.rank+data.vote } },
+      );
 }
+
 async function main() {
   try {
     // Connect to the MongoDB cluster
