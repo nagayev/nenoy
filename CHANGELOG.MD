@@ -1,6 +1,6 @@
 # CHANGELOG
 
-Current is now 1.0.4
+- DB refactoring (#12)
 
 ## 1.0.4
 
