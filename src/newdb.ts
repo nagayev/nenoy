@@ -8,6 +8,7 @@ const opts = {
 };
 const client = new MongoClient(uri, opts);
 //TODO: move types to file .d.ts
+//FIXME: we should use INVALID ONLY in this file and return error's code to client
 type MD5Type = string;
 type ObjectType = {
     name: string;
@@ -207,14 +208,16 @@ async function _getIdByToken(token: string): Promise<string> {
       .db("users")
       .collection("users")
       .findOne({ token: token });
-    if (!result) return "";
+    if (!result) return INVALID;
     return result._id;
 }
+
 async function addComment(arg): Promise<void | string> {
     await connectOnce();
-    //TODO: check token, if incorrect return invalid
+    const id = await _getIdByToken(arg.token);
+    if(id===INVALID) return INVALID;
     arg.post_id = ObjectId(arg.post_id);
-    arg.user_id = ObjectId(await _getIdByToken(arg.token));
+    arg.user_id = ObjectId(id);
     arg.rank = 0;
     arg.checked = false;
     delete arg.token;
@@ -226,6 +229,7 @@ async function addComment(arg): Promise<void | string> {
       `New listing created with the following id: ${result.insertedId}`,
     );
 }
+
 async function getComments(id: string) {
     await connectOnce();
     let commentaries: any[] = [];

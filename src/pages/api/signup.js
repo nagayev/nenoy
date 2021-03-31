@@ -1,4 +1,4 @@
-const db = require("../../usersdb");
+const db = require("../../newdb");
 import { sendAfterRegistrationMail } from "../../ui/email";
 import errors from "../../ui/errors";
 import { formatError, formatOk } from "../../ui/utils";

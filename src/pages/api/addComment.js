@@ -1,4 +1,4 @@
-const db = require("../../db");
+const db = require("../../newdb");
 import errors from "../../ui/errors";
 import { formatError, formatOk } from "../../ui/utils";
 export default async function (req, res) {
@@ -10,7 +10,7 @@ export default async function (req, res) {
     const check = (ans) => {
       if (ans === "INVALID") {
         //login is unavailable
-        res.end(formatError(errors.BUSY_LOGIN));
+        res.end(formatError(errors.INVALID_TOKEN));
         resolve();
       } else {
         res.end(formatOk());

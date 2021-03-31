@@ -1,4 +1,4 @@
-const db = require("../../usersdb");
+const db = require("../../newdb");
 export default async function (req, res) {
   //NOTE: don't delete new Promise(...)
   return new Promise((resolve, reject) => {
