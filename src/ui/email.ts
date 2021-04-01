@@ -1,4 +1,4 @@
-const db = require("../usersdb");
+const db = require("../newdb");
 const nodemailer = require("nodemailer");
 const auth = {
   user: process.env.email_user,

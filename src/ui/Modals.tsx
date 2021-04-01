@@ -211,6 +211,7 @@ function UserModal(props) {
           </div>
           <br />
           <h2>Статистика</h2>
+          <h3>Опубликованных</h3>
           <p>Записей: {userData.notesCount} </p>
           <p>Комментариев: {userData.commentariesCount} </p>
           <p>Рейтинг: {userData.rank} </p>

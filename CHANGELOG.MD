@@ -2,7 +2,8 @@
 
 ## Current
 
-- DB refactoring (#12)
+- DB refactoring. Part 1 (#12)
+- DB refactoring. Part 2 (#12)
 - Implement notesCount and commentariesCount
 - Delete useless commentaries
 

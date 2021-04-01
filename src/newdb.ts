@@ -44,45 +44,52 @@ const objectsCollection = "objects";
 const postsCollection = "posts";
 const commentariesCollection = "commentaries";
 
-//FIXME: only data argument, not login,password and name
-async function appendUser(login, password, name): Promise<void> {
+type UserInfo = {
+  login:string,
+  password:string,
+  name:string,
+  token:MD5Type,
+  rank:number,
+  vk:string,
+  type:string,
+  registration:number
+}
+
+async function signUp(params:UserInfo): Promise<void> {
     await connectOnce();
-    let data = {
-      login,
-      password,
-      token: MD5(`${login}_${password}`),
-      name,
+    const data = Object.assign({},params,{
+      token: MD5(`${params.login}_${params.password}`),
       rank: 0,
       place: "не указано",
       vk: "не указан",
       type: "user", //TODO: in future we will have admin
       registration: +new Date(),
-    };
+    });
     const result = await client
       .db(usersDB)
       .collection(usersCollection)
       .insertOne(data);
     console.log(`Append user with id: ${result.insertedId}`);
 }
-//FIXME: only data argument
-async function changePassword(
+
+async function changePassword(params:{
     token: string,
     new_password: string,
-  ): Promise<void | string> {
+}): Promise<void | string> {
     await connectOnce();
     let user = await client
       .db(usersDB)
       .collection(usersCollection)
-      .findOne({ token: token });
+      .findOne({ token: {params} });
     if (!user) return INVALID;
     const login = user.login;
-    const new_token = MD5(`${login}_${new_password}`);
+    const new_token = MD5(`${login}_${params.new_password}`);
     await client
       .db(usersDB)
       .collection(usersCollection)
       .updateOne(
-        { token },
-        { $set: { password: new_password, token: new_token } },
+        { token:params.token },
+        { $set: { password: params.new_password, token: new_token } },
       );
 }
 
@@ -96,7 +103,7 @@ async function updateUserInfo(userData: {
       .db(usersDB)
       .collection(usersCollection)
       .findOne({ token });
-    if (!user) return "INVALID";
+    if (!user) return INVALID;
     await client
       .db(usersDB)
       .collection(usersCollection)
@@ -104,8 +111,8 @@ async function updateUserInfo(userData: {
 }
 
 async function signIn(
-    login: string,
-    password: string,
+    params:{login: string,
+    password: string}
   ): Promise<sigInType | string> {
     //`SELECT password from users WHERE login='${login}';
     const data = { token: "", id: "" };
@@ -113,9 +120,9 @@ async function signIn(
     let data_from_db = await client
       .db(usersDB)
       .collection(usersCollection)
-      .findOne({ login: login });
-    if (data_from_db === null) return "INVALID"; //invalid login
-    if (data_from_db.password !== password) return "INVALID"; //correct login but incorrect password
+      .findOne({ login: {params} });
+    if (data_from_db === null) return INVALID; //invalid login
+    if (data_from_db.password !== params.password) return INVALID; //correct login but incorrect password
     data.token = data_from_db.token;
     data.id = data_from_db._id;
     return data;
@@ -158,12 +165,12 @@ async function getUserInfo(id: string): Promise<any[]> {
     result.notesCount = await client
       .db(postsDB)
       .collection(postsCollection)
-      .find({ user_id: ObjectId(id) }).count();
-    deleteKeys(result, ["_id", "login", "password", "token"]); //NOTE: exclude private info
+      .find({ user_id: ObjectId(id),checked:true }).count();
     result.commentariesCount=await client
     .db(postsDB)
     .collection(commentariesCollection)
-    .find({ user_id: ObjectId(id) }).count();;
+    .find({ user_id: ObjectId(id),checked:true }).count();
+    deleteKeys(result, ["_id", "login", "password", "token"]); //NOTE: exclude private info
     return result;
 }
 
@@ -175,7 +182,7 @@ async function getToken(login: string): Promise<string> {
       .findOne({ login: login });
     return result.token;
 }
-//FIXME: NOTE: db.ts below
+//NOTE: db.ts below
 async function appendObject(arg: ObjectType) {
     await connectOnce();
     arg.checked = true; //TODO:
@@ -335,7 +342,7 @@ async function voteForComment(
 
 export {
     //users functions
-    appendUser,
+    signUp,
     changePassword,
     updateUserInfo,
     signIn,

@@ -5,10 +5,10 @@ import { formatError, formatOk } from "../../ui/utils";
 export default async function (req, res) {
   //NOTE: don't delete new Promise(...)
   return new Promise((resolve, reject) => {
-    const { token, password } = JSON.parse(req.body);
+    const data = JSON.parse(req.body);
     res.setHeader("Content-Type", "application/json");
     res.setHeader("Cache-Control", "max-age=180000"); //(?)
-    db.changePassword(token, password)
+    db.changePassword(data)
       .then((data) => {
         if (data === "INVALID") {
           //sendAfterPasswordChange();

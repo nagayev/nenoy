@@ -12,7 +12,6 @@ export default async function (req, res) {
       .then((data) => {
         res.setHeader("Content-Type", "application/json");
         res.setHeader("Cache-Control", "max-age=180000"); //(?)
-        console.log(data);
         if (data) {
           sendRecoveryMail(login);
           res.status(200).end(formatOk());

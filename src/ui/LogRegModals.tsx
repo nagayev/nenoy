@@ -143,7 +143,7 @@ function LogModal(props: LogRegProps) {
       );
       return;
     }
-    fetch("/api/recover", opts).then((data) => {
+    fetch("/api/isLoginExists", opts).then((data) => {
       console.log(data);
       if (isErrorWithCode(data, errors.INVALID_LOGIN)) {
         alert("Неправильный логин");

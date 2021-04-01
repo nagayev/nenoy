@@ -5,8 +5,8 @@ import { formatError } from "../../ui/utils";
 export default async function (req, res) {
   //NOTE: don't delete new Promise(...)
   return new Promise((resolve, reject) => {
-    const { login, password } = JSON.parse(req.body);
-    db.signIn(login, password)
+    const params = JSON.parse(req.body);
+    db.signIn(params)
       .then((data) => {
         res.setHeader("Content-Type", "application/json");
         res.setHeader("Cache-Control", "max-age=180000"); //(?)

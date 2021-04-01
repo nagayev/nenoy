@@ -14,7 +14,7 @@ export default async function (req, res) {
         res.end(formatError(errors.BUSY_LOGIN));
         resolve();
       } else {
-        db.appendUser(content.login, content.password, content.name);
+        db.signUp(content);
         sendAfterRegistrationMail(content.login);
         res.end(formatOk());
         resolve();
