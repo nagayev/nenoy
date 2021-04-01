@@ -2,11 +2,16 @@
 
 ## Current
 
+Current is 1.1.0 now
+
+## 1.1.0
+
 - DB refactoring. Part 1 (#12)
 - DB refactoring. Part 2 (#12)
 - Implement notesCount and commentariesCount
 - Delete useless commentaries
 - Update DOCS
+- Update favicon.ico
 
 ## 1.0.4
 
