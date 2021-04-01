@@ -6,6 +6,7 @@
 - DB refactoring. Part 2 (#12)
 - Implement notesCount and commentariesCount
 - Delete useless commentaries
+- Update DOCS
 
 ## 1.0.4
 
