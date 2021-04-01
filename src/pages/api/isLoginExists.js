@@ -1,4 +1,4 @@
-const db = require("../../newdb");
+const db = require("../../db");
 const errors = require("../../ui/errors");
 import { sendRecoveryMail } from "../../ui/email";
 import { formatError, formatOk } from "../../ui/utils";

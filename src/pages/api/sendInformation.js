@@ -1,4 +1,4 @@
-const db = require("../../newdb");
+const db = require("../../db");
 import { formatOk } from "../../ui/utils";
 export default (req, res) => {
   const content = JSON.parse(req.body);

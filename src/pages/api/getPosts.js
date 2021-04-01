@@ -1,9 +1,9 @@
-const db = require("../../newdb");
+const db = require("../../db");
 export default async function (req, res) {
   //NOTE: don't delete new Promise(...)
   return new Promise((resolve, reject) => {
     const body = JSON.parse(req.body);
-    db.getPosts(body.type, body.page) //cast string to int
+    db.getPosts(body)
       .then((data) => {
         res.setHeader("Content-Type", "application/json");
         res.setHeader("Cache-Control", "max-age=180000"); //(?)

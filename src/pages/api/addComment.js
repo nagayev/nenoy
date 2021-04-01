@@ -1,4 +1,4 @@
-const db = require("../../newdb");
+const db = require("../../db");
 import errors from "../../ui/errors";
 import { formatError, formatOk } from "../../ui/utils";
 export default async function (req, res) {

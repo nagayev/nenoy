@@ -1,4 +1,4 @@
-const db = require("../newdb");
+const db = require("../db");
 const nodemailer = require("nodemailer");
 const auth = {
   user: process.env.email_user,
@@ -6,7 +6,7 @@ const auth = {
 };
 let transporter = nodemailer.createTransport({
   service: "yandex",
-  auth 
+  auth,
 });
 const from = '"Nenoy" <nagaevmt@yandex.ru>';
 const regMailTemplate = {
