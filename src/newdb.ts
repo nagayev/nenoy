@@ -30,9 +30,7 @@ type sigInType = {
     id: string;
 };
 async function connectOnce() {
-    //console.log("connectOnce");
     if (!globalThis.connected) {
-      //console.log("Real connect");
       await client.connect();
       globalThis.connected = true;
     }
@@ -46,6 +44,7 @@ const objectsCollection = "objects";
 const postsCollection = "posts";
 const commentariesCollection = "commentaries";
 
+//FIXME: only data argument, not login,password and name
 async function appendUser(login, password, name): Promise<void> {
     await connectOnce();
     let data = {
@@ -65,6 +64,7 @@ async function appendUser(login, password, name): Promise<void> {
       .insertOne(data);
     console.log(`Append user with id: ${result.insertedId}`);
 }
+//FIXME: only data argument
 async function changePassword(
     token: string,
     new_password: string,
@@ -81,7 +81,7 @@ async function changePassword(
       .db(usersDB)
       .collection(usersCollection)
       .updateOne(
-        { token: token },
+        { token },
         { $set: { password: new_password, token: new_token } },
       );
 }
@@ -155,7 +155,15 @@ async function getUserInfo(id: string): Promise<any[]> {
       .collection(usersCollection)
       .findOne({ _id: ObjectId(id) });
     if (result === null) return [];
+    result.notesCount = await client
+      .db(postsDB)
+      .collection(postsCollection)
+      .find({ user_id: ObjectId(id) }).count();
     deleteKeys(result, ["_id", "login", "password", "token"]); //NOTE: exclude private info
+    result.commentariesCount=await client
+    .db(postsDB)
+    .collection(commentariesCollection)
+    .find({ user_id: ObjectId(id) }).count();;
     return result;
 }
 

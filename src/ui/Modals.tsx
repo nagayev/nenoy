@@ -111,14 +111,17 @@ function InfoFromDBModal(props: MapModalInterface) {
 
 function UserModal(props) {
   const { isOpen, setIsOpen } = props;
-  const [place2, setPlace2] = React.useState("не указано"); //FIXME: refactor
-  const [vk2, setVk2] = React.useState("не указан"); //FIXME: refactor
+  //FIXME: refactor place2 and vk2
+  const [place2, setPlace2] = React.useState("не указано"); 
+  const [vk2, setVk2] = React.useState("не указан");
   const [userData,setUserData] = React.useState({
-    rank:0,
     place:'не указано',
     vk:'не указан',
     name:'',
-    registration:''
+    registration:'',
+    rank:0,
+    notesCount:0,
+    commentariesCount:0
   });
   
   const logOut = () => {
@@ -136,12 +139,15 @@ function UserModal(props) {
     rank: number;
     place: string;
     vk: string;
-    registration: string; 
+    registration: string;
+    notesCount: number;
+    commentariesCount: number; 
   };
+
   function getFormatedDate(date){
     return new Intl.DateTimeFormat().format(date);
   } 
-  //const getFormatedDate = (date) => `${date.getDate()}:${date.getMonth()+1}:${date.getFullYear()}`;
+  
   const setUserInfo = (data: UserType) => {
     data.registration=getFormatedDate(new Date(data.registration));
     const copy = Object.assign({},userData,data);
@@ -151,7 +157,6 @@ function UserModal(props) {
     setVk2(data.vk);
   };
   useEffect(() => {
-    //load info about user
     fetch("/api/getUserInfo", {
       method: "POST",
       body: JSON.stringify({ id: localStorage.getItem("id") }),
@@ -174,7 +179,6 @@ function UserModal(props) {
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
     alert("Данные сохранены");
-    //TODO: test this
     setIsOpen(false);
   }
   return (
@@ -188,7 +192,6 @@ function UserModal(props) {
         <div>
           <h1>{userData.name}</h1>
           <p>Дата регистрации: {userData.registration}</p>
-          <p>Рейтинг: {userData.rank} </p>
           <div style={{ display: "inline-flex" }}>
             ВК:&nbsp;
             <div
@@ -206,8 +209,12 @@ function UserModal(props) {
               dangerouslySetInnerHTML={{ __html: userData.place }}
             ></div>
           </div>
+          <br />
+          <h2>Статистика</h2>
+          <p>Записей: {userData.notesCount} </p>
+          <p>Комментариев: {userData.commentariesCount} </p>
+          <p>Рейтинг: {userData.rank} </p>
         </div>
-        <p>Личный кабинет дорабатывается...</p>
         <button onClick={sendUserData}>Сохранить</button> &nbsp;
         <button onClick={logOut}>выйти</button>
       </Modal>

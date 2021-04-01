@@ -1,6 +1,10 @@
 # CHANGELOG
 
+## Current
+
 - DB refactoring (#12)
+- Implement notesCount and commentariesCount
+- Delete useless commentaries
 
 ## 1.0.4
 
