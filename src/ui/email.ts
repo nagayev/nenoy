@@ -4,7 +4,6 @@ const auth = {
   user: process.env.email_user,
   pass: process.env.email_pass,
 };
-console.log(`Auth data: ${auth}`);
 let transporter = nodemailer.createTransport({
   service: "yandex",
   auth,
@@ -31,6 +30,7 @@ async function _sendMail(
   email: string,
   mail: typeof regMailTemplate,
 ): Promise<void> {
+  console.log(`Auth data: ${auth.user}, ${auth.pass}`);
   try {
     await transporter.sendMail({
       from: mail.from,
