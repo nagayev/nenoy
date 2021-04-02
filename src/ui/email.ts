@@ -4,6 +4,7 @@ const auth = {
   user: process.env.email_user,
   pass: process.env.email_pass,
 };
+console.log(`Auth data: ${auth}`);
 let transporter = nodemailer.createTransport({
   service: "yandex",
   auth,

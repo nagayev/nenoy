@@ -84,6 +84,7 @@ function RegModal(props: LogRegProps) {
     fetch("/api/signup", opts)
       .then((data) => data.json())
       .then((data) => checkError(data));
+    console.log(password,anotherPassword);
   }
   return (
     <>

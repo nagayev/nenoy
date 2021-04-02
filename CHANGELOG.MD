@@ -2,7 +2,7 @@
 
 ## Current
 
-Current is 1.1.0 now
+- Delete 404 page
 
 ## 1.1.0
 
