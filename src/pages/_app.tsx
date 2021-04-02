@@ -1,5 +1,4 @@
 import "../ui/index.css";
-import "../ui/404.css";
 import "../ui/PageContentsForIndex.css";
 import { AppProps } from "next/app";
 import Head from "next/head";
